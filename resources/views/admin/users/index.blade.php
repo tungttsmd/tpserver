@@ -21,6 +21,7 @@
                 <thead class="bg-primary text-white">
                     <tr>
                         <th style="width: 5%">ID</th>
+                        <th style="width: 10%">Avatar</th>
                         <th style="width: 25%">Alias</th>
                         <th style="width: 25%">Username</th>
                         <th style="width: 15%">Role</th>
@@ -32,6 +33,15 @@
                     @forelse ($users as $user)
                         <tr>
                             <td>{{ $user->id }}</td>
+                            <td style="padding: 0;">
+                                <div class="d-flex justify-content-center align-items-center" style="height: 100%;">
+                                    <img src="{{ asset($user->avatar_url) }}"
+                                        onerror="this.onerror=null;this.src='https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png';"
+                                        alt="Avatar" class="rounded-circle avatar-img">
+                                </div>
+                            </td>
+
+                            </td>
                             <td class="text-start">{{ $user->alias }}</td>
                             <td class="text-start">{{ $user->username }}</td>
                             <td>
@@ -60,6 +70,36 @@
     </div>
 
     <style>
+        .custom-table td,
+        .custom-table th {
+            vertical-align: middle;
+            background-color: #f0f4ff !important;
+        }
+
+        .custom-table tr:hover td {
+            background-color: #e8f0ff !important;
+        }
+
+        .custom-table thead th {
+            background-color: #4b6cb7 !important;
+            color: white !important;
+        }
+
+        .table td,
+        .table th {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .avatar-img {
+            height: 100%;
+            aspect-ratio: 1 / 1;
+            object-fit: cover;
+            display: block;
+            max-height: 38px;
+        }
+
         .custom-table td,
         .custom-table th {
             vertical-align: middle;

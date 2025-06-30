@@ -47,12 +47,12 @@ Route::middleware('auth')->group(function () {
     Route::put('/users/{user}/roles', [UserController::class, 'updateRoles'])->name('users.update-roles');
 
     // 5. Route Người dùng quản lý profile
-    Route::get('/profile/avatar/edit', [ProfileController::class, 'editAvatar'])->name('profile.edit-avatar');
-    Route::put('/profile/avatar/update', [ProfileController::class, 'updateAvatar'])->name('profile.update-avatar');
-    Route::get('/profile/edit', [ProfileController::class, 'editAlias'])->name('profile.edit-alias');
-    Route::put('/profile/update', [ProfileController::class, 'updateAlias'])->name('profile.update-alias');
-    Route::get('/profile/password', [ProfileController::class, 'editPassword'])->name('profile.edit-password');
-    Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.update-password');
+    Route::get('/profile/{user}/avatar/edit', [ProfileController::class, 'editAvatar'])->name('profile.edit-avatar');
+    Route::put('/profile/{user}/avatar/update',  [ProfileController::class, 'updateAvatar'])->name('profile.update-avatar');
+    Route::get('/profile/{user}/alias/edit', [ProfileController::class, 'editAlias'])->name('profile.edit-alias');
+    Route::put('/profile/{user}/alias/update', [ProfileController::class, 'updateAlias'])->name('profile.update-alias');
+    Route::get('/profile/{user}/password/edit', [ProfileController::class, 'editPassword'])->name('profile.edit-password');
+    Route::put('/profile/{user}/password/update', [ProfileController::class, 'updatePassword'])->name('profile.update-password');
 
     // 6. Route Tải về danh sách linh kiện
     Route::get('/components/download', [ComponentController::class, 'download'])->name('components.download');

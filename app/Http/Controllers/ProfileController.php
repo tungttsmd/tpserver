@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -51,32 +52,27 @@ class ProfileController extends Controller
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
+    public function editAvatar(User $user)
     {
-        //
-    }
-    public function editAvatar()
-    {
-        return view('profile.edit-avatar', [
-            'user' => Auth::user(),
-        ]);
+        return view('profile.edit-avatar', compact('user'));
     }
 
-    public function updateAvatar(Request $request)
+    public function updateAvatar(Request $request, User $user)
     {
+        // Nếu user không có quyền 'edit_users'
+        if (!auth()->user()->can('edit_users')) {
+            // Và cố gắng sửa alias user khác (không phải chính mình)
+            if ($user->id !== auth()->id()) {
+                abort(403, 'Bạn không được phép sửa alias của người khác.');
+            }
+            abort(403, 'Bạn không có quyền sửa alias.');
+        }
+
         $request->validate([
             'avatar' => 'required|image|max:2048',
         ]);
 
-        $user = Auth::user();
-
-        $filename = 'user_' . $user->id . '.' . $request->file('avatar')->extension();
+        $filename = 'user_' . $user->id . '_' . $user->username . '.' . $request->file('avatar')->extension();
         $path = $request->file('avatar')->store('avatars', 'public', $filename);
 
         $user->avatar_url = '/storage/' . $path;
@@ -85,39 +81,57 @@ class ProfileController extends Controller
         return back()->with('success', 'Đã cập nhật avatar thành công.');
     }
 
-    public function editAlias()
+    public function editAlias(User $user)
     {
-        return view('profile.edit-alias', [
-            'user' => Auth::user(),
-        ]);
+        return view('profile.edit-alias', compact('user'));
     }
 
-    public function updateAlias(Request $request)
+    public function updateAlias(Request $request, User $user)
     {
+        // Nếu user không có quyền 'edit_users'
+        if (!auth()->user()->can('edit_users')) {
+            // Và cố gắng sửa alias user khác (không phải chính mình)
+            if ($user->id !== auth()->id()) {
+                abort(403, 'Bạn không được phép sửa alias của người khác.');
+            }
+            abort(403, 'Bạn không có quyền sửa alias.');
+        }
+
+        // Validate dữ liệu
         $request->validate([
             'alias' => 'required|string|max:255',
         ]);
 
-        $user = Auth::user();
+        // Cập nhật alias
         $user->alias = $request->alias;
         $user->save();
 
-        return back()->with('success', 'Đã cập nhật tên hiển thị thành công.');
+        // Redirect với thông báo thành công
+        return redirect()->route('profile.edit-alias', $user->id)
+            ->with('success', 'Đã cập nhật tên hiển thị thành công.');
     }
 
-    public function editPassword()
+    public function editPassword(User $user)
     {
-        return view('profile.edit-password');
+        return view('profile.edit-password', compact('user'));
     }
 
-    public function updatePassword(Request $request)
+    public function updatePassword(Request $request, User $user)
     {
+        // Nếu user không có quyền 'edit_users'
+        if (!auth()->user()->can('edit_users_password')) {
+            // Và cố gắng sửa alias user khác (không phải chính mình)
+            if ($user->id !== auth()->id()) {
+                abort(403, 'Bạn không được phép sửa alias của người khác.');
+            }
+            abort(403, 'Bạn không có quyền sửa alias.');
+        }
+
         $request->validate([
             'current_password' => ['required', 'current_password'],
-            'password' => ['required', 'confirmed', Password::defaults()],
+            'password' => ['required', 'confirmed', 'min:6', Password::defaults()],
         ]);
 
-        $user = Auth::user();
         $user->password = Hash::make($request->password);
         $user->save();
 

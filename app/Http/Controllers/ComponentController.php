@@ -13,7 +13,7 @@ class ComponentController extends Controller
 {
     public function index()
     {
-        $components = Component::orderBy('updated_at', 'desc')->get();
+        $components = Component::orderBy('updated_at', 'desc')->paginate(20);
         return view('components.index', compact('components'));
     }
 

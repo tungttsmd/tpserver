@@ -31,9 +31,8 @@ return [
     |
     */
 
-    'lifetime' => env('SESSION_LIFETIME', 120),
-
-    'expire_on_close' => false,
+    'lifetime' => 120, // phút
+    'expire_on_close' => false, // giữ session khi đóng trình duyệt
 
     /*
     |--------------------------------------------------------------------------
@@ -128,7 +127,7 @@ return [
 
     'cookie' => env(
         'SESSION_COOKIE',
-        Str::slug(env('APP_NAME', 'laravel'), '_').'_session'
+        Str::slug(env('APP_NAME', 'laravel'), '_') . '_session'
     ),
 
     /*

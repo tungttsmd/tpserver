@@ -9,7 +9,7 @@
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif
 
-    <form action="{{ route('profile.update-avatar') }}" method="POST" enctype="multipart/form-data" class="bg-light p-4 rounded shadow-sm">
+    <form action="{{ route('profile.update-avatar', $user->id) }}" method="POST" enctype="multipart/form-data" class="bg-light p-4 rounded shadow-sm">
         @csrf
         @method('PUT')
 
@@ -20,7 +20,7 @@
 
         <div class="text-end">
             <button type="submit" class="btn btn-primary">Cập nhật ảnh</button>
-            <a href="{{ route('users.show', auth()->id()) }}" class="btn btn-secondary ms-2">Quay lại</a>
+            <a href="{{ route('users.show', $user->id) }}" class="btn btn-secondary ms-2">Quay lại</a>
         </div>
     </form>
 </div>

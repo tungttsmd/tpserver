@@ -9,17 +9,44 @@
     <!-- Sidebar -->
     <div class="sidebar">
         <!-- Sidebar user panel (optional) -->
-        <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-            <div class="image">
-                <img src="{{ asset(auth()->user()->avatar_url) }}" class="img-circle elevation-2 object-cover"
-                    alt="User Image" style="width: 60px; height: 60px; object-fit: cover;">
+        <div class="user-panel mt-3 pb-3 mb-1 d-flex align-items-start">
+            <div class="image me-3" style="position: relative">
+                <a href="{{ route('users.show', auth()->user()->id) }}">
+                    @php
+                        $mainRole = Str::slug(auth()->user()->getRoleNames()->first() ?? 'user');
+                    @endphp
+
+                    <img src="{{ asset(auth()->user()->avatar_url) }}"
+                        onerror="this.onerror=null;this.src='https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png';"
+                        class="img-circle elevation-2 object-cover user-avatar border-role-{{ $mainRole }}"
+                        alt="User Image" style="width: 60px; height: 60px; object-fit: cover;">
+
+                </a>
+                <div class="user-roles"
+                    style="position: absolute; bottom: -10px; display: flex; width: 100%; justify-content: center;">
+                    @foreach (auth()->user()->getRoleNames() as $role)
+                        <span class="role-badge role-{{ Str::slug($role) }}">{{ $role }}</span>
+                    @endforeach
                 </div>
+            </div>
+
             <div class="info">
-                <a href="#" class="d-block">{{ auth()->user()->alias }}</a>
-                <a href="#" class="d-block">{{ auth()->user()->username }}
-                    ({{ auth()->user()->getRoleNames()->implode(', ') }})</a>
+                <a href="{{ route('users.show', auth()->user()->id) }}" class="user-alias d-block mb-1 fw-bold">
+                    <b>{{ auth()->user()->alias }}</b>
+                </a>
+
+                <div class="user-username mb-1" style="font-style: italic; font-size: 0.9rem;">
+                    <a href="{{ route('users.show', auth()->user()->id) }}"
+                        style="text-decoration: none; color: inherit;">
+                        {{ '@' . auth()->user()->username }}
+                    </a>
+                </div>
+
+
             </div>
         </div>
+
+
 
         <!-- SidebarSearch Form -->
         <div class="form-inline">
@@ -201,3 +228,78 @@
     </div>
     <!-- /.sidebar -->
 </aside>
+
+
+<style>
+    .user-panel {
+        padding: 12px 0;
+        max-width: 350px;
+    }
+
+    .user-panel:hover {
+        background-color: lightsteelblue transparent !important;
+        transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        cursor: pointer;
+    }
+
+    .role-badge {
+        display: inline-block;
+        padding: 2px 10px;
+        border-radius: 12px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: #fff;
+        margin: 0 4px;
+        text-transform: capitalize;
+    }
+
+    /* Role-specific colors */
+    .role-admin {
+        background-color: #dc3545;
+        /* red */
+    }
+
+    .role-manager {
+        background-color: #ffc107;
+        /* yellow */
+        color: #212529;
+    }
+
+    .role-user {
+        background-color: #17a2b8;
+        /* blue */
+    }
+
+    .user-avatar {
+        border-radius: 50%;
+        border: 4px solid transparent;
+        transition: border-color 0.3s ease;
+    }
+
+    /* Border theo role */
+    .border-role-admin {
+        border-color: #dc3545;
+        /* đỏ */
+    }
+
+    .border-role-manager {
+        border-color: #ffc107;
+        /* vàng */
+    }
+
+    .border-role-user {
+        border-color: #17a2b8;
+        /* xanh */
+    }
+
+    .user-alias:hover,
+    .user-username a:hover {
+        color: #0d6efd;
+        text-decoration: underline;
+    }
+
+    .user-username {
+        color: #c2c7d0;
+
+    }
+</style>
