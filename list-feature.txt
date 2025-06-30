@@ -1,0 +1,109 @@
+2️⃣ Quản lý đăng nhập & phân quyền
+Có hệ thống user:
+
+Admin (toàn quyền)
+
+Quản lý kho (nhập xuất linh kiện)
+
+Nhân viên (chỉ xem, không được sửa xóa)
+
+Mỗi lần đăng nhập đều được log lại
+
+Quản lý user (chỉ admin được thêm/sửa user)
+
+2️⃣ Quản lý linh kiện (serial)
+OK Thêm linh kiện mới:
++ Thêm ngày nhập hàng
++ Nhập từ ai (có thể là location)
++ Bảo hành bao lâu
++ Serial Number bên cạnh có nút ramdom mã là TPSERVER...
+
+
+OK Serial (quét QR code hoặc nhập tay)
+
+OK Loại linh kiện
+
+OK Mô tả
+
+OK Vị trí kho
+
+OK Trạng thái (Còn hàng, Đã xuất, Lỗi,...)
+
+OK Kiểm tra trùng serial khi nhập
+
+OK Sửa thông tin linh kiện
+
+Tìm kiếm nhanh serial hoặc loại linh kiện
+
+3️⃣ Chức năng xuất kho
+OK Xuất linh kiện nhanh:
+
+OK Thay đổi trạng thái từ "Còn hàng" → "Đã xuất"
+
+OK Ghi log ai là người thực hiện xuất kho
+
+OK Ghi chú lý do xuất kho
+
+4️⃣ Lịch sử thao tác (Logs)
+OK Ghi lại toàn bộ:
+
+OK Ai thêm
+
+OK Ai xuất
+
+OK Ai sửa thông tin
+
+OK Thời gian thao tác
+
+OK Ghi chú kèm theo
+
+OK Hiển thị lịch sử đầy đủ, dễ kiểm tra khi audit
+
+5️⃣ Xuất file Excel
+OK Export danh sách toàn bộ linh kiện ra file .xlsx
+
+Export lịch sử log thao tác ra file .xlsx
+
+Dễ dàng sao lưu dữ liệu nội bộ
+
+6️⃣ Tạo & in QR Code
+Khi thêm linh kiện mới → tự động sinh QR code chứa serial
+
+Có trang in QR code:
+
+In từng mã
+
+In hàng loạt các linh kiện mới
+
+Hỗ trợ máy in QR code cầm tay dán trực tiếp lên linh kiện
+
+7️⃣ Thống kê kho
+Hiển thị:
+
+Tổng số linh kiện
+
+Số lượng còn hàng
+
+Số lượng đã xuất
+
+Thống kê nhanh theo loại linh kiện
+
+Hỗ trợ quản lý nhanh tình hình kho
+
+8️⃣ Giao diện đẹp, dễ dùng (Bootstrap 5 chuẩn)
+Giao diện gọn gàng, mượt mà
+
+Responsive: chạy mượt trên cả điện thoại, tablet, PC
+
+Tối ưu form nhập liệu nhanh chóng
+
+Dễ vận hành, phù hợp vận hành nội bộ quy mô vừa & lớn
+
+9️⃣ Bảo mật cơ bản
+Mã hóa mật khẩu user (SHA256)
+
+Quản lý session đăng nhập
+
+Chống nhập trùng serial
+
+Kiểm soát phân quyền rõ ràng
