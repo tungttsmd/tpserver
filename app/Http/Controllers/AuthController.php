@@ -26,7 +26,7 @@ class AuthController extends Controller
             Log::create([
                 'action' => 'Đăng nhập',
                 'user' => Auth::user()->username ?? 'unknown',
-                'note' => 'Người dùng [' . Auth::user()->role . '] ' . Auth::user()->username . ' đã đăng nhập.'
+                'note' => 'Người dùng ' . Auth::user()->username . ' đã đăng nhập.'
             ]);
             $request->session()->regenerate();
             return redirect()->intended('index');
@@ -47,7 +47,7 @@ class AuthController extends Controller
         Log::create([
             'action' => 'Đăng xuất',
             'user' => Auth::user()->username ?? 'unknown',
-            'note' => 'Người dùng [' . Auth::user()->role . '] ' . Auth::user()->username . ' đã đăng xuất.'
+            'note' => 'Người dùng ' . Auth::user()->username . ' đã đăng xuất.'
         ]);
         Auth::logout();
         return redirect('/');

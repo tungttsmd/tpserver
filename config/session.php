@@ -18,7 +18,7 @@ return [
     |
     */
 
-    'driver' => env('SESSION_DRIVER', 'file'),
+    'driver' => env('SESSION_DRIVER', 'database'),
 
     /*
     |--------------------------------------------------------------------------
@@ -32,7 +32,7 @@ return [
     */
 
     'lifetime' => 120, // phút
-    'expire_on_close' => false, // giữ session khi đóng trình duyệt
+    'expire_on_close' => true, // không giữ session khi đóng trình duyệt
 
     /*
     |--------------------------------------------------------------------------

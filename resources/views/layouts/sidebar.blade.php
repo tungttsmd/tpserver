@@ -135,14 +135,25 @@
                 </li>
                 <li class="nav-item">
                     <a href="{{ route('roles.index') }}" class="nav-link">
-                        <i class="far fa-circle nav-icon"></i>
+                        <i class="fas fa-user-tag nav-icon"></i>
                         <p>Quản lý phân quyền</p>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a href="{{ route('users.index') }}" class="nav-link">
-                        <i class="far fa-circle nav-icon"></i>
+                        <i class="fas fa-user-friends nav-icon"></i>
                         <p>Quản lý người dùng</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('static.index') }}" class="nav-link">
+                        <i class="fas fa-chart-bar nav-icon"></i>
+                        <p>Thống kê linh kiện</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('logs.download') }}" class="nav-link">
+<i class="fas fa-clipboard-list nav-icon"></i>                        <p>Tải xuống nhật ký</p>
                     </a>
                 </li>
                 <ul class="nav nav-treeview">

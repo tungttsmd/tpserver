@@ -37,8 +37,12 @@ class PermissionSeeder extends Seeder
             ]);
         }
         // 3. Lên list các role và permissions đi theo
-        $rolesHasPermissions = [
-            'admin' => [
+        $permissionGroups = [
+            'view_components' => [
+                'view_components',
+                'detail_components',
+            ],
+            'control_components' => [
                 'view_components',
                 'detail_components',
                 'create_components',
@@ -47,18 +51,35 @@ class PermissionSeeder extends Seeder
                 'export_components',
                 'recall_components',
                 'download_components',
+            ],
+            'control_users' => [
                 'view_users',
                 'edit_users',
                 'edit_users_password',
+            ],
+            'control_roles' => [
                 'view_roles',
                 'detail_roles',
-                'edit_roles',
-            ],
-            'user' => [
-                'view_components',
-                'detail_components',
-                'download_components',
-            ],
+                'edit_roles'
+            ]
+        ];
+
+        $rolesHasPermissions = [
+            'admin' => array_merge(
+                $permissionGroups['control_components'],
+                $permissionGroups['control_users'],
+                $permissionGroups['control_roles'],
+            ),
+            'manager' => array_merge(
+                $permissionGroups['control_components'],
+                $permissionGroups['control_users'],
+            ),
+            'storekeeper' => array_merge(
+                $permissionGroups['control_components'],
+            ),
+            'user' => array_merge(
+                $permissionGroups['view_components'],
+            ),
             // thêm role khác nếu cần
         ];
 

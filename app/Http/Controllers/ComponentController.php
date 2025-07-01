@@ -39,7 +39,7 @@ class ComponentController extends Controller
         if (in_array($sort, $allowedSorts)) {
             $query->orderBy($sort, $dir);
         }
-        
+
         $perPage = $request->input('perPage', 20); // mặc định 20
         $components = $query->paginate($perPage)->withQueryString();
 

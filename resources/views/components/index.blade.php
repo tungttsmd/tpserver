@@ -6,7 +6,7 @@
         {{-- Bộ lọc --}}
         <form method="GET" action="{{ route('components.index') }}" class="mb-4">
             <div class="row g-3 align-items-end" style="gap: 20px">
-                <div class="card-body card mb-0">
+                <div class="mt-4 card-body card mb-0">
                     <div class="row align-items-center g-2">
                         {{-- Nút lọc --}}
                         <div class="col-md-4 d-flex flex-row gap" style="gap: 20px">
@@ -26,7 +26,7 @@
 
                     </div>
                 </div>
-                <div class="card-body d-flex flex-row card mb-0">
+                <div class="mt-4 card-body d-flex flex-row card mb-0">
                     {{-- Phân loại --}}
                     <div class="col-md-3 d-flex flex-column">
                         <label class="form-label fw-semibold">Phân loại</label>

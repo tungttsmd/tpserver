@@ -8,6 +8,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LogController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\StaticController;
 use App\Http\Controllers\UserController;
 
 // // // Mật khẩu bạn muốn mã hóa
@@ -74,6 +75,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/components/{component}/edit', [ComponentController::class, 'edit'])->name('components.edit');
     Route::put('/components/{component}', [ComponentController::class, 'update'])->name('components.update');
     Route::delete('/components/{component}', [ComponentController::class, 'destroy'])->name('components.destroy');
+
+    // 10. Route Thống kê
+    Route::get('/static', [StaticController::class, 'index'])->name('static.index');
+
+    // 11. Route Tải về danh sách linh kiện
+    Route::get('/logs/download', [LogController::class, 'download'])->name('logs.download');
 });
 
 // Route kiểm tra kết nối database (system)

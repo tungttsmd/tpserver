@@ -62,7 +62,7 @@ OK Hiển thị lịch sử đầy đủ, dễ kiểm tra khi audit
 5️⃣ Xuất file Excel
 OK Export danh sách toàn bộ linh kiện ra file .xlsx
 
-Export lịch sử log thao tác ra file .xlsx
+Ok Export lịch sử log thao tác ra file .xlsx
 
 Dễ dàng sao lưu dữ liệu nội bộ
 
@@ -80,15 +80,15 @@ Hỗ trợ máy in QR code cầm tay dán trực tiếp lên linh kiện
 7️⃣ Thống kê kho
 Hiển thị:
 
-Tổng số linh kiện
+OK Tổng số linh kiện
 
-Số lượng còn hàng
+OK Số lượng còn hàng
 
-Số lượng đã xuất
+OK Số lượng đã xuất
 
-Thống kê nhanh theo loại linh kiện
+OK Thống kê nhanh theo loại linh kiện
 
-Hỗ trợ quản lý nhanh tình hình kho
+OK Hỗ trợ quản lý nhanh tình hình kho
 
 8️⃣ Giao diện đẹp, dễ dùng (Bootstrap 5 chuẩn)
 Giao diện gọn gàng, mượt mà
@@ -100,10 +100,13 @@ Tối ưu form nhập liệu nhanh chóng
 Dễ vận hành, phù hợp vận hành nội bộ quy mô vừa & lớn
 
 9️⃣ Bảo mật cơ bản
-Mã hóa mật khẩu user (SHA256)
+OK Mã hóa mật khẩu user (SHA256) (Không an toàn bằng Brypt của laravel)
 
 Quản lý session đăng nhập
 
-Chống nhập trùng serial
+OK Chống nhập trùng serial - Đoạn validation
 
-Kiểm soát phân quyền rõ ràng
+OK Kiểm soát phân quyền rõ ràng
+
+
+10. THÊM BẢNG trung gian về nội dung xuất - nhập kho.
