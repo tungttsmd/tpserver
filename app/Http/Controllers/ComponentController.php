@@ -11,12 +11,40 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class ComponentController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $components = Component::orderBy('updated_at', 'desc')->paginate(20);
+        $query = Component::query();
+
+        if ($search = $request->input('search')) {
+            $query->where(function ($q) use ($search) {
+                $q->where('serial_number', 'like', "%$search%")
+                    ->orWhere('description', 'like', "%$search%");
+            });
+        }
+
+        if ($status = $request->input('status')) {
+            $query->where('status', $status);
+        }
+
+        if ($category = $request->input('category')) {
+            $query->where('category', $category);
+        }
+
+
+        // SORT
+        $sort = $request->input('sort', 'id');
+        $dir = $request->input('dir', 'desc');
+        $allowedSorts = ['category', 'serial_number', 'condition', 'location', 'status', 'id']; // tránh SQL Injection
+
+        if (in_array($sort, $allowedSorts)) {
+            $query->orderBy($sort, $dir);
+        }
+        
+        $perPage = $request->input('perPage', 20); // mặc định 20
+        $components = $query->paginate($perPage)->withQueryString();
+
         return view('components.index', compact('components'));
     }
-
     public function create()
     {
         return view('components.create');

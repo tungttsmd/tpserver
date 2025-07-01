@@ -5,10 +5,16 @@
             <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
         </li>
         <li class="nav-item d-none d-sm-inline-block">
-            <a href="index3.html" class="nav-link">Home</a>
-        </li>
-        <li class="nav-item d-none d-sm-inline-block">
-            <a href="#" class="nav-link">Contact</a>
+            <div class="content-header  border-bottom borde p-0">
+                <div class="container-fluid p-0"style="width: 100%">
+                    <div class="d-flex justify-content-between p-0 align-items-center">
+                        <h2 class="h3 fw-bold mb-0 p-0" style="color: #4b6cb7"><b>
+                                @yield('title', 'Trang không tên')
+                            </b>
+                        </h2>
+                    </div>
+                </div>
+            </div>
         </li>
     </ul>
 
@@ -36,6 +42,7 @@
                 </form>
             </div>
         </li>
+
 
         <!-- Messages Dropdown Menu -->
         <li class="nav-item dropdown">

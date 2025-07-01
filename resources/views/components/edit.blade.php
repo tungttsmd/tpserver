@@ -6,7 +6,7 @@
             <div class="col-lg-8 col-md-10">
                 <div class="card shadow-lg rounded-4">
                     <div class="card-header bg-main text-white text-center rounded-top-4">
-                        <h4 class="mb-0"><i class="fas fa-edit mr-2"></i> Cập nhật thông tin linh kiện</h4>
+                        <h4 class="mb-0"><i class="fas fa-edit me-2"></i> Cập nhật thông tin linh kiện</h4>
                     </div>
 
                     <div class="card-body bg-light-subtle">
@@ -83,7 +83,7 @@
                                     <div class="input-group">
                                         <span class="input-group-text"><i class="{{ $field['icon'] }}"></i></span>
 
-                                        @if (isset($field['type']) && $field['type'] === 'select')
+                                        @if ($field['type'] === 'select')
                                             <select name="{{ $field['name'] }}" id="{{ $field['name'] }}"
                                                 class="form-control input-hover" required>
                                                 <option value="">-- Chọn {{ strtolower($field['label']) }} --</option>
@@ -95,7 +95,7 @@
                                                 @endforeach
                                             </select>
                                         @else
-                                            <input type="text" name="{{ $field['name'] }}" id="{{ $field['name'] }}"
+                                            <input type="{{ $field['type'] }}" name="{{ $field['name'] }}" id="{{ $field['name'] }}"
                                                 class="form-control input-hover"
                                                 value="{{ old($field['name'], $component->{$field['name']}) }}"
                                                 placeholder="{{ $field['placeholder'] ?? '' }}" required>
@@ -114,9 +114,9 @@
                                 <button type="submit" class="btn bg-main text-white btn-hover">
                                     <i class="fas fa-save me-2"></i> Lưu thay đổi
                                 </button>
-                                <button type="button" class="btn btn-secondary" onclick="history.back()">
+                                <a href="{{ route('components.index') }}" class="btn btn-secondary">
                                     <i class="fas fa-arrow-left me-1"></i> Quay lại
-                                </button>
+                                </a>
                             </div>
                         </form>
 
@@ -148,7 +148,7 @@
         }
 
         .bg-main {
-            background-color: #ffc107 !important
+            background-color: #ffc107 !important;
         }
     </style>
 @endsection

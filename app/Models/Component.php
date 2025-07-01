@@ -11,4 +11,5 @@ class Component extends Model
 {
     use HasRoles, HasPermissions, HasFactory;
     protected $fillable = ['serial_number', 'category', 'location', 'condition', 'status', 'description', 'exported_at'];
+    
 }

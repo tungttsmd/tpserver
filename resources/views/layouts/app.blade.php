@@ -8,11 +8,6 @@
 
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
-    <!-- Content Header (Page header) -->
-    @include ('layouts.header')
-
-    <!-- /.content-header -->
-
     <!-- Main content -->
     <div class="content">
         @yield('content')

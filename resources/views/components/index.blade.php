@@ -1,100 +1,162 @@
 @extends('layouts.app')
-
+@section('title',"Quản lý linh kiện")
 @section('content')
-    <div class="container py-4">
-        <!-- Tìm kiếm -->
-        <div class="mb-3">
-            <div class="input-group shadow-sm">
-                <span class="input-group-text bg-white">
-                    <i class="fas fa-search text-muted"></i>
-                </span>
-                <input type="text" id="searchInput" class="form-control" placeholder="Tìm kiếm linh kiện...">
-            </div>
-        </div>
+    <div class="container ">
 
-        @if (session('success'))
-            <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
-                <i class="fas fa-trash-alt mr-2"></i>
-                {{ session('success') }}
-            </div>
-        @elseif (session('error'))
-            <div class="alert alert-warning alert-dismissible fade show mt-3" role="alert">
-                <i class="fas fa-minus-circle mr-2"></i> {{ session('error') }}
-            </div>
-        @endif
+        {{-- Bộ lọc --}}
+        <form method="GET" action="{{ route('components.index') }}" class="mb-4">
+            <div class="row g-3 align-items-end" style="gap: 20px">
+                <div class="card-body card mb-0">
+                    <div class="row align-items-center g-2">
+                        {{-- Nút lọc --}}
+                        <div class="col-md-4 d-flex flex-row gap" style="gap: 20px">
+                            {{-- Nút reset --}}
+                            <a href="{{ route('components.index') }}" class="btn btn-danger w-100">
+                                <i class="fas fa-undo me-1"></i>
+                            </a><button type="submit" class="btn w-100 text-white" style="background-color:#4b6cb7">
+                                <i class="fas fa-search text-white"></i>
+                            </button>
+                        </div>
+                        {{-- Ô tìm kiếm --}}
+                        <div class="col-md-8 d-flex align-items-center">
+                            <input type="text" name="search" class="form-control shadow-sm flex-grow-1"
+                                value="{{ request('search') }}" placeholder="Tìm kiếm Serial hoặc Mô tả.">
+                        </div>
 
 
-        <!-- Bảng dữ liệu -->
-        <div class="table-responsive rounded shadow-sm">
-            <table
-                class="fixed-table table table-bordered text-center align-middle bg-primary-subtle text-dark rounded custom-table">
+                    </div>
+                </div>
+                <div class="card-body d-flex flex-row card mb-0">
+                    {{-- Phân loại --}}
+                    <div class="col-md-3 d-flex flex-column">
+                        <label class="form-label fw-semibold">Phân loại</label>
+                        <select name="category" class="form-select shadow-sm">
+                            <option value="">Tất cả</option>
+                            @foreach (['RAM', 'Chip', 'VGA', 'Main', 'Nguồn', 'Quạt', 'Khác'] as $cat)
+                                <option value="{{ $cat }}" {{ request('category') == $cat ? 'selected' : '' }}>
+                                    {{ $cat }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    {{-- Tình trạng --}}
+                    <div class="col-md-3 d-flex flex-column">
+                        <label class="form-label fw-semibold">Tình trạng</label>
+                        <select name="condition" class="form-select shadow-sm">
+                            <option value="">Tất cả</option>
+                            @foreach (['Mới', 'Cũ', 'Hư'] as $cond)
+                                <option value="{{ $cond }}" {{ request('condition') == $cond ? 'selected' : '' }}>
+                                    {{ $cond }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    {{-- Trạng thái --}}
+                    <div class="col-md-3 d-flex flex-column">
+                        <label class="form-label fw-semibold">Trạng thái</label>
+                        <select name="status" class="form-select shadow-sm">
+                            <option value="">Tất cả</option>
+                            @foreach (['Sẵn kho', 'Đã xuất'] as $status)
+                                <option value="{{ $status }}" {{ request('status') == $status ? 'selected' : '' }}>
+                                    {{ $status }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    {{-- Số dòng/trang --}}
+                    <div class="col-md-3 d-flex flex-column">
+                        <label class="form-label fw-semibold">Hiển thị</label>
+                        <select name="perPage" class="form-select shadow-sm">
+                            @foreach ([20, 50, 80, 100, 200] as $size)
+                                <option value="{{ $size }}"
+                                    {{ request('perPage', 20) == $size ? 'selected' : '' }}>
+                                    {{ $size }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+
+
+
+            </div>
+        </form>
+
+        {{-- Thông báo --}}
+        @foreach (['success' => 'danger', 'error' => 'warning'] as $type => $alert)
+            @if (session($type))
+                <div class="alert alert-{{ $alert }} alert-dismissible fade show mt-3" role="alert">
+                    <i class="fas {{ $type === 'success' ? 'fa-trash-alt' : 'fa-minus-circle' }} me-2"></i>
+                    {{ session($type) }}
+                </div>
+            @endif
+        @endforeach
+
+        {{-- Bảng dữ liệu --}}
+        @php
+            $currentSort = request('sort', 'id');
+            $currentDir = request('dir', 'desc');
+            function sortHeader($label, $column)
+            {
+                $currentSort = request('sort', 'id');
+                $currentDir = request('dir', 'desc');
+                $newDir = $currentSort === $column && $currentDir === 'asc' ? 'desc' : 'asc';
+                $icon =
+                    $currentSort === $column ? 'fa-sort-amount-' . ($currentDir === 'asc' ? 'up' : 'down') : 'fa-sort';
+                $url = route('components.index', array_merge(request()->all(), ['sort' => $column, 'dir' => $newDir]));
+                return "<a href='{$url}' class='text-white text-decoration-none'>{$label} <i class='fas {$icon} ms-1'></i></a>";
+            }
+        @endphp
+
+        <div class="table-responsive shadow-sm rounded" style="max-height: 65vh; overflow-y: auto;">
+            <table class="table table-bordered text-center align-middle custom-table" style="min-width: 1100px;">
                 <thead class="bg-primary text-white">
                     <tr>
-                        <th class="sortable" data-column="1" style="width: 15%">Phân loại <i class="fas fa-sort ms-1"></i>
-                        <th class="sortable" data-column="2" style="width: 15%">Mã Serial <i class="fas fa-sort ms-1"></i>
-                        </th>
-                        </th>
-                        <th class="sortable" data-column="3" style="width: 15%">Tình trạng <i class="fas fa-sort ms-1"></i>
-                        </th>
-                        <th class="sortable" data-column="4" style="width: 10%">Địa chỉ <i class="fas fa-sort ms-1"></i>
-                        </th>
-                        <th class="sortable" data-column="5" style="width: 20%">Mô tả <i class="fas fa-sort ms-1"></i></th>
-                        </th>
-                        <th class="sortable" data-column="6" style="width: 10%">Trạng thái</th>
-                        <th style="width: 30%">Hành động</th>
+                        <th>{!! sortHeader('Phân loại', 'category') !!}</th>
+                        <th>{!! sortHeader('Mã Serial', 'serial_number') !!}</th>
+                        <th>{!! sortHeader('Tình trạng', 'condition') !!}</th>
+                        <th>{!! sortHeader('Địa chỉ', 'location') !!}</th>
+                        <th>{!! sortHeader('Mô tả', 'description') !!}</th>
+                        <th>{!! sortHeader('Trạng thái', 'status') !!}</th>
+                        <th>Hành động</th>
                     </tr>
                 </thead>
-                <tbody id="componentTable">
+                <tbody>
                     @foreach ($components as $component)
                         <tr>
-                            <td class="text-left">{{ $component->category }}</td>
-                            <td class="text-left">{{ $component->serial_number }}</td>
-                            <td class="text-left">
-                                <span class="badge bg-primary">
-                                    {{ $component->condition }}
-                                </span>
+                            <td class="text-start">{{ $component->category }}</td>
+                            <td class="text-start">{{ $component->serial_number }}</td>
+                            <td class="text-start"><span class="badge bg-primary">{{ $component->condition }}</span></td>
+                            <td class="text-start">{{ $component->location }}</td>
+                            <td class="text-start text-truncate" style="max-width: 200px;">{{ $component->description }}
                             </td>
-                            <td class="text-left">{{ $component->location }}</td>
-                            <td class="text-left"
-                                style="max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                                {{ $component->description }}
+                            <td class="text-start {{ $component->status === 'Sẵn kho' ? 'text-success' : 'text-danger' }}">
+                                {{ $component->status }}
                             </td>
-                            @if ($component->status === 'Sẵn kho')
-                                <td class="text-left text-success">{{ $component->status }}</td>
-                            @else
-                                <td class="text-left text-danger">{{ $component->status }}</td>
-                            @endif
-
-                            </td>
-
                             <td>
                                 @if ($component->status === 'Sẵn kho')
-                                    <a href="{{ route('components.exportConfirm', $component->id) }}" <a type="submit"
-                                        class="btn btn-sm btn-success">
-                                        <i class="far fa-minus-square mr-2"></i>
-                                        <span>Xuất kho</span>
+                                    <a href="{{ route('components.exportConfirm', $component->id) }}"
+                                        class="btn btn-sm btn-success mb-1">
+                                        <i class="far fa-minus-square me-1"></i> Xuất kho
                                     </a>
                                 @else
-                                    <button type="submit" class="btn btn-sm btn-danger">
-                                        <i class="fas fa-minus-circle mr-2"></i>
-                                        <span>Đã xuất</span>
+                                    <button class="btn btn-sm btn-danger mb-1" disabled>
+                                        <i class="fas fa-minus-circle me-1"></i> Đã xuất
                                     </button>
                                 @endif
-                                <a href="{{ route('components.show', $component->id) }}" class="btn btn-sm btn-info me-1">
+                                <a href="{{ route('components.show', $component->id) }}" class="btn btn-sm btn-info mb-1">
                                     <i class="fas fa-eye"></i>
                                 </a>
-
                                 <a href="{{ route('components.edit', $component->id) }}"
-                                    class="btn btn-sm btn-warning me-1">
+                                    class="btn btn-sm btn-warning mb-1">
                                     <i class="fas fa-edit"></i>
                                 </a>
-
                                 <form action="{{ route('components.destroy', $component->id) }}" method="POST"
                                     class="d-inline"
-                                    onsubmit="return confirm('Bạn có chắc chắn muốn xoá [{{ $component->serial_number }}] ?');">
+                                    onsubmit="return confirm('Bạn có chắc chắn muốn xoá [{{ $component->serial_number }}]?');">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-danger">
+                                    <button type="submit" class="btn btn-sm btn-danger mb-1">
                                         <i class="fas fa-trash-alt"></i>
                                     </button>
                                 </form>
@@ -104,110 +166,34 @@
                 </tbody>
             </table>
         </div>
-    </div>
-  
 
-    <!-- CSS -->
+        <div class="mt-3 d-flex justify-content-center">
+            {{ $components->links() }}
+        </div>
+    </div>
+
+    {{-- Style --}}
     <style>
-        .sortable {
-            cursor: pointer;
-            user-select: none;
+        .custom-table th {
+            position: sticky;
+            top: 0;
+            background-color: #4b6cb7 !important;
+            z-index: 2;
         }
 
         .custom-table td,
         .custom-table th {
             vertical-align: middle;
-            background-color: #f0f4ff !important;
-            /* Giữ nền nhạt xanh-tím */
+            white-space: nowrap;
         }
 
         .custom-table tr:hover td {
             background-color: #f0f4ff !important;
-            /* Không đổi màu khi hover */
         }
 
-        .custom-table thead th {
-            background-color: #4b6cb7 !important;
-            /* Màu tím xanh đậm */
-            color: white !important;
-        }
-
-        .fixed-table {
-            table-layout: fixed;
-            width: 100%;
-            margin-bottom: 0 !important;
-
-        }
-
-        .fixed-table th,
-        .fixed-table td {
-            white-space: nowrap;
+        .text-truncate {
             overflow: hidden;
             text-overflow: ellipsis;
         }
-
-        .table thead tr:hover th {
-            background-color: inherit !important;
-        }
-
-        .table tbody tr:hover td {
-            background-color: #e8f0ff !important;
-        }
     </style>
-
-    <!-- JS tìm kiếm + sắp xếp -->
-    <script>
-        const searchInput = document.getElementById('searchInput');
-        const tableBody = document.getElementById('componentTable');
-        const headers = document.querySelectorAll('th.sortable');
-        let sortDirection = {};
-
-        searchInput.addEventListener('keyup', function() {
-            const filter = this.value.toLowerCase();
-            const rows = tableBody.querySelectorAll('tr');
-
-            rows.forEach(row => {
-                const text = row.textContent.toLowerCase();
-                row.style.display = text.includes(filter) ? '' : 'none';
-            });
-        });
-
-        headers.forEach(header => {
-            header.addEventListener('click', function() {
-                const column = this.getAttribute('data-column');
-                const rowsArray = Array.from(tableBody.querySelectorAll('tr'));
-                sortDirection[column] = !sortDirection[column];
-
-                rowsArray.sort((a, b) => {
-                    const aText = a.children[column].textContent.trim().toLowerCase();
-                    const bText = b.children[column].textContent.trim().toLowerCase();
-
-                    if (!isNaN(Date.parse(aText)) && !isNaN(Date.parse(bText))) {
-                        return sortDirection[column] ?
-                            new Date(aText) - new Date(bText) :
-                            new Date(bText) - new Date(aText);
-                    } else if (!isNaN(aText) && !isNaN(bText)) {
-                        return sortDirection[column] ?
-                            aText - bText :
-                            bText - aText;
-                    } else {
-                        return sortDirection[column] ?
-                            aText.localeCompare(bText) :
-                            bText.localeCompare(aText);
-                    }
-                });
-
-                tableBody.innerHTML = '';
-                rowsArray.forEach(row => tableBody.appendChild(row));
-
-                headers.forEach(h => h.innerHTML = h.textContent.trim() +
-                    ' <i class="fas fa-sort ms-1"></i>');
-                this.innerHTML = this.textContent.trim() + (
-                    sortDirection[column] ?
-                    ' <i class="fas fa-sort-amount-up ms-1"></i>' :
-                    ' <i class="fas fa-sort-amount-down ms-1"></i>'
-                );
-            });
-        });
-    </script>
 @endsection
