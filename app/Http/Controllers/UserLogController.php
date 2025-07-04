@@ -2,16 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Exports\LogsExport;
-use App\Models\Log;
+use App\Exports\UserLogsExport;
+use App\Models\Component;
+use App\Models\UserLog;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 
-class LogController extends Controller
+class UserLogController extends Controller
 {
     public function index()
     {
-        $logs = Log::orderBy('created_at', 'desc')->get();
+        $logs = UserLog::orderBy('created_at', 'desc')->get();
         return view('logs.index', compact('logs'));
     }
     public function download(Request $request)
@@ -28,24 +29,13 @@ class LogController extends Controller
             default => \Maatwebsite\Excel\Excel::XLSX,
         };
 
-        return Excel::download(new LogsExport, $filename, $format);
+        return Excel::download(new UserLogsExport, $filename, $format);
     }
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         //
@@ -55,7 +45,6 @@ class LogController extends Controller
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
@@ -66,7 +55,6 @@ class LogController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
     public function edit($id)
     {
@@ -78,7 +66,6 @@ class LogController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
@@ -89,7 +76,6 @@ class LogController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {

@@ -6,6 +6,7 @@ use App\Exports\ComponentsExport;
 use Illuminate\Http\Request;
 use App\Models\Component;
 use App\Models\Log;
+use App\Models\UserLog;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -70,7 +71,7 @@ class ComponentController extends Controller
                 'description' => $request->description,
             ]);
 
-            Log::create([
+            UserLog::create([
                 'action' => 'Thêm mới',
                 'user' => Auth::user()->username ?? 'unknown',
                 'note' => Auth::user()->username . " đã thêm mới $request->category " . "[$request->serial_number]"
@@ -108,10 +109,10 @@ class ComponentController extends Controller
     {
         $validated = $request->validate([
             'serial_number' => 'required|string|max:255',
-            'category'      => 'required|string|max:255',
-            'location'      => 'required|string|max:255',
-            'condition'      => 'required|string|max:255',
-            'description'   => 'nullable|string',
+            'category' => 'required|string|max:255',
+            'location' => 'required|string|max:255',
+            'condition' => 'required|string|max:255',
+            'description' => 'nullable|string',
             // 'status'      => 'required|string|max:255',
         ]);
 
@@ -125,10 +126,10 @@ class ComponentController extends Controller
 
         $component->save();
 
-        Log::create([
+        UserLog::create([
             'action' => 'Cập nhật',
-            'user'   => Auth::user()->username ?? 'unknown',
-            'note'   => Auth::user()->username . " đã thay đổi thông tin $component->category [$component->serial_number]"
+            'user' => Auth::user()->username ?? 'unknown',
+            'note' => Auth::user()->username . " đã thay đổi thông tin $component->category [$component->serial_number]"
         ]);
 
         return redirect()
@@ -139,7 +140,7 @@ class ComponentController extends Controller
     public function destroy(Component $component)
     {
         $component->delete();
-        Log::create([
+        UserLog::create([
             'action' => 'Xoá dữ liệu',
             'user' => Auth::user()->username ?? 'unknown',
             'note' => Auth::user()->username . " đã xoá linh kiện $component->category [$component->serial_number]"
@@ -173,10 +174,10 @@ class ComponentController extends Controller
         $component->exported_at = now();
         $component->save();
 
-        Log::create([
+        UserLog::create([
             'action' => 'Xuất kho',
-            'user'   => Auth::user()->username ?? 'unknown',
-            'note'   => Auth::user()->username . " xác nhận xuất kho $component->category [$component->serial_number]"
+            'user' => Auth::user()->username ?? 'unknown',
+            'note' => Auth::user()->username . " xác nhận xuất kho $component->category [$component->serial_number]"
         ]);
 
         return redirect()->route('components.index')
@@ -202,10 +203,10 @@ class ComponentController extends Controller
         $component->updated_at = now();
         $component->save();
 
-        Log::create([
+        UserLog::create([
             'action' => 'Thu hồi',
-            'user'   => Auth::user()->username ?? 'unknown',
-            'note'   => Auth::user()->username . " xác nhận thu hồi $component->category [$component->serial_number]"
+            'user' => Auth::user()->username ?? 'unknown',
+            'note' => Auth::user()->username . " xác nhận thu hồi $component->category [$component->serial_number]"
         ]);
 
         return redirect()->route('components.index')
@@ -229,4 +230,31 @@ class ComponentController extends Controller
 
         return Excel::download(new ComponentsExport, $filename, $format);
     }
+
+    public function scan()
+    {
+        return view(view: 'components.scan');
+    }
+    public function scanpost(Request $request)
+    {
+        $request->validate([
+            'serial_number' => 'required|string|max:255',
+        ]);
+
+        $component = Component::where('serial_number', $request->input('serial_number'))->first();
+
+        if (!$component) {
+            return redirect()->back()->with('info', 'Không tìm thấy linh kiện có mã: ' . $request->input('serial_number'));
+        }
+
+        $link_qr = 'https://api.qrserver.com/v1/create-qr-code/?data=' . urlencode($component->serial_number);
+
+        $serial = $request->input('serial_number');
+
+        return view('components.show', [
+            'component' => $component,
+            'link_qr' => $link_qr,
+        ])->with('success', 'Thông tin linh kiện: ' . $serial);
+    }
+
 }

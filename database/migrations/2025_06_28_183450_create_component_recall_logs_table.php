@@ -13,8 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('recall_logs', function (Blueprint $table) {
+        Schema::create('component_recall_logs', function (Blueprint $table) {
             $table->id();
+            $table->string('user_id');
+            $table->string( 'serial_number');
+            $table->string( 'recall_reason');
             $table->timestamps();
         });
     }
@@ -26,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('recall_logs');
+        Schema::dropIfExists('component_recall_logs');
     }
 };

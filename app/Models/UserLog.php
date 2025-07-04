@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Spatie\Permission\Traits\HasPermissions;
 use Spatie\Permission\Traits\HasRoles;
 
-class Log extends Model
+class UserLog extends Model
 {
     use HasFactory, HasRoles, HasPermissions;
     protected $fillable = ['user', 'action', 'note'];

@@ -30,24 +30,22 @@
                 class="fixed-table table table-bordered text-center align-middle bg-primary-subtle text-dark rounded custom-table">
                 <thead class="bg-primary text-white">
                     <tr>
-                        <th class="sortable" data-column="1" style="width: 15%">Ngày xuất <i class="fas fa-sort ms-1"></i>
                         <th class="sortable" data-column="2" style="width: 15%">Phân loại <i class="fas fa-sort ms-1"></i>
                         <th class="sortable" data-column="3" style="width: 15%">Mã Serial <i class="fas fa-sort ms-1"></i>
                         </th>
                         </th>
                         <th class="sortable" data-column="4" style="width: 15%">Tình trạng <i class="fas fa-sort ms-1"></i>
                         </th>
-                        <th class="sortable" data-column="5" style="width: 10%">Địa chỉ <i class="fas fa-sort ms-1"></i>
+                        <th class="sortable" data-column="5" style="width: 10%">Vị trí <i class="fas fa-sort ms-1"></i>
                         </th>
-                        <th class="sortable" data-column="6" style="width: 20%">Mô tả <i class="fas fa-sort ms-1"></i></th>
-                        </th>
+                        <th class="sortable" data-column="1" style="width: 15%">Ngày xuất <i class="fas fa-sort ms-1"></i>
+
                         <th style="width: 15%">Thu hồi</th>
                     </tr>
                 </thead>
                 <tbody id="componentTable">
                     @foreach ($components as $component)
                         <tr>
-                            <td class="text-left">{{ $component->exported_at }}</td>
                             <td class="text-left">{{ $component->category }}</td>
                             <td class="text-left">{{ $component->serial_number }}</td>
                             <td class="text-left">
@@ -56,10 +54,8 @@
                                 </span>
                             </td>
                             <td class="text-left">{{ $component->location }}</td>
-                            <td class="text-left"
-                                style="max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                                {{ $component->description }}
-                            </td>
+                            <td class="text-left">{{ $component->exported_at }}</td>
+
                             <td>
                                 <form action="{{ route('components.recallpost', $component->id) }}" method="POST"
                                     class="d-inline"

@@ -12,13 +12,11 @@ return new class extends Migration {
      */
     public function up()
     {
-        Schema::create('vendors', function (Blueprint $table) {
+        Schema::create('user_logs', function (Blueprint $table) {
             $table->id();
-            $table->string(column: 'vendor_name');
-            $table->string('vendor_phone');
-            $table->string('vendor_email');
-            $table->string('vendor_address');
-            $table->string('vendor_description');
+            $table->string('user');
+            $table->string('action');
+            $table->string('note');
             $table->timestamps();
         });
     }
@@ -30,6 +28,6 @@ return new class extends Migration {
      */
     public function down()
     {
-        Schema::dropIfExists('vendors');
+        Schema::dropIfExists('user_logs');
     }
 };

@@ -1,15 +1,12 @@
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
-    <!-- Brand Logo -->
-    <a href="index3.html" class="brand-link">
-        <img src="{{ asset('img/logo.jpg') }}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3"
-            style="opacity: .8">
-        <span class="brand-text font-weight-light">TPServer Admin </span>
-    </a>
 
     <!-- Sidebar -->
-    <div class="sidebar">
+    <div class="tp-server sidebar">
+        <!-- Brand Logo -->
+        <a href="{{ url('/') }}" class="brand-link-bg">
+        </a>
         <!-- Sidebar user panel (optional) -->
-        <div class="user-panel mt-3 pb-3 mb-1 d-flex align-items-start">
+        <div class="user-panel pt-3 pb-3 mb-1 d-flex align-items-start">
             <div class="image me-3" style="position: relative">
                 <a href="{{ route('users.show', auth()->user()->id) }}">
                     @php
@@ -49,193 +46,204 @@
 
 
         <!-- SidebarSearch Form -->
-        <div class="form-inline">
-            <div class="input-group" data-widget="sidebar-search">
-                <input class="form-control form-control-sidebar" type="search" placeholder="Search"
-                    aria-label="Search">
-                <div class="input-group-append">
-                    <button class="btn btn-sidebar">
-                        <i class="fas fa-search fa-fw"></i>
+        <form method="POST" action="{{ route('components.scanpost') }}">
+            @csrf
+            {{-- SERIAL NUMBER tách riêng để thêm autofocus --}}
+            <div class="scan-box mb-2 mt-2 p-2">
+                <div class="input-group">
+                    <button type="submit" style="border-top-right-radius: 0px; border-bottom-right-radius: 0px"
+                        class="btn bg-main btn-hover">
+                        <i class="fas fa-qrcode mr-2"></i> Scan
                     </button>
+                    <input type="text" name="serial_number" id="serial_number"
+                        class="flex-fill form-control input-hover" value="{{ old('serial_number') }}" required
+                        placeholder="Scan linh kiện..." autofocus>
                 </div>
             </div>
-        </div>
+        </form>
+
 
         <!-- Sidebar Menu -->
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
                 data-accordion="false">
-                <!-- Add icons to the links using the .nav-icon class
-               with font-awesome or any other icon font library -->
-                <li class="nav-item">
-                    <a href="{{ route('components.create') }}" class="nav-link">
-                        <i class="fas fa-plus nav-icon"></i>
-                        <p>Thêm mới linh kiện</p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ route('components.store') }}" class="nav-link">
-                        <i class="fas fa-boxes nav-icon"></i>
-                        <p>Danh sách kho hàng</p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ route('components.stock') }}" class="nav-link">
-                        <i class="fas fa-pallet nav-icon"></i>
-                        <p>Sản phẩm còn hàng</p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ route('components.export') }}" class="nav-link">
-                        <i class="fas fa-truck-loading nav-icon"></i>
-                        <p>Danh sách xuất kho</p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ route('components.download', ['type' => 'xlsx']) }}" class="nav-link">
-                        <i class="far fa-file-excel nav-icon"></i>
-                        <p>Tải xuống .xlsx</p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ route('components.download', ['type' => 'xls']) }}" class="nav-link">
-                        <i class="fas fa-file-excel nav-icon"></i>
-                        <p>Tải xuống .xls</p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ route('components.download', ['type' => 'html']) }}" class="nav-link">
-                        <i class="far fa-file-code nav-icon"></i>
-                        <p>Tải xuống .html</p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ route('components.download', ['type' => 'csv']) }}" class="nav-link">
-                        <i class="fas fa-file-csv nav-icon"></i>
-                        <p>Tải xuống .csv</p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ route('components.download', ['type' => 'pdf']) }}" class="nav-link">
-                        <i class="far fa-file-pdf nav-icon"></i>
-                        <p>Tải xuống .pdf</p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ route('components.download', ['type' => 'ods']) }}" class="nav-link">
-                        <i class="fas fa-file-alt nav-icon"></i>
-                        <p>Tải xuống .ods</p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ route('logs.index') }}" class="nav-link">
-                        <i class="fas fa-clock nav-icon"></i>
-                        <p>Nhật ký</p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ route('roles.index') }}" class="nav-link">
-                        <i class="fas fa-user-tag nav-icon"></i>
-                        <p>Quản lý phân quyền</p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ route('users.index') }}" class="nav-link">
-                        <i class="fas fa-user-friends nav-icon"></i>
-                        <p>Quản lý người dùng</p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ route('static.index') }}" class="nav-link">
-                        <i class="fas fa-chart-bar nav-icon"></i>
-                        <p>Thống kê linh kiện</p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ route('logs.download') }}" class="nav-link">
-<i class="fas fa-clipboard-list nav-icon"></i>                        <p>Tải xuống nhật ký</p>
-                    </a>
-                </li>
-                <ul class="nav nav-treeview">
-                    <li class="nav-item">
-                        <a href="#" class="nav-link">
-                            <i class="far fa-circle nav-icon"></i>
-                            <p>Inactive Page</p>
-                        </a>
-                    </li>
-                </ul>
-                </li>
-                <li class="nav-item menu-open">
-                    <a href="#" class="nav-link active">
-                        <i class="nav-icon fas fa-tachometer-alt"></i>
+                <li class="nav-item has-treeview">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-cogs"></i>
                         <p>
-                            Starter Pages
+                            Linh kiện
                             <i class="right fas fa-angle-left"></i>
                         </p>
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="#" class="nav-link active">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Active Page</p>
+                            <a href="{{ route('components.create') }}" class="nav-link">
+                                <i class="fas fa-plus nav-icon"></i>
+                                <p>Thêm mới linh kiện</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Inactive Page</p>
+                            <a href="{{ route('components.store') }}" class="nav-link">
+                                <i class="fas fa-boxes nav-icon"></i>
+                                <p>Danh sách kho hàng</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('components.stock') }}" class="nav-link">
+                                <i class="fas fa-pallet nav-icon"></i>
+                                <p>Sản phẩm còn hàng</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('components.export') }}" class="nav-link">
+                                <i class="fas fa-truck-loading nav-icon"></i>
+                                <p>Danh sách xuất kho</p>
+                            </a>
+                        </li>
+
+                    </ul>
+                </li>
+
+                <li class="nav-item has-treeview">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-download"></i>
+                        <p>
+                            Tải xuống
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{{ route('components.download', ['type' => 'xlsx']) }}" class="nav-link">
+                                <i class="far fa-file-excel nav-icon"></i>
+                                <p>Tải xuống .xlsx</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('components.download', ['type' => 'xls']) }}" class="nav-link">
+                                <i class="fas fa-file-excel nav-icon"></i>
+                                <p>Tải xuống .xls</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('components.download', ['type' => 'html']) }}" class="nav-link">
+                                <i class="far fa-file-code nav-icon"></i>
+                                <p>Tải xuống .html</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('components.download', ['type' => 'csv']) }}" class="nav-link">
+                                <i class="fas fa-file-csv nav-icon"></i>
+                                <p>Tải xuống .csv</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('components.download', ['type' => 'pdf']) }}" class="nav-link">
+                                <i class="far fa-file-pdf nav-icon"></i>
+                                <p>Tải xuống .pdf</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('components.download', ['type' => 'ods']) }}" class="nav-link">
+                                <i class="fas fa-file-alt nav-icon"></i>
+                                <p>Tải xuống .ods</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('logs.download') }}" class="nav-link">
+                                <i class="fas fa-clipboard-list nav-icon"></i>
+                                <p>Tải xuống nhật ký</p>
                             </a>
                         </li>
                     </ul>
                 </li>
-                <li class="nav-item">
+
+                <li class="nav-item has-treeview">
                     <a href="#" class="nav-link">
-                        <i class="nav-icon fas fa-th"></i>
+                        <i class="fas fa-chart-pie nav-icon "></i>
                         <p>
-                            Danh sách linh kiện
-                            <span class="right badge badge-danger">New</span>
+                            Thống kê
+                            <i class="right fas fa-angle-left"></i>
                         </p>
                     </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{{ route('static.index') }}" class="nav-link">
+                                <i class="fas fa-chart-bar nav-icon"></i>
+                                <p>Thống kê linh kiện</p>
+                            </a>
+                        </li>
+                    </ul>
                 </li>
-                <li class="nav-item">
+
+                <li class="nav-item has-treeview">
                     <a href="#" class="nav-link">
-                        <i class="nav-icon fas fa-th"></i>
+                        <i class="fa fa-user-friends nav-icon"></i>
                         <p>
-                            Thêm linh kiện
-                            <span class="right badge badge-danger">New</span>
+                            Người dùng
+                            <i class="right fas fa-angle-left"></i>
                         </p>
                     </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{{ route('users.index') }}" class="nav-link">
+                                <i class="fas fa-id-card nav-icon"></i>
+                                <p>Quản lý người dùng</p>
+                            </a>
+                        </li>
+                    </ul>
                 </li>
-                <li class="nav-item">
+
+                <li class="nav-item has-treeview">
                     <a href="#" class="nav-link">
-                        <i class="nav-icon fas fa-th"></i>
+                        <i class="nav-icon fas fa-user-lock"></i>
                         <p>
-                            Danh sách linh kiện
-                            <span class="right badge badge-danger">New</span>
+                            Phân quyền
+                            <i class="right fas fa-angle-left"></i>
                         </p>
                     </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{{ route('roles.index') }}" class="nav-link">
+                                <i class="fa fa-user-tag nav-icon"></i>
+                                <p>Quản lý phân quyền</p>
+                            </a>
+                        </li>
+                    </ul>
                 </li>
-                <li class="nav-item">
+
+                <li class="nav-item has-treeview">
                     <a href="#" class="nav-link">
-                        <i class="nav-icon fas fa-th"></i>
+                        <i class="nav-icon fas fa-history"></i>
                         <p>
-                            Danh sách linh kiện
-                            <span class="right badge badge-danger">New</span>
+                            Lịch sử
+                            <i class="right fas fa-angle-left"></i>
                         </p>
                     </a>
-                </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link">
-                        <i class="nav-icon fas fa-th"></i>
-                        <p>
-                            Danh sách linh kiện
-                            <span class="right badge badge-danger">New</span>
-                        </p>
-                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{{ route('logs.index') }}" class="nav-link">
+                                <i class="fas fa-clock nav-icon"></i>
+                                <p>Nhật ký hoạt động</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('logs.index-component-export') }}" class="nav-link">
+                                <i class="fas fa-clock nav-icon"></i>
+                                <p>Lịch sử xuất kho</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('logs.index-component-recall') }}" class="nav-link">
+                                <i class="fas fa-clock nav-icon"></i>
+                                <p>Lịch sử thu hồi</p>
+                            </a>
+                        </li>
+                    </ul>
                 </li>
             </ul>
         </nav>
-        <!-- /.sidebar-menu -->
+        <!-- /. sidebar-menu -->
     </div>
     <!-- /.sidebar -->
 </aside>
@@ -243,8 +251,30 @@
 
 <style>
     .user-panel {
-        padding: 12px 0;
         max-width: 350px;
+        box-shadow: 0px -5px 5px rgba(75, 108, 183, 0.5);
+    }
+
+    .user-panel:hover {
+        filter: brightness(1.2);
+
+    }
+
+    ul.nav-treeview li a.nav-link {
+        padding-left: 30px;
+
+    }
+
+    li.has-treeview {
+        margin: auto
+    }
+
+    .has-treeview>.nav-link>p {
+        font-weight: 650;
+    }
+
+    .has-treeview>.nav-link {
+        padding-left: 10px;
     }
 
     .user-panel:hover {
@@ -281,6 +311,11 @@
         /* blue */
     }
 
+    .bg-main {
+        background-color: #4b6cb7 !important;
+        color: white !important;
+    }
+
     .user-avatar {
         border-radius: 50%;
         border: 4px solid transparent;
@@ -311,6 +346,58 @@
 
     .user-username {
         color: #c2c7d0;
+
+    }
+
+    .scan-box:hover {
+        filter: brightness(1.12);
+
+    }
+
+    .tp-server .nav-link.active {
+        background-color: #4b6cb7;
+    }
+
+    .brand-link-bg {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        /* canh giữa text */
+        height: 120px;
+        /* chiều cao bạn muốn */
+        width: 100%;
+        /* hoặc cố định chiều rộng nếu cần */
+        color: white;
+        font-weight: 300;
+        font-size: 1.25rem;
+        text-decoration: none;
+
+        /* background ảnh logo */
+        background-image: url('{{ asset('img/logo.jpg') }}');
+        background-size: cover;
+        /* fit rộng đầy đủ */
+        background-position: center center;
+        background-repeat: no-repeat;
+
+        /* nếu muốn hiệu ứng mờ nền để chữ nổi bật */
+        position: relative;
+        overflow: hidden;
+        filter: brightness(1.2);
+        /* tăng sáng 20% */
+    }
+
+    .brand-link-bg:hover {
+        filter: brightness(1.8);
+
+    }
+
+    .brand-link-bg>.brand-text {
+        position: relative;
+        z-index: 2;
+    }
+
+    .tp-server {
+        padding: 0;
 
     }
 </style>

@@ -8,4 +8,3 @@
     reserved.
 </footer>
 </div>
-s

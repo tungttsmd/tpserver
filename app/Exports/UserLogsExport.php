@@ -2,18 +2,18 @@
 
 namespace App\Exports;
 
-use App\Models\Log;
+use App\Models\UserLog;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 
-class LogsExport implements FromCollection, WithHeadings
+class UserLogsExport implements FromCollection, WithHeadings
 {
     /**
      * @return \Illuminate\Support\Collection
      */
     public function collection()
     {
-        return Log::select('id', 'user', 'action', 'note', 'updated_at', 'created_at')->get();
+        return UserLog::select('id', 'user', 'action', 'note', 'updated_at', 'created_at')->get();
     }
     public function headings(): array
     {

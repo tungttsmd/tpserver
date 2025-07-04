@@ -12,13 +12,11 @@ return new class extends Migration {
      */
     public function up()
     {
-        Schema::create('vendors', function (Blueprint $table) {
+        Schema::create('component_export_logs', function (Blueprint $table) {
             $table->id();
-            $table->string(column: 'vendor_name');
-            $table->string('vendor_phone');
-            $table->string('vendor_email');
-            $table->string('vendor_address');
-            $table->string('vendor_description');
+            $table->string('user_id');
+            $table->string(column: 'serial_number');
+            $table->string('export_reason');
             $table->timestamps();
         });
     }
@@ -30,6 +28,6 @@ return new class extends Migration {
      */
     public function down()
     {
-        Schema::dropIfExists('vendors');
+        Schema::dropIfExists(table: 'component_export_logs');
     }
 };

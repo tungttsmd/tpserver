@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Log;
+use App\Models\UserLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -23,7 +23,7 @@ class AuthController extends Controller
         $remember = $request->has('remember');
 
         if (Auth::attempt($credentials, $remember)) {
-            Log::create([
+            UserLog::create([
                 'action' => 'Đăng nhập',
                 'user' => Auth::user()->username ?? 'unknown',
                 'note' => 'Người dùng ' . Auth::user()->username . ' đã đăng nhập.'
@@ -44,13 +44,13 @@ class AuthController extends Controller
     }
     public function logoutpost()
     {
-        Log::create([
+        UserLog::create([
             'action' => 'Đăng xuất',
             'user' => Auth::user()->username ?? 'unknown',
             'note' => 'Người dùng ' . Auth::user()->username . ' đã đăng xuất.'
         ]);
         Auth::logout();
         return redirect('/');
-        
+
     }
 }

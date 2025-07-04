@@ -10,4 +10,5 @@ use Spatie\Permission\Traits\HasRoles;
 class Permission extends Model
 {
     use HasFactory, HasRoles, HasPermissions;
+    protected $fillable = ['name', 'display_name', 'guard_name'];
 }

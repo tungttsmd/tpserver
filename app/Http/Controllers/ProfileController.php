@@ -59,18 +59,18 @@ class ProfileController extends Controller
 
     public function updateAvatar(Request $request, User $user)
     {
-        // Nếu user không có quyền 'edit_users'
-        if (!auth()->user()->can('edit_users')) {
-            // Và cố gắng sửa alias user khác (không phải chính mình)
-            if ($user->id !== auth()->id()) {
-                abort(403, 'Bạn không được phép sửa alias của người khác.');
-            }
-            abort(403, 'Bạn không có quyền sửa alias.');
-        }
+        switch (true) {
+            case $user->id === auth()->id():
+                // Cho phép sửa chính mình
+                break;
 
-        $request->validate([
-            'avatar' => 'required|image|max:2048',
-        ]);
+            case auth()->user()->can('edit_users'):
+                // Cho phép nếu có quyền sửa người khác
+                break;
+
+            default:
+                abort(403, 'Bạn không có quyền sửa alias của người khác.');
+        }
 
         $filename = 'user_' . $user->id . '_' . $user->username . '.' . $request->file('avatar')->extension();
         $path = $request->file('avatar')->store('avatars', 'public', $filename);

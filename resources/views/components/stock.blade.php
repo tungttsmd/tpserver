@@ -30,34 +30,28 @@
                 class="fixed-table table table-bordered text-center align-middle bg-primary-subtle text-dark rounded custom-table">
                 <thead class="bg-primary text-white">
                     <tr>
-                        <th class="sortable" data-column="1" style="width: 15%">Phân loại <i class="fas fa-sort ms-1"></i>
                         <th class="sortable" data-column="2" style="width: 15%">Mã Serial <i class="fas fa-sort ms-1"></i>
+                        <th class="sortable" data-column="1" style="width: 15%">Phân loại <i class="fas fa-sort ms-1"></i>
                         </th>
                         </th>
                         <th class="sortable" data-column="3" style="width: 15%">Tình trạng <i class="fas fa-sort ms-1"></i>
                         </th>
-                        <th class="sortable" data-column="4" style="width: 10%">Địa chỉ <i class="fas fa-sort ms-1"></i>
+                        <th class="sortable" data-column="4" style="width: 10%">Vị trí<i class="fas fa-sort ms-1"></i>
                         </th>
-                        <th class="sortable" data-column="5" style="width: 20%">Mô tả <i class="fas fa-sort ms-1"></i></th>
-                        </th>
-                        <th style="width: 30%">Hành động</th>
+                        <th style="width: 10%">Hành động</th>
                     </tr>
                 </thead>
                 <tbody id="componentTable">
                     @foreach ($components as $component)
                         <tr>
-                            <td class="text-left">{{ $component->category }}</td>
                             <td class="text-left">{{ $component->serial_number }}</td>
+                            <td class="text-left">{{ $component->category }}</td>
                             <td class="text-left">
                                 <span class="badge bg-primary">
                                     {{ $component->condition }}
                                 </span>
                             </td>
                             <td class="text-left">{{ $component->location }}</td>
-                            <td class="text-left"
-                                style="max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                                {{ $component->description }}
-                            </td>
                             <td>
                                 @if ($component->status === 'Sẵn kho')
                                     <a href="{{ route('components.exportConfirm', $component->id) }}" <a type="submit"
@@ -75,20 +69,6 @@
                                     <i class="fas fa-eye"></i>
                                 </a>
 
-                                <a href="{{ route('components.edit', $component->id) }}"
-                                    class="btn btn-sm btn-warning me-1">
-                                    <i class="fas fa-edit"></i>
-                                </a>
-
-                                <form action="{{ route('components.destroy', $component->id) }}" method="POST"
-                                    class="d-inline"
-                                    onsubmit="return confirm('Bạn có chắc chắn muốn xoá [{{ $component->serial_number }}] ?');">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-danger">
-                                        <i class="fas fa-trash-alt"></i>
-                                    </button>
-                                </form>
                             </td>
                         </tr>
                     @endforeach

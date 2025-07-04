@@ -79,6 +79,10 @@
                                             <input type="text" name="serial_number" id="serial_number"
                                                 class="form-control input-hover" value="{{ old('serial_number') }}" required
                                                 placeholder="Nhập số serial chính xác (ví dụ: SN123456789)" autofocus>
+                                            <button type="button" onclick="generateCode()" class="btn btn-primary">Tạo mã
+                                                ngẫu
+                                                nhiên</button>
+                                            <p id="code" class="mt-2 fw-bold"></p>
                                         </div>
                                     </div>
 
@@ -148,7 +152,38 @@
                                             </div>
                                         </div>
                                     @endforeach
-
+                                    <div class="mb-3">
+                                        <label for="imported_at" class="form-label">Ngày nhập hàng</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text icon-scale"><i
+                                                    class="fas fa-calendar-alt"></i></span>
+                                            <input type="date" name="imported_at" id="imported_at"
+                                                class="form-control input-hover" required
+                                                value="{{ old('imported_at', date('Y-m-d')) }}">
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="warranty_months" class="form-label">Bảo hành (tháng)</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text icon-scale"><i
+                                                    class="fas fa-shield-alt"></i></span>
+                                            <input type="number" min="0" name="warranty_months" id="warranty_months"
+                                                class="form-control input-hover" value="{{ old('warranty_months', 0) }}"
+                                                placeholder="Nhập số tháng bảo hành">
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="vendor" class="form-label">Nhà cung cấp</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text icon-scale"><i
+                                                    class="fas fa-map-marker-alt"></i></span>
+                                            <select name="vendor" id="vendor" class="form-control input-hover" required>
+                                                <option value="">-- Chọn người cung cấp --</option>
+                                                <option value="Văn Sáng" @selected(old('vendor') == 'Kho 1')>Văn Sáng</option>
+                                                <option value="Cray" @selected(old('vendor') == 'Kho 2')>Cray</option>
+                                            </select>
+                                        </div>
+                                    </div>
                                     {{-- MÔ TẢ --}}
                                     <div class="mb-3">
                                         <label for="description" class="form-label">Mô tả</label>
@@ -181,6 +216,16 @@
     <style>
         .tpserver .gapflex {
             gap: 20px;
+        }
+
+        .icon-scale {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: px;
+            /* độ rộng cố định cho span */
+            font-size: 16px;
+            /* kích thước icon */
         }
 
         .qr-frame {
@@ -292,4 +337,25 @@
             opacity: 0.5;
         }
     </style>
+
+
+    <script>
+        function generateCode(length = 12) {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let code = '';
+            for (let i = 0; i < length; i++) {
+
+                if (i % 4 == 0) {
+                    code += '-';
+                } else {
+                    code += chars.charAt(Math.floor(Math.random() * chars.length));
+                }
+
+            }
+
+            // Gán vào input có id="serial_number"
+            document.getElementById('serial_number').value = 'TPSC' + code;
+        }
+    </script>
+
 @endsection

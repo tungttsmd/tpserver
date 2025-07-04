@@ -1,22 +1,22 @@
 2️⃣ Quản lý đăng nhập & phân quyền
 Có hệ thống user:
 
-Admin (toàn quyền)
+OK Admin (toàn quyền)
 
-Quản lý kho (nhập xuất linh kiện)
+OK Quản lý kho (nhập xuất linh kiện)
 
-Nhân viên (chỉ xem, không được sửa xóa)
+OK Nhân viên (chỉ xem, không được sửa xóa)
 
-Mỗi lần đăng nhập đều được log lại
+OK Mỗi lần đăng nhập đều được log lại
 
-Quản lý user (chỉ admin được thêm/sửa user)
+OK Quản lý user (chỉ admin được thêm/sửa user)
 
 2️⃣ Quản lý linh kiện (serial)
 OK Thêm linh kiện mới:
 + Thêm ngày nhập hàng
 + Nhập từ ai (có thể là location)
 + Bảo hành bao lâu
-+ Serial Number bên cạnh có nút ramdom mã là TPSERVER...
+OK + Serial Number bên cạnh có nút ramdom mã là TPSERVER...
 
 
 OK Serial (quét QR code hoặc nhập tay)
