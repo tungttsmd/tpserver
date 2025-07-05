@@ -10,5 +10,6 @@ use Spatie\Permission\Traits\HasRoles;
 class UserLog extends Model
 {
     use HasFactory, HasRoles, HasPermissions;
-    protected $fillable = ['user', 'action', 'note'];
+    protected $fillable = ['action_id', 'user_id', 'note'];
+    public $timestamps = false;
 }

@@ -1,0 +1,32 @@
+<?php
+
+namespace Database\Seeders;
+
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+use Faker\Factory as Faker;
+
+class CustomerSeeder extends Seeder
+{
+    public function run()
+    {
+        $faker = Faker::create();
+        $date_created = $faker->dateTimeBetween('-2 years', 'now');
+        $date_updated = (clone $date_created)->modify('+' . rand(0, 60) . ' days');
+        $customers = [];
+
+        for ($i = 0; $i < 300; $i++) {
+            $customers[] = [
+                'name' => $faker->unique()->name,
+                'phone' => $faker->optional()->phoneNumber,
+                'email' => $faker->unique()->safeEmail,
+                'address' => $faker->address,
+                'note' => $faker->sentence(6),
+                'date_created' => $date_created,
+                'date_updated' => $date_updated,
+            ];
+        }
+
+        DB::table('customers')->insert($customers);
+    }
+}

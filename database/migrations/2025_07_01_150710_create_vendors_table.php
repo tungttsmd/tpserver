@@ -14,12 +14,13 @@ return new class extends Migration {
     {
         Schema::create('vendors', function (Blueprint $table) {
             $table->id();
-            $table->string(column: 'vendor_name');
-            $table->string('vendor_phone');
-            $table->string('vendor_email');
-            $table->string('vendor_address');
-            $table->string('vendor_description');
-            $table->timestamps();
+            $table->string('name')->unique()->index();
+            $table->string('phone')->nullable()->index();
+            $table->string('email')->index();
+            $table->string('address')->index();
+            $table->string('note');
+            $table->timestamp('date_updated')->useCurrent()->useCurrentOnUpdate();
+            $table->timestamp('date_created')->useCurrent();
         });
     }
 

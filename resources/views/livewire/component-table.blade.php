@@ -1,4 +1,4 @@
-<div class="container p-12 max-w-full">
+<div class="container p-2 max-w-full">
     {{-- Bộ lọc --}}
     @include('livewire.partials.component-table-filter')
 
@@ -30,6 +30,7 @@
             <tbody>
                 @foreach ($components as $component)
                     <tr>
+
                         @if ($view_table_action_buttons)
                             <td>
                                 @include($view_table_action_buttons)
@@ -37,7 +38,12 @@
                         @endif
                         @foreach ($columns as $field)
                             <td>
-                                {{ $component->$field }}
+                                @php $relationship = rtrim($field, '_id') @endphp
+                                @if (in_array($relationship, $relationships))
+                                    {{ optional($component->$relationship)->name ?? '-' }}
+                                @else
+                                    {{ $component->$field }}
+                                @endif
                             </td>
                         @endforeach
                     </tr>

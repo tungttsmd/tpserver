@@ -14,12 +14,13 @@ return new class extends Migration {
     {
         Schema::create('customers', function (Blueprint $table) {
             $table->id();
-            $table->string('customer_name');
-            $table->string('customer_phone');
-            $table->string('customer_email');
-            $table->string('customer_address');
-            $table->string('customer_description');
-            $table->timestamps();
+            $table->string('name')->unique()->index();
+            $table->string('phone')->nullable()->index();
+            $table->string('email')->index();
+            $table->string('address')->index();
+            $table->string('note');
+            $table->timestamp('date_updated')->useCurrent()->useCurrentOnUpdate();
+            $table->timestamp('date_created')->useCurrent();
         });
     }
 

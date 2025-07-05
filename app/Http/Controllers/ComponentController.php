@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Exports\ComponentsExport;
 use Illuminate\Http\Request;
 use App\Models\Component;
+use App\Models\ComponentLog;
 use App\Models\Log;
 use App\Models\UserLog;
 use Illuminate\Support\Facades\Auth;
@@ -19,15 +20,15 @@ class ComponentController extends Controller
         if ($search = $request->input('search')) {
             $query->where(function ($q) use ($search) {
                 $q->where('serial_number', 'like', "%$search%")
-                    ->orWhere('description', 'like', "%$search%");
+                    ->orWhere('note', 'like', "%$search%");
             });
         }
 
-        if ($status = $request->input('status')) {
-            $query->where('status', $status);
+        if ($status_id = $request->input('status_id')) {
+            $query->where('status_id', $status_id);
         }
 
-        if ($category = $request->input('category')) {
+        if ($category_id = $request->input('category_id')) {
             $query->where('category', $category);
         }
 
@@ -35,7 +36,7 @@ class ComponentController extends Controller
         // SORT
         $sort = $request->input('sort', 'id');
         $dir = $request->input('dir', 'desc');
-        $allowedSorts = ['category', 'serial_number', 'condition', 'location', 'status', 'id']; // tránh SQL Injection
+        $allowedSorts = ['name', 'category_id', 'serial_number', 'condition_id', 'vendor_id', 'location_id', 'status_id', 'id']; // tránh SQL Injection
 
         if (in_array($sort, $allowedSorts)) {
             $query->orderBy($sort, $dir);
@@ -113,9 +114,10 @@ class ComponentController extends Controller
         $validated = $request->validate([
             'serial_number' => 'required|string|max:255',
             'category' => 'required|string|max:255',
+            'vendor' => 'required|string|max:255',
             'location' => 'required|string|max:255',
             'condition' => 'required|string|max:255',
-            'description' => 'nullable|string',
+            'note' => 'nullable|string',
             // 'status'      => 'required|string|max:255',
         ]);
 
@@ -153,34 +155,34 @@ class ComponentController extends Controller
     }
     public function stock()
     {
-        $components = Component::where('status', 'Sẵn kho')
-            ->orderBy('updated_at', 'desc')
+        $components = Component::where('status_id', 2)
+            ->orderBy('date_updated', 'desc')
             ->get();
         return view('components.stock', compact('components'));
     }
     public function export()
     {
-        $components = Component::where('status', 'Xuất kho')
-            ->orderBy('exported_at', 'desc')
+        $components = Component::where('status_id', 1)
+            ->orderBy('date_updated', 'desc')
             ->get();
         return view('components.export', compact('components'));
     }
 
     public function exportpost(Component $component)
     {
-        if ($component->status !== 'Sẵn kho') {
+        if ($component->status_id !== 2) {
             return redirect()->route('components.index')
                 ->with('error', "Chỉ có linh kiện đang 'Sẵn kho' mới được xuất kho.");
         }
 
-        $component->status = 'Xuất kho';
+        $component->status_id = 1;
         $component->exported_at = now();
         $component->save();
 
-        UserLog::create([
-            'action' => 'Xuất kho',
-            'user' => Auth::user()->username ?? 'unknown',
-            'note' => Auth::user()->username . " xác nhận xuất kho $component->category [$component->serial_number]"
+        ComponentLog::create([
+            'action_id' => 3,
+            'user_id' => Auth::user()->id,
+            'note' => Auth::user()->username . " đã thêm mới $component->category [$component->serial_number]"
         ]);
 
         return redirect()->route('components.index')
@@ -196,14 +198,12 @@ class ComponentController extends Controller
 
     public function recallpost(Component $component)
     {
-        if ($component->status !== 'Xuất kho') {
+        if ($component->status_id !== 1) {
             return redirect()->route('components.index')
                 ->with('error', "Chỉ có linh kiện đang 'Xuất kho' mới được thu hồi.");
         }
 
-        $component->status = 'Sẵn kho';
-        $component->recalled_at = now();
-        $component->updated_at = now();
+        $component->status_id = 2;
         $component->save();
 
         UserLog::create([
@@ -259,5 +259,4 @@ class ComponentController extends Controller
             'link_qr' => $link_qr,
         ])->with('success', 'Thông tin linh kiện: ' . $serial);
     }
-
 }

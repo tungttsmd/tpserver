@@ -10,92 +10,94 @@ class PermissionSeeder extends Seeder
 {
     public function run(): void
     {
-        // 1. Lên các list permissions
+        // 1. Danh sách permissions theo chuẩn module.action
         $permissions = [
-            'view_components' => 'Xem danh sách linh kiện',
-            'detail_components' => 'Xem chi tiết linh kiện',
-            'create_components' => 'Tạo mới linh kiện',
-            'edit_components' => 'Chỉnh sửa linh kiện',
-            'delete_components' => 'Xóa linh kiện',
-            'export_components' => 'Xuất kho linh kiện',
-            'recall_components' => 'Thu hồi linh kiện',
-            'download_components' => 'Tải xuống danh sách linh kiện',
-            'view_users' => 'Xem danh sách người dùng',
-            'edit_users' => 'Thay đổi thông tin người dùng',
-            'edit_users_password' => 'Thay đổi mật khẩu người dùng',
-            'view_roles' => 'Xem danh sách vai trò',
-            'create_roles' => 'Tạo mới vai trò',
-            'edit_roles' => 'Chỉnh sửa quyền hạn vai trò',
+            'dashboard.view' => 'Xem dashboard và thống kê',
+            'log.view' => 'Xem logs hệ thống',
+            'user.download_log' => 'Tải logs người dùng',
+            'component.download_log' => 'Tải logs linh kiện',
+
+            'role.view' => 'Xem danh sách vai trò',
+            'role.create' => 'Tạo mới vai trò',
+            'role.update' => 'Chỉnh sửa vai trò',
+
+            'user.view' => 'Xem danh sách người dùng',
+            'user.update' => 'Chỉnh sửa thông tin người dùng',
+            'user.assign_role' => 'Gán vai trò cho người dùng',
+
+            'component.view' => 'Xem danh sách linh kiện',
+            'component.detail' => 'Xem chi tiết linh kiện',
+            'component.create' => 'Tạo mới linh kiện',
+            'component.update' => 'Chỉnh sửa linh kiện',
+            'component.delete' => 'Xóa linh kiện',
+            'component.issue' => 'Xuất kho linh kiện',
+            'component.recall' => 'Thu hồi linh kiện',
+            'component.scan_qr' => 'Quét QR linh kiện',
         ];
 
-        // 2. Tạo permission vào bảng permissions
-        foreach ($permissions as $permission => $display_name) {
+        // 2. Tạo permissions
+        foreach ($permissions as $name => $displayName) {
             Permission::firstOrCreate([
-                'name' => $permission,
-                'display_name' => $display_name,
+                'name' => $name,
+                'display_name' => $displayName,
                 'guard_name' => 'web',
             ]);
         }
-        // 3. Lên list các role và permissions đi theo
-        $permissionGroups = [
-            'view_components' => [
-                'view_components',
-                'detail_components',
+
+        // 3. Nhóm permission theo vai trò
+        $rolesPermissions = [
+            'admin' => array_keys($permissions), // full quyền
+
+            'manager' => [
+                'dashboard.view',
+                'log.view',
+                'user.download_log',
+                'component.download_log',
+
+                'role.view',
+                'user.view',
+                'user.update',
+                'user.assign_role',
+
+                'component.view',
+                'component.detail',
+                'component.create',
+                'component.update',
+                'component.delete',
+                'component.issue',
+                'component.recall',
+                'component.scan_qr',
             ],
-            'control_components' => [
-                'view_components',
-                'detail_components',
-                'create_components',
-                'edit_components',
-                'delete_components',
-                'export_components',
-                'recall_components',
-                'download_components',
+
+            'storekeeper' => [
+                'component.view',
+                'component.detail',
+                'component.create',
+                'component.update',
+                'component.delete',
+                'component.issue',
+                'component.recall',
+                'component.scan_qr',
+                'component.download_log',
             ],
-            'control_users' => [
-                'view_users',
-                'edit_users',
-                'edit_users_password',
+
+            'user' => [
+                'component.view',
+                'component.detail',
+                'dashboard.view',
             ],
-            'control_roles' => [
-                'view_roles',
-                'create_roles',
-                'edit_roles'
-            ]
         ];
 
-        $rolesHasPermissions = [
-            'admin' => array_merge(
-                $permissionGroups['control_components'],
-                $permissionGroups['control_users'],
-                $permissionGroups['control_roles'],
-            ),
-            'manager' => array_merge(
-                $permissionGroups['control_components'],
-                $permissionGroups['control_users'],
-            ),
-            'storekeeper' => array_merge(
-                $permissionGroups['control_components'],
-            ),
-            'user' => array_merge(
-                $permissionGroups['view_components'],
-            ),
-            // thêm role khác nếu cần
-        ];
-
-        // 4. Thêm role vào bảng roles & tiến hành sync permission
-        foreach ($rolesHasPermissions as $roleName => $perms) {
-            // Gán dữ liệu vào bảng role
+        // 4. Tạo role và gán permission
+        foreach ($rolesPermissions as $roleName => $perms) {
             $role = Role::firstOrCreate([
                 'name' => $roleName,
                 'guard_name' => 'web',
             ]);
-
-            // Gán dữ liệu vào bảng trung gian role_has_permissions
             $role->syncPermissions($perms);
         }
 
-        // 5. Xóa cache permission để đảm bảo thay đổi có hiệu lực ngay
+        // 5. Xóa cache permission
         app(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();
     }
 }

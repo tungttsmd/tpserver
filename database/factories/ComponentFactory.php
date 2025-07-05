@@ -3,7 +3,6 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Str;
 
 class ComponentFactory extends Factory
 {
@@ -11,25 +10,35 @@ class ComponentFactory extends Factory
 
     public function definition()
     {
-        $categories = ['CPU', 'RAM', 'GPU', 'SSD', 'Motherboard', 'Power Supply'];
-        $locations = ['Kho A', 'Kho B', 'Kho', 'In Transit'];
-        $conditions = ['Mới', 'Like new', 'Đã sử dụng', 'Hỏng nặng'];
-        $statuses = ['Sẵn kho', 'Xuất kho'];
-        $vendors = ['Văn Sáng', 'FPT', 'Crayola'];
+        $warranty_options = [
+            '+6 months',
+            '+1 year',
+            '+2 years',
+            '+3 years',
+            '+5 years',
+            '+7 years',
+        ];
 
-        $exported = $this->faker->boolean(20); // 20% chance đã xuất kho
-        $recalled = $this->faker->boolean(10); // 10% chance đã thu hồi
+        $warranty_modifier = $this->faker->randomElement($warranty_options);
+        $date_created = $this->faker->dateTimeBetween('-2 years', 'now');
+        $warranty_start = $date_created;
+        $warranty_end = (clone $warranty_start)->modify($warranty_modifier);
+        $date_updated = (clone $date_created)->modify('+' . rand(0, 60) . ' days');
 
         return [
-            'serial_number' => strtoupper($this->faker->bothify('SN-####-???')),
-            'category' => $this->faker->randomElement($categories),
-            'location' => $this->faker->randomElement($locations),
-            'vendor' => $this->faker->randomElement($vendors),
-            'condition' => $this->faker->randomElement(array: $conditions),
-            'status' => $this->faker->randomElement($statuses),
-            'description' => $this->faker->sentence(8),
-            'exported_at' => $exported ? $this->faker->dateTimeBetween('-1 year', 'now') : null,
-            'recalled_at' => $recalled ? $this->faker->dateTimeBetween('-6 months', 'now') : null,
+            'serial_number'    => strtoupper($this->faker->bothify('TPSC-####-???')),
+            'name'             => $this->faker->unique()->words(2, true),
+            'category_id'      => $this->faker->numberBetween(1, 10),
+            'vendor_id'        => $this->faker->numberBetween(1, 10),
+            'condition_id'     => $this->faker->numberBetween(1, 10),
+            'location_id'      => $this->faker->numberBetween(1, 10),
+            'manufacturer_id'  => $this->faker->numberBetween(1, 10),
+            'status_id'        => $this->faker->numberBetween(1, 5),
+            'note'             => $this->faker->sentence(),
+            'warranty_start'   => $warranty_start,
+            'warranty_end'     => $warranty_end,
+            'date_created'     => $date_created,
+            'date_updated'     => $date_updated,
         ];
     }
 }

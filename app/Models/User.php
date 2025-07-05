@@ -14,7 +14,7 @@ class User extends Authenticatable
 
     protected $fillable = ['username', 'password'];
     protected $hidden = ['password', 'remember_token'];
-
+    public $timestamps = false;
     public function canEditPassword(): bool
     {
         return $this->id === auth()->id() || auth()->user()?->hasPermissionTo('edit_users_password');

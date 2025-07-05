@@ -5,36 +5,43 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>
- */
 class UserFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
     public function definition()
     {
+        $id = $this->faker->unique()->numberBetween(1, 10000);
+        $username = $this->faker->userName;
+        $date_created = $this->faker->dateTimeBetween('-2 years', 'now');
+        $date_updated = (clone $date_created)->modify('+' . rand(0, 60) . ' days');
+
         return [
-            'alias' => fake()->name(),
-            'username' => fake()->unique()->userName(),
-            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
+            'alias' => $this->vietnameseName(),
+            'username' => $username,
+            'password' => bcrypt('123'),
+            'avatar_url' => "https://i.pravatar.cc/150?u={$id}",
+            'cover_url' => "https://picsum.photos/seed/{$username}/800/200",
+            'date_created' => $date_created,
+            'date_updated' => $date_updated,
             'remember_token' => Str::random(10),
         ];
-
     }
-
-    /**
-     * Indicate that the model's email address should be unverified.
-     *
-     * @return static
-     */
-    public function unverified()
+    protected function vietnameseName()
     {
-        return $this->state(fn(array $attributes) => [
-            // 'email_verified_at' => null,
-        ]);
+        $ho = ['Nguyễn', 'Trần', 'Lê', 'Phạm', 'Hoàng', 'Phan', 'Vũ', 'Đặng', 'Bùi', 'Đỗ'];
+        $tenLotPool = ['Văn', 'Thị', 'Hữu', 'Minh', 'Quang', 'Thành', 'Đức', 'Thanh', 'Xuân', 'Khánh'];
+        $ten = ['An', 'Bảo', 'Cường', 'Dũng', 'Hà', 'Hạnh', 'Hùng', 'Linh', 'Mai', 'Nam', 'Oanh', 'Phương', 'Quang', 'Sơn', 'Trang', 'Tuấn', 'Vân', 'Vy', 'Yến'];
+
+        $hoTenLot = $this->faker->randomElement($ho);
+
+        // Lấy số từ 0 đến 3 chữ tên lót
+        $soTenLot = $this->faker->numberBetween(0, 3);
+        if ($soTenLot > 0) {
+            $tenLotArr = $this->faker->randomElements($tenLotPool, $soTenLot);
+            $hoTenLot .= ' ' . implode(' ', $tenLotArr);
+        }
+
+        $tenChinh = $this->faker->randomElement($ten);
+
+        return $hoTenLot . ' ' . $tenChinh;
     }
 }

@@ -22,11 +22,13 @@ class AuthController extends Controller
         $credentials = $request->only('username', 'password');
         $remember = $request->has('remember');
 
+
         if (Auth::attempt($credentials, $remember)) {
             UserLog::create([
-                'action' => 'Đăng nhập',
-                'user' => Auth::user()->username ?? 'unknown',
-                'note' => 'Người dùng ' . Auth::user()->username . ' đã đăng nhập.'
+                'action_id' => 1,
+                'user_id' => Auth::user()->id,
+                'note' => 'Người dùng ' . Auth::user()->alias . '(' . Auth::user()->username . ') đã đăng nhập.'
+            
             ]);
             $request->session()->regenerate();
             return redirect()->intended('index');
@@ -51,6 +53,5 @@ class AuthController extends Controller
         ]);
         Auth::logout();
         return redirect('/');
-
     }
 }

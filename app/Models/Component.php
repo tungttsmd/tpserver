@@ -11,5 +11,29 @@ class Component extends Model
 {
     use HasRoles, HasPermissions, HasFactory;
     protected $fillable = ['serial_number', 'category', 'vendor', 'location', 'condition', 'status', 'description', 'exported_at'];
-
+    public $timestamps = false;
+    public function category()
+    {
+        return $this->belongsTo(Category::class, 'category_id');
+    }
+    public function vendor()
+    {
+        return $this->belongsTo(Vendor::class, 'vendor_id');
+    }
+    public function condition()
+    {
+        return $this->belongsTo(Condition::class, 'condition_id');
+    }
+    public function location()
+    {
+        return $this->belongsTo(Location::class, 'location_id');
+    }
+    public function manufacturer()
+    {
+        return $this->belongsTo(Manufacturer::class, 'manufacturer_id');
+    }
+    public function status()
+    {
+        return $this->belongsTo(Status::class, 'status_id');
+    }
 }

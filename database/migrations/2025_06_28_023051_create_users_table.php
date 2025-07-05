@@ -5,23 +5,18 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration {
-    protected $primaryKey = 'user_id';
-
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
     public function up()
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('alias')->index();
-            $table->string('username')->unique();
+            $table->string('alias')->unique()->index();
+            $table->string('username')->unique()->index();
             $table->string('password');
             $table->string('avatar_url')->nullable();
+            $table->string('cover_url')->nullable();
             $table->rememberToken();
-            $table->timestamps();
+            $table->timestamp('date_updated')->useCurrent()->useCurrentOnUpdate();
+            $table->timestamp('date_created')->useCurrent();
         });
     }
 

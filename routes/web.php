@@ -28,69 +28,65 @@ Route::post('login', [AuthController::class, 'loginpost'])->name('auth.loginpost
 
 Route::middleware('auth')->group(function () {
 
-    // 1. Route Đăng nhập và đăng xuất
+    // 1. Đăng xuất
     Route::get('logout', [AuthController::class, 'logout'])->name('auth.logout');
     Route::post('logout', [AuthController::class, 'logoutpost'])->name('auth.logoutpost');
 
-    // 2. Route Phân quyền vai trò và quyền hạn
-    Route::get('/roles', [RoleController::class, 'index'])->name('roles.index')->middleware('permission:view_roles');
-    Route::get('/roles/create', [RoleController::class, 'create'])->name('roles.create')->middleware('permission:create_roles');
-    Route::post('/roles/create', [RoleController::class, 'store'])->name('roles.store')->middleware('permission:create_roles');
-    Route::get('/roles/{role}/permissions', [RoleController::class, 'edit'])->name('roles.permissions.edit')->middleware('permission:edit_roles');
-    Route::put('/roles/{role}/permissions', [RoleController::class, 'update'])->name('roles.permissions.update')->middleware('permission:edit_roles');
+    // 2. Quản lý vai trò và phân quyền
+    Route::get('/roles', [RoleController::class, 'index'])->name('roles.index')->middleware('permission:role.view');
+    Route::get('/roles/create', [RoleController::class, 'create'])->name('roles.create')->middleware('permission:role.create');
+    Route::post('/roles/create', [RoleController::class, 'store'])->name('roles.store')->middleware('permission:role.create');
+    Route::get('/roles/{role}/permissions', [RoleController::class, 'edit'])->name('roles.permissions.edit')->middleware('permission:role.update');
+    Route::put('/roles/{role}/permissions', [RoleController::class, 'update'])->name('roles.permissions.update')->middleware('permission:role.update');
 
-    // 3. Route Bảng điều khiển và nhật ký
-    Route::get('/index', [DashboardController::class, 'index'])->name('index');
-    Route::get('/logs', [UserLogController::class, 'index'])->name('logs.index');
-    Route::get('/export-logs', action: [ComponentExportLogController::class, 'index'])->name('logs.index-component-export');
-    Route::get('/recall-logs', [ComponentRecallLogController::class, 'index'])->name('logs.index-component-recall');
+    // 3. Dashboard và logs (chung cho admin hoặc user có quyền xem logs)
+    Route::get('/index', [DashboardController::class, 'index'])->name('index')->middleware('permission:dashboard.view');
+    Route::get('/logs', [UserLogController::class, 'index'])->name('logs.index')->middleware('permission:log.view');
+    Route::get('/export-logs', [ComponentExportLogController::class, 'index'])->name('logs.index-component-export')->middleware('permission:component.download_log');
+    Route::get('/recall-logs', [ComponentRecallLogController::class, 'index'])->name('logs.index-component-recall')->middleware('permission:component.download_log');
 
-    // 4. Route Quản lý người dùng
-    Route::get('/users', [UserController::class, 'index'])->name('users.index');
-    Route::get('/users/{user}', [UserController::class, 'show'])->name('users.show');
-    Route::get('/users/{user}/roles', [UserController::class, 'editRoles'])->name('users.edit-roles');
-    Route::put('/users/{user}/roles', [UserController::class, 'updateRoles'])->name('users.update-roles');
+    // 4. Quản lý người dùng
+    Route::get('/users', [UserController::class, 'index'])->name('users.index')->middleware('permission:user.view');
+    Route::get('/users/{user}', [UserController::class, 'show'])->name('users.show')->middleware('permission:user.view');
+    Route::get('/users/{user}/roles', [UserController::class, 'editRoles'])->name('users.edit-roles')->middleware('permission:user.assign_role');
+    Route::put('/users/{user}/roles', [UserController::class, 'updateRoles'])->name('users.update-roles')->middleware('permission:user.assign_role');
 
-    // 5. Route Người dùng quản lý profile
-    Route::get('/profile/{user}/avatar/edit', [ProfileController::class, 'editAvatar'])->name('profile.edit-avatar');
-    Route::put('/profile/{user}/avatar/update', [ProfileController::class, 'updateAvatar'])->name('profile.update-avatar');
-    Route::get('/profile/{user}/alias/edit', [ProfileController::class, 'editAlias'])->name('profile.edit-alias');
-    Route::put('/profile/{user}/alias/update', [ProfileController::class, 'updateAlias'])->name('profile.update-alias');
-    Route::get('/profile/{user}/password/edit', [ProfileController::class, 'editPassword'])->name('profile.edit-password');
-    Route::put('/profile/{user}/password/update', [ProfileController::class, 'updatePassword'])->name('profile.update-password');
+    // 5. Profile cá nhân (user tự chỉnh sửa)
+    Route::get('/profile/{user}/avatar/edit', [ProfileController::class, 'editAvatar'])->name('profile.edit-avatar')->middleware('permission:user.update');
+    Route::put('/profile/{user}/avatar/update', [ProfileController::class, 'updateAvatar'])->name('profile.update-avatar')->middleware('permission:user.update');
+    Route::get('/profile/{user}/alias/edit', [ProfileController::class, 'editAlias'])->name('profile.edit-alias')->middleware('permission:user.update');
+    Route::put('/profile/{user}/alias/update', [ProfileController::class, 'updateAlias'])->name('profile.update-alias')->middleware('permission:user.update');
+    Route::get('/profile/{user}/password/edit', [ProfileController::class, 'editPassword'])->name('profile.edit-password')->middleware('permission:user.update');
+    Route::put('/profile/{user}/password/update', [ProfileController::class, 'updatePassword'])->name('profile.update-password')->middleware('permission:user.update');
 
-    // 6. Route Tải về danh sách linh kiện
-    Route::get('/components/download', [ComponentController::class, 'download'])->name('components.download');
+    // 6. Tải về danh sách linh kiện
+    Route::get('/components/download', [ComponentController::class, 'download'])->name('components.download')->middleware('permission:component.download_log');
 
-    // 7. Route Scan linh kiện
-    Route::get('/components/scan', [ComponentController::class, 'scan'])->name('components.scan');
-    Route::post('components/scan', [ComponentController::class, 'scanpost'])->name('components.scanpost');
+    // 7. Scan linh kiện
+    Route::get('/components/scan', [ComponentController::class, 'scan'])->name('components.scan')->middleware('permission:component.scan_qr');
+    Route::post('components/scan', [ComponentController::class, 'scanpost'])->name('components.scanpost')->middleware('permission:component.scan_qr');
 
-    // 8. Route Xuất kho và thu hồi linh kiện
-    Route::get('/components/{component}/export/confirm', [ComponentController::class, 'exportConfirm'])->name('components.exportConfirm');
-    Route::put('/components/{component}/export', [ComponentController::class, 'exportpost'])->name('components.exportpost');
-    Route::put('/components/{component}/recall', [ComponentController::class, 'recallpost'])->name('components.recallpost');
+    // 8. Xuất kho và thu hồi linh kiện
+    Route::get('/components/{component}/export/confirm', [ComponentController::class, 'exportConfirm'])->name('components.exportConfirm')->middleware('permission:component.issue');
+    Route::put('/components/{component}/export', [ComponentController::class, 'exportpost'])->name('components.exportpost')->middleware('permission:component.issue');
+    Route::put('/components/{component}/recall', [ComponentController::class, 'recallpost'])->name('components.recallpost')->middleware('permission:component.recall');
 
-    // 9. Route Xem danh sách linh kiện
-    Route::get('/components', [ComponentController::class, 'index'])->name('components.index');
-    Route::get('/components/export', [ComponentController::class, 'export'])->name('components.export');
-    Route::get('/components/stock', [ComponentController::class, 'stock'])->name('components.stock');
+    // 9. Xem danh sách linh kiện
+    Route::get('/components', [ComponentController::class, 'index'])->name('components.index')->middleware('permission:component.view');
+    Route::get('/components/export', [ComponentController::class, 'export'])->name('components.export')->middleware('permission:component.view');
+    Route::get('/components/stock', [ComponentController::class, 'stock'])->name('components.stock')->middleware('permission:component.view');
 
-    // 10. Route CRUD dữ liệu linh kiện
-    Route::get('/components/create', [ComponentController::class, 'create'])->name('components.create');
-    Route::post('/components', [ComponentController::class, 'store'])->name('components.store');
-    Route::get('/components/{component}', [ComponentController::class, 'show'])->name('components.show');
-    Route::get('/components/{component}/edit', [ComponentController::class, 'edit'])->name('components.edit');
-    Route::put('/components/{component}', [ComponentController::class, 'update'])->name('components.update');
-    Route::delete('/components/{component}', [ComponentController::class, 'destroy'])->name('components.destroy');
+    // 10. CRUD linh kiện
+    Route::get('/components/create', [ComponentController::class, 'create'])->name('components.create')->middleware('permission:component.create');
+    Route::post('/components', [ComponentController::class, 'store'])->name('components.store')->middleware('permission:component.create');
+    Route::get('/components/{component}', [ComponentController::class, 'show'])->name('components.show')->middleware('permission:component.view');
+    Route::get('/components/{component}/edit', [ComponentController::class, 'edit'])->name('components.edit')->middleware('permission:component.update');
+    Route::put('/components/{component}', [ComponentController::class, 'update'])->name('components.update')->middleware('permission:component.update');
+    Route::delete('/components/{component}', [ComponentController::class, 'destroy'])->name('components.destroy')->middleware('permission:component.delete');
 
-    // 11. Route Thống kê
-    Route::get('/static', [StaticController::class, 'index'])->name('static.index');
+    // 11. Thống kê
+    Route::get('/static', [StaticController::class, 'index'])->name('static.index')->middleware('permission:dashboard.view');
 
-    // 12. Route Tải về danh sách linh kiện
-    Route::get('/logs/download', action: [UserLogController::class, 'download'])->name('logs.download');
-
+    // 12. Tải về logs người dùng
+    Route::get('/logs/download', [UserLogController::class, 'download'])->name('logs.download')->middleware('permission:user.download_log');
 });
-
-// Route kiểm tra kết nối database (system)
-Route::get('/check-database', [DatabaseController::class, 'checkDatabaseConnection']);
