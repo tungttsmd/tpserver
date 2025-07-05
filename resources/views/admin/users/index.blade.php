@@ -122,4 +122,5 @@
             text-overflow: ellipsis;
         }
     </style>
+    {{-- </style> --}}
 @endsection
