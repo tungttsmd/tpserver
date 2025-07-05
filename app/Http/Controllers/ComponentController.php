@@ -56,6 +56,7 @@ class ComponentController extends Controller
         $request->validate([
             'serial_number' => 'required|string|max:255|unique:components,serial_number',
             'category' => 'required|string|max:255',
+            'vendor' => 'required|string|max:255',
             'location' => 'required|string|max:255',
             'condition' => 'required|string|max:255',
             'status' => 'required|string|max:255',
@@ -65,6 +66,7 @@ class ComponentController extends Controller
             $component = Component::create([
                 'serial_number' => $request->serial_number,
                 'category' => $request->category,
+                'vendor' => $request->vendor,
                 'location' => $request->location,
                 'condition' => $request->condition,
                 'status' => $request->status,
@@ -83,6 +85,7 @@ class ComponentController extends Controller
                 'successData' => [
                     'serial_number' => $request->serial_number,
                     'category' => $request->category,
+                    'vendor' => $request->vendor,
                     'condition' => $request->condition,
                     'status' => $request->status,
                     'location' => $request->location,
@@ -91,7 +94,7 @@ class ComponentController extends Controller
                 ]
             ]);
         } catch (\Exception $e) {
-            return back()->withErrors(['msg' => 'Serial number đã tồn tại hoặc đã xảy ra lỗi!']);
+            return back()->withErrors(['msg' => 'Serial number đã tồn tại hoặc đã xảy ra lỗi!' . $e->getMessage()]);
         }
     }
     public function show(Component $component)

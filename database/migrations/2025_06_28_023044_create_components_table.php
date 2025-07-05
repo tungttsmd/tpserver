@@ -14,11 +14,11 @@ return new class extends Migration {
     {
         Schema::create('components', function (Blueprint $table) {
             $table->id();
-            $table->string('serial_number');
-            $table->string('category');
-            $table->string('vendor');
-            $table->string('location');
-            $table->string('condition');
+            $table->string('serial_number')->unique()->index();
+            $table->string('category')->index();
+            $table->string('vendor')->index();
+            $table->string(column: 'condition')->index();
+            $table->string('location')->index();
             $table->string('status');
             $table->text('description');
             $table->timestamp('warranty_expiry_at')->nullable();
@@ -26,6 +26,8 @@ return new class extends Migration {
             $table->timestamp('exported_at')->nullable();
             $table->timestamp('recalled_at')->nullable();
             $table->timestamps();
+            $table->index(['category', 'vendor', 'condition', 'location'], 'idx_category_vendor_condition_location');
+            //WHERE category = ? AND vendor = ? AND condition = ? AND location = ? for fastest query
         });
     }
 

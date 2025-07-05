@@ -15,6 +15,7 @@ class ComponentFactory extends Factory
         $locations = ['Kho A', 'Kho B', 'Kho', 'In Transit'];
         $conditions = ['Mới', 'Like new', 'Đã sử dụng', 'Hỏng nặng'];
         $statuses = ['Sẵn kho', 'Xuất kho'];
+        $vendors = ['Văn Sáng', 'FPT', 'Crayola'];
 
         $exported = $this->faker->boolean(20); // 20% chance đã xuất kho
         $recalled = $this->faker->boolean(10); // 10% chance đã thu hồi
@@ -23,7 +24,8 @@ class ComponentFactory extends Factory
             'serial_number' => strtoupper($this->faker->bothify('SN-####-???')),
             'category' => $this->faker->randomElement($categories),
             'location' => $this->faker->randomElement($locations),
-            'condition' => $this->faker->randomElement($conditions),
+            'vendor' => $this->faker->randomElement($vendors),
+            'condition' => $this->faker->randomElement(array: $conditions),
             'status' => $this->faker->randomElement($statuses),
             'description' => $this->faker->sentence(8),
             'exported_at' => $exported ? $this->faker->dateTimeBetween('-1 year', 'now') : null,

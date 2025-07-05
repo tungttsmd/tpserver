@@ -77,7 +77,8 @@
                                         <div class="input-group">
                                             <span class="input-group-text"><i class="fas fa-barcode"></i></span>
                                             <input type="text" name="serial_number" id="serial_number"
-                                                class="form-control input-hover" value="{{ old('serial_number') }}" required
+                                                class="form-create form-control input-hover"
+                                                value="{{ old('serial_number') }}" required
                                                 placeholder="Nhập số serial chính xác (ví dụ: SN123456789)" autofocus>
                                             <button type="button" onclick="generateCode()" class="btn btn-primary">Tạo mã
                                                 ngẫu
@@ -129,6 +130,13 @@
                                                 'type' => 'select',
                                                 'options' => ['Kho 1', 'Kho 2'],
                                             ],
+                                            [
+                                                'name' => 'vendor',
+                                                'label' => 'Nhà cung cấp',
+                                                'icon' => 'fas fa-store',
+                                                'type' => 'select',
+                                                'options' => ['Văn Sáng 1', 'Crayola 2'],
+                                            ],
                                         ];
                                     @endphp
 
@@ -172,18 +180,7 @@
                                                 placeholder="Nhập số tháng bảo hành">
                                         </div>
                                     </div>
-                                    <div class="mb-3">
-                                        <label for="vendor" class="form-label">Nhà cung cấp</label>
-                                        <div class="input-group">
-                                            <span class="input-group-text icon-scale"><i
-                                                    class="fas fa-map-marker-alt"></i></span>
-                                            <select name="vendor" id="vendor" class="form-control input-hover" required>
-                                                <option value="">-- Chọn người cung cấp --</option>
-                                                <option value="Văn Sáng" @selected(old('vendor') == 'Kho 1')>Văn Sáng</option>
-                                                <option value="Cray" @selected(old('vendor') == 'Kho 2')>Cray</option>
-                                            </select>
-                                        </div>
-                                    </div>
+
                                     {{-- MÔ TẢ --}}
                                     <div class="mb-3">
                                         <label for="description" class="form-label">Mô tả</label>
@@ -354,8 +351,9 @@
             }
 
             // Gán vào input có id="serial_number"
-            document.getElementById('serial_number').value = 'TPSC' + code;
+            document.querySelector('.form-create#serial_number').value = 'TPSC' + code;
         }
+        document.querySelector('.form-create#serial_number').focus();
     </script>
 
 @endsection

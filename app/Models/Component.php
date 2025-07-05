@@ -10,6 +10,6 @@ use Spatie\Permission\Traits\HasRoles;
 class Component extends Model
 {
     use HasRoles, HasPermissions, HasFactory;
-    protected $fillable = ['serial_number', 'category', 'location', 'condition', 'status', 'description', 'exported_at'];
-    
+    protected $fillable = ['serial_number', 'category', 'vendor', 'location', 'condition', 'status', 'description', 'exported_at'];
+
 }
