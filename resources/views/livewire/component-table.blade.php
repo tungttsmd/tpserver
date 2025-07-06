@@ -1,4 +1,4 @@
-<div class="container p-2 max-w-full">
+<div class="tpserver container p-2 max-w-full">
     {{-- Bộ lọc --}}
     @include('livewire.partials.component-table-filter')
 
@@ -57,13 +57,28 @@
     </div>
 
     <style>
-        .custom-table {
+        .tpserver thead th {
+            top: 2px !important;
+        }
+
+        .tpserver thead th::before {
+            border: 6px solid #4b6cb7;
+            content: '';
+            position: absolute;
+            top: -10px;
+            padding: 0;
+            left: 0;
+            right: 0;
+            z-index: -10;
+        }
+
+        .tpserver .custom-table {
             border-collapse: collapse;
             width: 100%;
         }
 
         /* Header */
-        .custom-table thead th {
+        .tpserver .custom-table thead th {
             position: sticky;
             top: 0;
             background-color: #4b6cb7;
@@ -76,7 +91,7 @@
         }
 
         /* Body cells */
-        .custom-table tbody td {
+        .tpserver .custom-table tbody td {
             background-color: #fff;
             border: 1px solid #dee2e6;
             color: #212529;
@@ -86,7 +101,7 @@
         }
 
         /* Hover effect */
-        .custom-table tbody tr:hover td {
+        .tpserver .custom-table tbody tr:hover td {
             background-color: #f8f9fa;
         }
     </style>
