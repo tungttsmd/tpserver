@@ -34,14 +34,14 @@
                 {{-- Nút quay lại --}}
                 <a href="#" class="btn btn-secondary"
                     onclick="Livewire.emit('changeView', 'component-form-scan')">
-                    <i class="fas fa-arrow-left me-1"></i> Quay lại
+                    <i class="fas fa-arrow-left "></i> Quay lại
                 </a>
                 <a href="#" class="btn btn-primary" onclick="Livewire.emit('changeView', 'component-form-scan')">
-                    <i class="fas fa-plus me-1"></i> Thêm
+                    <i class="fas fa-plus "></i> Thêm
                 </a>
                 <a href="#" class="btn bg-main text-white"
-                    onclick="Livewire.emit('scanRequest', 'TPSC-9845-JUH')">
-                    <i class="fas fa-qrcode me-1"></i> Scan
+                    onclick="Livewire.emit('scanRequest', 'TPSC-0173-KOD')">
+                    <i class="fas fa-qrcode "></i> Scan
                 </a>
             </div>
 
@@ -60,9 +60,8 @@
 
     {{-- Cột Thông tin linh kiện --}}
 
-    @if (is_object($component))
-        <div class="row g-3"> {{-- ✅ Wrap 2 khối vào row mới --}}
-
+    <div class="row col-12 g-3"> {{-- ✅ Wrap 2 khối vào row mới --}}
+        @if (is_object($component))
             {{-- Thông tin linh kiện --}}
             <div class="col-12 col-lg-6">
                 <div class="mt-0 text-gray-600 bg-gray-50 p-3 rounded space-y-1">
@@ -73,29 +72,42 @@
                                 <i class="fas fa-barcode mr-1"></i>
                                 <span>{{ $component->serial_number ?? 'N/A' }}</span>
                             </p>
-                            <p class="font-semibold text-[18px]">
-                                <i class="fas fa-memory mr-1 text-blue-600"></i>
-                                Tên: <span class="text-gray-700">{{ $component->name }}</span>
+                            <p class="font-semibold text-[18px]" style="color: #4b6cb7">
+                                <i class="fas fa-tags mr-1"></i>
+                                <span>{{ strtoupper($component->name) }}</span>
                             </p>
-                            <p><i class="fas fa-cube mr-1 text-green-600"></i>
+                            <p>
+                                <i class="fas fa-cube mr-1 text-green-600"></i>
                                 Loại: <span class="text-gray-700">{{ optional($component->category)->name }}</span>
                             </p>
-                            <p><i class="fas fa-shield-alt mr-1 text-purple-600"></i>
-                                Bảo hành:
+                            <p>
+
                                 @php
                                     $start = \Carbon\Carbon::parse($component->warranty_start);
                                     $end = \Carbon\Carbon::parse($component->warranty_end);
                                     $months = $start->diffInMonths($end);
+                                    $color = match (true) {
+                                        $months <= 0 => 'red',
+                                        $months > 48 => 'purple', // tím
+                                        $months > 36 => 'indigo', // chàm
+                                        $months > 24 => 'blue', // lam
+                                        $months > 12 => 'green', // lục
+                                        $months > 6 => 'yellow', // vàng
+                                        $months > 3 => 'orange', // cam
+                                        default => 'gray', // fallback
+                                    };
                                 @endphp
-                                <strong class="text-gray-700">
-                                    {{ $months }} tháng ({{ $start->format('d/m/Y') }} -
+                                <i class="fas fa-shield-alt mr-1 text-{{ $color }}-600"></i>
+
+                                <strong class="text-{{ $color }}-700">
+                                    Bảo hành: {{ $months }} tháng ({{ $start->format('d/m/Y') }} -
                                     {{ $end->format('d/m/Y') }})
                                 </strong>
                             </p>
                         </div>
 
                         {{-- QR Code --}}
-                        <div class="w-100 w-md-40 d-flex flex-column align-items-end">
+                        <div class="w-md-40 d-flex flex-column align-items-center">
                             <img src="{{ $qrcode ?? asset('img/qrcode-default.jpg') }}" alt="QR Code"
                                 class="w-32 h-32 object-contain border rounded shadow p-2" />
                         </div>
@@ -118,57 +130,13 @@
                     </div>
                 </div>
             </div>
-
-            {{-- Gợi ý tương tự --}}
-            <div class="col-12 col-lg-6">
-                @if (!empty($suggestions) && count($suggestions))
-                    <ul class="space-y-2">
-                        <li class="d-flex flex-col gap-2 p-3 bg-gray-100 rounded-md shadow-sm">
-                            <h4 class="text-lg font-semibold">
-                                <i class="fas fa-list mr-1 text-indigo-500"></i> Các linh kiện tương tự:
-                            </h4>
-                        </li>
-
-                        <div class="overflow-y-auto" style="max-height: 400px;">
-                            @foreach ($suggestions as $item)
-                                <li class="d-flex flex-col gap-2 p-3 bg-gray-100 rounded-md shadow-sm">
-                                    <div class="d-flex flex-column flex-sm-row gap-2">
-                                        <p class="text-sm"><i class="fas fa-barcode mr-1 text-gray-500"></i>
-                                            <span class="font-medium text-gray-800">{{ $item->serial_number }}</span>
-                                        </p>
-                                        <p class="text-sm"><i class="fas fa-microchip mr-1 text-gray-500"></i>
-                                            {{ $item->name }}</p>
-                                        <p class="text-sm text-gray-500 italic">
-                                            Loại: {{ optional($item->category)->name }}
-                                        </p>
-                                    </div>
-                                    <div class="d-flex justify-between align-items-center">
-                                        @php
-                                            $start = \Carbon\Carbon::parse($item->warranty_start);
-                                            $end = \Carbon\Carbon::parse($item->warranty_end);
-                                            $months = $start->diffInMonths($end);
-                                        @endphp
-                                        <strong class="text-gray-700 text-sm">
-                                            {{ $months }} tháng ({{ $start->format('d/m/Y') }} -
-                                            {{ $end->format('d/m/Y') }})
-                                        </strong>
-                                        <a href="#" class="btn bg-main text-white btn-sm"
-                                            onclick="Livewire.emit('scanRequest', '{{ $item->serial_number }}')">
-                                            <i class="fas fa-eye me-1"></i> Xem
-                                        </a>
-                                    </div>
-                                </li>
-                            @endforeach
-                        </div>
-                    </ul>
-                @else
-                    <p class="text-gray-500 italic text-sm">Không có linh kiện tương tự.</p>
-                @endif
+        @else
+            <div
+                class="justify-content-center col-lg-6 bg-yellow-100 text-yellow-800 p-3 rounded flex items-center gap-2">
+                <i class="fas fa-info-circle"></i> Không tìm thấy linh kiện phù hợp với serial đã nhập.
             </div>
-        </div>
-    @else
-        <div class="bg-yellow-100 text-yellow-800 p-3 rounded flex items-center gap-2">
-            <i class="fas fa-info-circle"></i> Không tìm thấy linh kiện phù hợp với serial đã nhập.
-        </div>
-    @endif
+        @endif
+        @include('livewire.partials.component-form-scan-suggestion')
+    </div>
+
 </div>

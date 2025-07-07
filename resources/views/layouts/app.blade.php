@@ -289,6 +289,16 @@
         </aside>
 
         <style>
+            i.fa,
+            i.fas {
+                min-width: 24px;
+                min-height: 24px;
+                display: inline-flex;
+                justify-content: center;
+                align-items: center;
+                text-align: center;
+            }
+
             .user-panel {
                 max-width: 350px;
                 box-shadow: 0px -5px 5px rgba(75, 108, 183, 0.5);
