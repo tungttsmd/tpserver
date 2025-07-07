@@ -1,8 +1,8 @@
-<div class="tpserver">
-    <div class="container mt-5 border shadow-sm rounded" style="max-height: 65vh; overflow-y: auto;">
+<div class="tpserver container pl-2 pr-2 pt-3 pb-24 max-w-full">
+    <div class="container border shadow-sm rounded" style="max-height: 100vh; overflow-y: auto;">
         <div class="row justify-content-center">
-            <div class="col-lg-12">
-                <div class="card shadow-lg rounded-4">
+            <div class="col-lg-12 p-0">
+                <div class="card shadow-sm rounded-4 m-0">
                     @if (session('info'))
                         <div class="alert alert-warning alert-dismissible fade show" role="alert">
                             <i class="fas fa-exclamation-circle me-2"></i> {{ session('info') }}

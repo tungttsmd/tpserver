@@ -4,8 +4,7 @@
         Admin panel by TPSERVER
     </div>
     <!-- Default to the left -->
-    <strong>Copyright &copy; 2025 <a href="https://www.facebook.com/servertp/">TPSERVER VIETNAM</a>.</strong> All rights
-    reserved.
+    <small>Copyright &copy; 2025 <a href="https://www.facebook.com/servertp/">TPSERVER VIETNAM</a>. All rights reserved.</small>
 </footer>
 <style>
     .user-panel {
@@ -43,7 +42,6 @@
 
     .role-badge {
         display: inline-block;
-        padding: 2px 10px;
         border-radius: 12px;
         font-size: 0.75rem;
         font-weight: 600;
@@ -158,6 +156,31 @@
         padding: 0;
 
     }
-</style>
 
+    .main-footer {
+        padding-top: 2px;
+        padding-bottom: 2px;
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+</style>
+<script>
+    function generateCode(length = 12) {
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        let code = '';
+        for (let i = 0; i < length; i++) {
+
+            if (i % 4 == 0) {
+                code += '-';
+            } else {
+                code += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+
+        }
+
+        // Gán vào input có id="serial_number"
+        document.querySelector('.form-create#serial_number').value = 'TPSC' + code;
+    }
+    document.querySelector('.form-create#serial_number').focus();
+</script>
 </div>

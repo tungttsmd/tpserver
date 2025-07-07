@@ -1,4 +1,4 @@
-<div class="tpserver container p-2 max-w-full">
+<div class="tpserver container pl-2 pr-2 pt-3 pb-24 max-w-full">
     {{-- Bộ lọc --}}
     @include('livewire.partials.component-table-filter')
 

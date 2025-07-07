@@ -65,20 +65,7 @@
                   @csrf
 
                   {{-- SERIAL NUMBER tách riêng để thêm autofocus --}}
-                  <div class="mb-3">
-                      <label for="serial_number" class="form-label">Serial number</label>
-                      <div class="input-group">
-                          <span class="input-group-text"><i class="fas fa-barcode"></i></span>
-                          <input type="text" name="serial_number" id="serial_number"
-                              class="form-create form-control input-hover" value="{{ old('serial_number') }}" required
-                              placeholder="Nhập số serial chính xác (ví dụ: SN123456789)" autofocus>
-                          <button type="button" onclick="generateCode()" class="btn btn-primary">Tạo
-                              mã
-                              ngẫu
-                              nhiên</button>
-                          <p id="code" class="mt-2 fw-bold"></p>
-                      </div>
-                  </div>
+                  <x-form.components.serial x-data="{ serial: '{{ old('serial_number') }}', generate() { this.serial = 'SN' + Math.random().toString(36).substring(2, 12).toUpperCase(); } }" />
 
                   {{-- CÁC FIELD CÒN LẠI --}}
                   @php
@@ -194,22 +181,4 @@
       </div>
   </div>
 
-  <script>
-      function generateCode(length = 12) {
-          const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-          let code = '';
-          for (let i = 0; i < length; i++) {
-
-              if (i % 4 == 0) {
-                  code += '-';
-              } else {
-                  code += chars.charAt(Math.floor(Math.random() * chars.length));
-              }
-
-          }
-
-          // Gán vào input có id="serial_number"
-          document.querySelector('.form-create#serial_number').value = 'TPSC' + code;
-      }
-      document.querySelector('.form-create#serial_number').focus();
-  </script>
+  

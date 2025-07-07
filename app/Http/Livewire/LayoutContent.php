@@ -5,7 +5,7 @@ use Livewire\Component;
 
 class LayoutContent extends Component
 {
-    public $currentView = 'component-index'; // view mặc định
+    public $currentView = 'component-form-scan'; // view mặc định
 
     protected $listeners = ['changeView'];
 
