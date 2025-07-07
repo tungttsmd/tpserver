@@ -449,6 +449,19 @@
                 padding: 0;
 
             }
+
+            .text-main {
+                color: #4b6cb7 !important;
+            }
+
+            .bright-hover:hover {
+                filter: brightness(1.8);
+
+            }
+
+            .scale-hover:hover {
+                transform: scale(1.1);
+            }
         </style>
 
 
@@ -479,6 +492,45 @@
         <!-- AdminLTE App -->
         <script src="{{ asset('dist/js/adminlte.min.js') }}"></script>
         <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+        <script>
+            // Ưu tiên focus sau khi Livewire đã render
+            window.addEventListener('DOMContentLoaded', () => {
+                setTimeout(() => {
+                    document.getElementById('scanInputFocus')?.focus();
+                }, 100);
+            });
+        </script>
+
+        <script>
+            document.addEventListener('keydown', function(e) {
+                // Loại trừ các phím không phải ký tự, ví dụ: Shift, Ctrl, Alt, Enter, Arrow keys...
+                if (e.key.length === 1) { // key có độ dài 1 nghĩa là ký tự in được
+                    console.log('Ký tự được bấm:', e.key);
+                } else {
+                    console.log('Phím đặc biệt hoặc không phải ký tự:', e.key);
+                }
+            });
+        </script>
+        <script>
+            function generateCode(length = 12) {
+                const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+                let code = '';
+                for (let i = 0; i < length; i++) {
+
+                    if (i % 4 == 0) {
+                        code += '-';
+                    } else {
+                        code += chars.charAt(Math.floor(Math.random() * chars.length));
+                    }
+
+                }
+
+                // Gán vào input có id="serial_number"
+                document.querySelector('.form-create#serial_number').value = 'TPSC' + code;
+            }
+            let target = document.querySelector('.form-create#serial_number');
+            if (target) target.focus();
+        </script>
 
         @livewireScripts
 </body>

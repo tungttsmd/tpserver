@@ -39,27 +39,20 @@
                 <a href="#" class="btn btn-primary" onclick="Livewire.emit('changeView', 'component-form-scan')">
                     <i class="fas fa-plus "></i> Thêm
                 </a>
-                <a href="#" class="btn bg-main text-white"
-                    onclick="Livewire.emit('scanRequest', 'TPSC-0173-KOD')">
-                    <i class="fas fa-qrcode "></i> Scan
-                </a>
             </div>
 
             {{-- Input Serial --}}
             <div class="flex-grow-1">
                 <div class="input-group">
                     <span class="input-group-text"><i class="fas fa-barcode"></i></span>
-                    <input type="text" name="serial_number" id="serial_number" class="form-control input-hover"
-                        value="{{ old('serial_number') }}" placeholder="Nhập số serial (ví dụ: SN123456789)" required
-                        autofocus>
+                    <input id="scanInputFocus" class="form-control input-hover" type="text" wire:model="serialNumber"
+                        placeholder="Nhập số serial" autocomplete="off" />
                 </div>
             </div>
         </div>
     </div>
 
-
     {{-- Cột Thông tin linh kiện --}}
-
     <div class="row col-12 g-3"> {{-- ✅ Wrap 2 khối vào row mới --}}
         @if (is_object($component))
             {{-- Thông tin linh kiện --}}
@@ -108,8 +101,16 @@
 
                         {{-- QR Code --}}
                         <div class="w-md-40 d-flex flex-column align-items-center">
-                            <img src="{{ $qrcode ?? asset('img/qrcode-default.jpg') }}" alt="QR Code"
-                                class="w-32 h-32 object-contain border rounded shadow p-2" />
+                            <div class="relative w-32 h-32">
+                                {{-- Ảnh mặc định --}}
+                                <img src="{{ asset('img/qrcode-default.jpg') }}" alt="Default QR"
+                                    class="absolute inset-0 w-full h-full object-contain rounded shadow p-2" />
+
+                                {{-- Ảnh qrcode thật --}}
+                                <img src="{{ $qrcode }}" alt="QR Code"
+                                    class="relative w-full h-full object-contain rounded shadow p-2"
+                                    onload="this.previousElementSibling.style.display='none'" />
+                            </div>
                         </div>
                     </div>
 

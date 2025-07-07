@@ -164,23 +164,5 @@
         padding-right: 20px;
     }
 </style>
-<script>
-    function generateCode(length = 12) {
-        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-        let code = '';
-        for (let i = 0; i < length; i++) {
 
-            if (i % 4 == 0) {
-                code += '-';
-            } else {
-                code += chars.charAt(Math.floor(Math.random() * chars.length));
-            }
-
-        }
-
-        // Gán vào input có id="serial_number"
-        document.querySelector('.form-create#serial_number').value = 'TPSC' + code;
-    }
-    document.querySelector('.form-create#serial_number').focus();
-</script>
 </div>

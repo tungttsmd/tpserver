@@ -1,27 +1,29 @@
   {{-- Gợi ý tương tự --}}
   <div class="col-lg-6">
-      {{ dd($this->suggestions) }}
-      @if ($this->suggestions->count())
-          <div class="mb-2 d-flex flex-col gap-2 p-2 bg-gray-100 rounded shadow-sm">
-              <h4 class="text-lg font-semibold">
-                  <i class="fas fa-list mr-1 text-indigo-500"></i> Các linh kiện tương tự:
-              </h4>
-          </div>
+      @if ($suggestions)
+          <h4 class="text-md font-semibold text-gray-500 mb-2">
+              <i class="fas fa-list mr-1 text-gray-500"></i> Các linh kiện tương tự:
+          </h4>
           <div class="overflow-y-auto" style="max-height: 400px;">
               <ul class="space-y-2">
                   @foreach ($suggestions as $item)
                       <li class="mb-2 d-flex flex-col gap-2 p-2 bg-gray-100 rounded shadow-sm">
+                        <div class="">
+                            <p class="mr-2 text-sm flex items-center text-gray-500 italic"><i
+                                    class="fas fa-barcode mr-2 text-gray-500"></i>
+                                <span
+                                    class="font-medium text-gray-500"><strong>{{ $item->serial_number }}</strong></span>
+                            </p>
+                        </div>
                           <div class="d-flex justify-content-between flex-column flex-sm-row gap-2">
+                              
                               <div class="d-inline-flex flex">
-                                  <p class="text-lg mr-2"><i class="fas fa-barcode mr-2 text-gray-500"></i>
-                                      <span
-                                          class="font-medium text-gray-800"><strong>{{ $item->serial_number }}</strong></span>
-                                  </p>
-                                  <p class="mr-2 text-xs flex items-center text-green-500 italic"><i
+
+                                  <p class="mr-2 text-sm flex items-center text-green-500 italic"><i
                                           class="fas fa-cube mr-1 text-green-500"></i>
                                       Loại: {{ optional($item->category)->name }}
                                   </p>
-                                  <p class="text-xs flex items-center text-blue-500 italic"><i
+                                  <p class="text-sm flex items-center text-blue-500 italic"><i
                                           class="fas fa-layer-group mr-1 text-blue-500"></i>
                                       Loại: {{ optional($item->status)->name }}
                                   </p>
@@ -54,8 +56,9 @@
                                   Bảo hành: {{ $months }} tháng ({{ $start->format('d/m/Y') }} -
                                   {{ $end->format('d/m/Y') }})
                               </strong>
-                              <a href="#" class="btn bg-main text-white btn-sm"
-                                  onclick="Livewire.emit('scanRequest', '{{ $item->serial_number }}')">
+                              <a href="#" class="text-main bright-hover scale-hover"
+                                  onclick="document.getElementById('scanInputFocus').value = '{{ $item->serial_number }}';
+            document.getElementById('scanInputFocus').dispatchEvent(new Event('input'));">
                                   <i class="fas fa-eye m-0"></i> Xem
                               </a>
                           </div>
