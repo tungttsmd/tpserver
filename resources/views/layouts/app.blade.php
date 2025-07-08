@@ -462,6 +462,11 @@
             .scale-hover:hover {
                 transform: scale(1.1);
             }
+
+            .tpserver .disable-click {
+                pointer-events: none !important;
+                /* KHÔNG nhận sự kiện chuột */
+            }
         </style>
 
 
@@ -492,26 +497,9 @@
         <!-- AdminLTE App -->
         <script src="{{ asset('dist/js/adminlte.min.js') }}"></script>
         <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
-        <script>
-            // Ưu tiên focus sau khi Livewire đã render
-            window.addEventListener('DOMContentLoaded', () => {
-                setTimeout(() => {
-                    document.getElementById('scanInputFocus')?.focus();
-                }, 100);
-            });
-        </script>
 
         <script>
-            document.addEventListener('keydown', function(e) {
-                // Loại trừ các phím không phải ký tự, ví dụ: Shift, Ctrl, Alt, Enter, Arrow keys...
-                if (e.key.length === 1) { // key có độ dài 1 nghĩa là ký tự in được
-                    console.log('Ký tự được bấm:', e.key);
-                } else {
-                    console.log('Phím đặc biệt hoặc không phải ký tự:', e.key);
-                }
-            });
-        </script>
-        <script>
+            // Xử lý nút random và autofocus cho create form
             function generateCode(length = 12) {
                 const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
                 let code = '';
@@ -531,7 +519,45 @@
             let target = document.querySelector('.form-create#serial_number');
             if (target) target.focus();
         </script>
+        <script>
+            // Xử lý thao tác cho máy scanner: Lắng nghe phím bất kỳ ngoài input để focus lại input và chọn hết nội dung
+            document.addEventListener('keydown', function(e) {
+                // Xử lý thao tác cho máy scanner
+                const input = document.getElementById('scanInputFocus');
+                if (!input) return;
 
+                input.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter') {
+                        // Không preventDefault, để form Livewire vẫn xử lý submit
+                        // Chỉ blur để rút focus sau khi submit được kích hoạt
+                        setTimeout(() => input.blur(), 0);
+                    }
+                });
+
+                // Khi nhấn Enter trong input, blur để rút focus (không ngăn submit)
+                if (document.activeElement !== input) {
+                    // Bỏ qua các phím điều khiển (tab, shift,...)
+                    if (!['Tab', 'Shift', 'Control', 'Alt', 'Meta'].includes(e.key)) {
+                        input.focus();
+                        input.select();
+                    }
+                }
+            });
+
+            // Xử lý thao tác cho nút Xem của suggestions
+            function triggerManualScan(serialNumber) {
+                const input = document.querySelector('#scanInputBox input');
+                input.value = serialNumber;
+                input.dispatchEvent(new Event('input')); // Cập nhật wire:model.defer
+                document.getElementById('formTriggerLivewire').requestSubmit();
+            }
+
+            function triggerRealtimeScan(serialNumber) {
+                const input = document.querySelector('#scanInputBox input');
+                input.value = serialNumber;
+                input.dispatchEvent(new Event('input'));
+            }
+        </script>
         @livewireScripts
 </body>
 

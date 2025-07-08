@@ -1,5 +1,5 @@
 <div class="tpserver container pl-2 pr-2 pt-3 pb-24 max-w-full">
-    <div class="container border shadow-sm rounded" style="max-height: 100vh; overflow-y: auto;">
+    <div class="container border shadow-sm rounded max-w-full" style="max-height: 100vh; overflow-y: unset;">
         <div class="row justify-content-center">
             <div class="col-lg-12 p-0">
                 <div class="card shadow-sm rounded-4 m-0">

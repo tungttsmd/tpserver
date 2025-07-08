@@ -13,8 +13,18 @@ class ComponentForm extends Component
     public $currentView = 'component-form-scan'; // view mặc định
     public $view_form_content = '';
     public $serialNumber = null;
-    protected $listeners = ['scanRequest' => 'scanResponse'];
+    protected $listeners = ['scanRequest' => 'scanResponse', 'setScanModeRequest' => 'setScanModeResponse'];
+    public $mode = 'manual';
 
+    public function formRenderTrigger()
+    {
+        // Hàm này là hàm rỗng nhằm chỉ để kích hoạt lại render của livewire khi submit form chuẩn mà không realtime
+    }
+
+    public function setScanModeResponse($mode)
+    {
+        $this->mode = $mode;
+    }
     public function render()
     {
         if ($this->serialNumber) {
@@ -32,15 +42,9 @@ class ComponentForm extends Component
             ])->where('serial_number', $this->serialNumber)->first();
             $qrcode = "https://api.qrserver.com/v1/create-qr-code/?data={$this->serialNumber}&size=240x240";
 
-            $prefixLength = floor(strlen($this->serialNumber) * 0.5);
-            $prefix = substr($this->serialNumber, 0, $prefixLength);
-
-            $suggestions = HardwareComponent::with('category', 'status')
-                ->where('serial_number', 'like', $prefix . '%')
-                ->when($component, fn($q) => $q->where('id', '!=', $component->id))
-                ->orderBy('serial_number')
-                ->paginate(20);
-            } else {
+            // Phương pháp search đề xuất thông minh
+            $suggestions = $this->smartMatching($component);
+        } else {
             $suggestions = null;
             $qrcode = null;
             $component = null;
@@ -63,4 +67,46 @@ class ComponentForm extends Component
                 break;
         }
     }
+    public function smartMatching($component)
+    {
+        $serial = $this->serialNumber;
+
+        $baseQuery = HardwareComponent::with('category', 'status')
+            ->when($component, fn($q) => $q->where('id', '!=', $component->id));
+
+        // 1. prefix
+        $suggestions = (clone $baseQuery)
+            ->where('serial_number', 'like', $serial . '%')
+            ->orderBy('serial_number')
+            ->paginate(20);
+
+        // 2. chứa toàn bộ
+        if ($suggestions->isEmpty()) {
+            $suggestions = (clone $baseQuery)
+                ->where('serial_number', 'like', '%' . $serial . '%')
+                ->orderBy('serial_number')
+                ->paginate(20);
+        }
+
+        // 3. nửa đầu
+        if ($suggestions->isEmpty()) {
+            $half = substr($serial, 0, floor(strlen($serial) * 0.5));
+            $suggestions = (clone $baseQuery)
+                ->where('serial_number', 'like', $half . '%')
+                ->orderBy('serial_number')
+                ->paginate(20);
+        }
+
+        // 4. nửa sau
+        if ($suggestions->isEmpty()) {
+            $half = substr($serial, floor(strlen($serial) * 0.5));
+            $suggestions = (clone $baseQuery)
+                ->where('serial_number', 'like', '%' . $half)
+                ->orderBy('serial_number')
+                ->paginate(20);
+        }
+
+        return $suggestions;
+    }
+
 }

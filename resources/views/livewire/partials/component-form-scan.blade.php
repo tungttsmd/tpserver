@@ -28,28 +28,53 @@
         @endif
 
         {{-- Form Row --}}
-        <div class="d-flex align-items-center gap-3 mb-3">
-            {{-- Nút hành động --}}
-            <div class="d-flex flex-column flex-sm-row gap-2">
-                {{-- Nút quay lại --}}
-                <a href="#" class="btn btn-secondary"
-                    onclick="Livewire.emit('changeView', 'component-form-scan')">
-                    <i class="fas fa-arrow-left "></i> Quay lại
-                </a>
-                <a href="#" class="btn btn-primary" onclick="Livewire.emit('changeView', 'component-form-scan')">
-                    <i class="fas fa-plus "></i> Thêm
-                </a>
-            </div>
-
-            {{-- Input Serial --}}
-            <div class="flex-grow-1">
-                <div class="input-group">
-                    <span class="input-group-text"><i class="fas fa-barcode"></i></span>
-                    <input id="scanInputFocus" class="form-control input-hover" type="text" wire:model="serialNumber"
-                        placeholder="Nhập số serial" autocomplete="off" />
+        <div class="row mb-3 gx-3 align-items-center">
+            {{-- Nhóm nút --}}
+            <div class="col-auto">
+                <div class="btn-group btn-group-sm mb-2" role="group" aria-label="Chọn chế độ quét">
+                    <a href="#" class="d-inline-flex align-items-center btn btn-success rounded text-md"
+                        onclick="Livewire.emit('changeView', 'component-form-scan')">
+                        <i class="fas fa-plus"></i> Thêm mới
+                    </a>
+                    <div class="ml-4 rounded-lg  overflow-hidden border g-0 d-inline-flex   ">
+                        <a href="#"
+                            class="btn rounded-0 {{ $mode === 'manual' ? 'bg-main text-white border-1 ' : 'bg-light text-dark ' }}"
+                            onclick="Livewire.emit('setScanModeRequest', 'manual')">
+                            <i class="fas fa-expand"></i> Máy quét
+                        </a>
+                        <a href="#"
+                            class="btn rounded-0 {{ $mode === 'realtime' ? 'bg-main text-white border-1 ' : 'bg-light text-dark ' }}"
+                            onclick="Livewire.emit('setScanModeRequest', 'realtime')">
+                            <i class="fas fa-barcode"></i> Nhập tay
+                        </a>
+                    </div>
                 </div>
             </div>
+
+            {{-- Ô input --}}
+            <div class="col" id="scanInputBox">
+                @if ($mode === 'realtime')
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-search"></i></span>
+                        <input type="text" wire:model="serialNumber" class="form-control"
+                            placeholder="Nhập serial để tra cứu" autocomplete="off" />
+                    </div>
+                @elseif ($mode === 'manual')
+                    <form id="formTriggerLivewire" wire:submit.prevent="formRenderTrigger">
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-barcode"></i></span>
+                            <input id="scanInputFocus" type="text" wire:model.defer="serialNumber"
+                                class="form-control" placeholder="Sử dụng máy quét để tra cứu" onfocus="this.select()"
+                                style="background-color: #e9ecef">
+                            <button type="submit" class="btn btn-primary" hidden>
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </form>
+                @endif
+            </div>
         </div>
+
     </div>
 
     {{-- Cột Thông tin linh kiện --}}
@@ -132,10 +157,12 @@
                 </div>
             </div>
         @else
-            <div
-                class="justify-content-center col-lg-6 bg-yellow-100 text-yellow-800 p-3 rounded flex items-center gap-2">
-                <i class="fas fa-info-circle"></i> Không tìm thấy linh kiện phù hợp với serial đã nhập.
-            </div>
+            @if ($serialNumber)
+                <div
+                    class="justify-content-center col-lg-6 bg-yellow-100 text-yellow-800 p-3 rounded flex items-center gap-2">
+                    <i class="fas fa-info-circle"></i> Không tìm thấy linh kiện phù hợp với serial đã nhập.
+                </div>
+            @endif
         @endif
         @include('livewire.partials.component-form-scan-suggestion')
     </div>
