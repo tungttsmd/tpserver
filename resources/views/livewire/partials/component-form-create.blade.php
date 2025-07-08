@@ -9,7 +9,7 @@
               <div class="w-100 d-flex flex-column" style="height: 500px;">
                   <div
                       class="flex-grow-1 d-flex align-items-center justify-content-center mb-4 qr-frame {{ session('successData') ? '' : 'opacity-50' }}">
-                      <img src="{{ session('successData.link_qr') ?? asset('img/qr-placeholder.jpg') }}"
+                      <img src="{{ session('successData.link_qr') ?? asset('img/qrcode-default.jpg') }}"
                           alt="{{ session('successData') ? 'QR Code' : 'QR Placeholder' }}" class="img-fluid"
                           style="padding: 40px">
                       @if (!session('successData'))
@@ -61,67 +61,68 @@
                   </div>
               @endif
 
-              <form method="POST" action="{{ route('components.store') }}">
+              <form wire.submit.prevent="formHandlerRequest">
                   @csrf
 
                   {{-- SERIAL NUMBER tách riêng để thêm autofocus --}}
                   <x-form.components.serial x-data="{ serial: '{{ old('serial_number') }}', generate() { this.serial = 'SN' + Math.random().toString(36).substring(2, 12).toUpperCase(); } }" />
 
+
                   {{-- CÁC FIELD CÒN LẠI --}}
                   @php
+
+                      $categoryOptions = [];
+                      $conditionOptions = [];
+                      $locationOptions = [];
+                      $vendorOptions = [];
+                      foreach ($categories as $category) {
+                          $categoryOptions[$category->id] = $category->name;
+                      }
+                      foreach ($conditions as $condition) {
+                          $conditionOptions[$condition->id] = $condition->name;
+                      }
+                      foreach ($locations as $location) {
+                          $locationOptions[$location->id] = $location->name;
+                      }
+                      foreach ($vendors as $vendor) {
+                          $vendorOptions[$vendor->id] = $vendor->name;
+                      }
+
                       $fields = [
                           [
                               'name' => 'category',
                               'label' => 'Phân loại',
                               'icon' => 'fas fa-cogs',
                               'type' => 'select',
-                              'options' => [
-                                  'RAM',
-                                  'Chip',
-                                  'Quạt',
-                                  'Tản',
-                                  'Ổ cứng',
-                                  'Nguồn',
-                                  'Main',
-                                  'VGA',
-                                  'Case',
-                                  'Khác',
-                              ],
+                              'options' => $categoryOptions,
                           ],
                           [
                               'name' => 'condition',
                               'label' => 'Tình trạng',
                               'icon' => 'fas fa-microchip',
                               'type' => 'select',
-                              'options' => [
-                                  'Mới 100%',
-                                  'Like new',
-                                  'Sử dụng ổn định',
-                                  'Tình trạng bất ổn',
-                                  'Đang chờ sửa chữa',
-                                  'Đã gửi đi sửa chữa',
-                                  'Hư hỏng',
-                              ],
+                              'options' => $conditionOptions,
                           ],
                           [
                               'name' => 'location',
                               'label' => 'Vị trí',
                               'icon' => 'fas fa-map-marker-alt',
                               'type' => 'select',
-                              'options' => ['Kho 1', 'Kho 2'],
+                              'options' => $locationOptions,
                           ],
                           [
                               'name' => 'vendor',
                               'label' => 'Nhà cung cấp',
                               'icon' => 'fas fa-store',
                               'type' => 'select',
-                              'options' => ['Văn Sáng 1', 'Crayola 2'],
+                              'options' => $vendorOptions,
                           ],
                       ];
                   @endphp
-
+                  Tên linh kiện: <input type="text">
                   @foreach ($fields as $field)
                       <div class="mb-3">
+                          <input wire:model.defer="serialNumber" type="text">
                           <label for="{{ $field['name'] }}" class="form-label">{{ $field['label'] }}</label>
                           <div class="input-group">
                               <span class="input-group-text"><i class="{{ $field['icon'] }}"></i></span>
@@ -180,5 +181,3 @@
           </div>
       </div>
   </div>
-
-  
