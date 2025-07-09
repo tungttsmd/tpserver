@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Validator;
 class ComponentForm extends Component
 {
     use WithPagination;
+    public $serial_number, $category_id, $vendor_id, $location_id, $condition_id, $status_id, $name, $date_issued, $warranty_start, $warranty_end, $note;
     public $category;
     public $vendor;
     public $location;
@@ -27,6 +28,7 @@ class ComponentForm extends Component
     public $serialNumber = null;
     protected $listeners = ['scanRequest' => 'scanResponse', 'setScanModeRequest' => 'setScanModeResponse', 'formCreateRequest' => 'formCreateResponse'];
     public $mode = 'manual';
+    public $successData = null;
 
     public function formRenderTrigger()
     {
@@ -129,51 +131,6 @@ class ComponentForm extends Component
             'suggestions' => $suggestions,
         ];
     }
-    public function formCreateResponse()
-    {
-        $validated = Validator::make([
-            'serial_number' => $this->serialNumber,
-            'category' => $this->category,
-            'vendor' => $this->vendor,
-            'location' => $this->location,
-            'condition' => $this->condition,
-            'status' => $this->status,
-            'description' => $this->description,
-        ], [
-            'serial_number' => 'required|string|max:255|unique:components,serial_number',
-            'category' => 'required|string|max:255',
-            'vendor' => 'required|string|max:255',
-            'location' => 'required|string|max:255',
-            'condition' => 'required|string|max:255',
-            'status' => 'required|string|max:255',
-            'description' => 'nullable|string',
-        ])->validate();
-
-        try {
-            $component = HardwareComponent::create($validated);
-
-            UserLog::create([
-                'action' => 'Thêm mới',
-                'user' => Auth::user()->username ?? 'unknown',
-                'note' => (Auth::user()->username ?? 'unknown') . " đã thêm mới {$this->category} [{$this->serialNumber}]"
-            ]);
-
-            session()->flash('successData', [
-                'serial_number' => $this->serialNumber,
-                'category' => $this->category,
-                'vendor' => $this->vendor,
-                'condition' => $this->condition,
-                'status' => $this->status,
-                'location' => $this->location,
-                'description' => $this->description,
-                'link_qr' => "https://api.qrserver.com/v1/create-qr-code/?data={$this->serialNumber}"
-            ]);
-
-            $this->reset(['serialNumber', 'category', 'vendor', 'condition', 'status', 'location', 'description']);
-        } catch (\Exception $e) {
-            session()->flash('error', 'Serial number đã tồn tại hoặc xảy ra lỗi: ' . $e->getMessage());
-        }
-    }
     public function loadCreateFormData()
     {
         $categories = Category::select('id', 'name')
@@ -185,5 +142,53 @@ class ComponentForm extends Component
         $vendors = Vendor::select('id', 'name')
             ->get();
         return ['categories' => $categories, 'conditions' => $conditions, 'vendors' => $vendors, 'locations' => $locations];
+    }
+    public function rules()
+    {
+        return [
+            'serial_number'   => 'required|unique:components,serial_number',
+            'name'            => 'required|string|max:255',
+            'category_id'        => 'required|exists:categories,id',
+            'condition_id'       => 'required|exists:conditions,id',
+            'location_id'        => 'required|exists:locations,id',
+            'vendor_id'          => 'required|exists:vendors,id',
+            'note'            => 'nullable|string|max:1000',
+            'date_issued'     => 'required|date',
+            'warranty_start'  => 'required|date',
+            'warranty_end'    => 'required|date|after_or_equal:warranty_start',
+        ];
+    }
+    public function formCreateSubmit()
+    {
+
+        $this->validate();
+
+        $qrcode = "https://api.qrserver.com/v1/create-qr-code/?data={$this->serialNumber}&size=240x240" ?? asset('img/qrcode-default.jpg');
+
+        $component = HardwareComponent::create([
+            'serial_number'   => $this->serial_number,
+            'name'            => $this->name,
+            'category_id'     => $this->category,
+            'condition_id'    => $this->condition,
+            'location_id'     => $this->location,
+            'vendor_id'       => $this->vendor,
+            'date_issued'     => $this->date_issued,
+            'warranty_start'  => $this->warranty_start,
+            'warranty_end'    => $this->warranty_end,
+            'note'     => $this->note,
+        ]);
+
+        $this->successData = [
+            'serial_number' => $component->serial_number,
+            'category'      => $component->category->name ?? '',
+            'condition'     => $component->condition->name ?? '',
+            'location'      => $component->location->name ?? '',
+            'vendor'        => $component->vendor->name ?? '',
+            'status'        => $component->status ?? 'N/A',
+            'note'   => $component->note,
+            'qrcode'       => $qrcode,
+        ];
+
+        $this->resetExcept('successData');
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
@@ -17,6 +18,7 @@ class ComponentLogSeeder extends Seeder
             $actionId = $faker->numberBetween(0, 15);
             $userId = $faker->numberBetween(1, 1000);
             $componentId = $faker->numberBetween(1, 500);
+            $customerId = $faker->numberBetween(1, 300);
 
             // note là số ngẫu nhiên, ví dụ 1-1000
             $note = (string) $faker->numberBetween(1, 1000);
@@ -35,6 +37,7 @@ class ComponentLogSeeder extends Seeder
 
             $data[] = [
                 'user_id' => $userId,
+                'customer_id' => $customerId,
                 'component_id' => $componentId,
                 'action_id' => $actionId,
                 'note' => $note,

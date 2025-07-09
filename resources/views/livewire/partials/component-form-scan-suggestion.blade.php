@@ -10,11 +10,15 @@
                   <ul class="space-y-2">
                       @foreach ($suggestions as $item)
                           <li class="mt-2 d-flex flex-col gap-2 p-2 bg-gray-100 rounded shadow-sm">
-                              <div class="">
+                              <div class="d-inline-flex justify-content-between">
                                   <p class="mr-2 text-sm flex items-center text-gray-500 italic"><i
                                           class="fas fa-barcode mr-2 text-gray-500"></i>
                                       <span
                                           class="font-medium text-gray-500"><strong>{{ $item->serial_number }}</strong></span>
+                                  </p>
+                                  <p class="text-sm text-blue-700" style="color: #4b6cb7">
+                                      <strong>{{ strtoupper($item->name) }}</strong><i
+                                          class="fas fa-tags ml-2 text-blue-500" style="color: #4b6cb7"></i>
                                   </p>
                               </div>
                               <div class="d-flex justify-content-between flex-column flex-sm-row gap-2">
@@ -34,12 +38,7 @@
                                           Ngày tạo: {{ $item->date_created ?? 'N/A' }}
                                       </p>
                                   </div>
-                                  <div class="">
-                                      <p class="text-sm text-blue-700" style="color: #4b6cb7">
-                                          <strong>{{ strtoupper($item->name) }}</strong><i
-                                              class="fas fa-tags ml-2 text-blue-500" style="color: #4b6cb7"></i>
-                                      </p>
-                                  </div>
+
                               </div>
                               <div class="d-flex justify-between align-items-center">
                                   @php

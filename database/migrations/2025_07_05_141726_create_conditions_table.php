@@ -16,8 +16,9 @@ return new class extends Migration
         Schema::create('conditions', function (Blueprint $table) {
             $table->id();
             $table->string('name')->unique()->index();
-            $table->timestamp('date_updated')->useCurrent()->useCurrentOnUpdate();
-            $table->timestamp('date_created')->useCurrent();        });
+            $table->timestamp('date_updated')->useCurrent()->useCurrentOnUpdate()->index();
+            $table->timestamp('date_created')->useCurrent()->index();
+        });
     }
 
     /**

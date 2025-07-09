@@ -15,8 +15,8 @@ return new class extends Migration {
             $table->string('avatar_url')->nullable();
             $table->string('cover_url')->nullable();
             $table->rememberToken();
-            $table->timestamp('date_updated')->useCurrent()->useCurrentOnUpdate();
-            $table->timestamp('date_created')->useCurrent();
+            $table->timestamp('date_updated')->useCurrent()->useCurrentOnUpdate()->index();
+            $table->timestamp('date_created')->useCurrent()->index();
         });
     }
 

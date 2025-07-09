@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('name')->unique()->index();
             $table->string('note');
-            $table->timestamp('date_updated')->useCurrent()->useCurrentOnUpdate();
-            $table->timestamp('date_created')->useCurrent();
+            $table->timestamp('date_updated')->useCurrent()->useCurrentOnUpdate()->index();
+            $table->timestamp('date_created')->useCurrent()->index();
         });
     }
 

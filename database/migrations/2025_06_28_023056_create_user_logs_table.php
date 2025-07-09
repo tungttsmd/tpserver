@@ -17,8 +17,8 @@ return new class extends Migration {
             $table->unsignedBigInteger('user_id')->index();
             $table->string('action_id')->index();
             $table->string('note');
-            $table->timestamp('date_updated')->useCurrent()->useCurrentOnUpdate();
-            $table->timestamp('date_created')->useCurrent();
+            $table->timestamp('date_updated')->useCurrent()->useCurrentOnUpdate()->index();
+            $table->timestamp('date_created')->useCurrent()->index();
         });
     }
 

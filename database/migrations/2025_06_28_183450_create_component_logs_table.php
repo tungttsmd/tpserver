@@ -15,14 +15,15 @@ return new class extends Migration
     {
         Schema::create('component_logs', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('component_id');
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('customer_id')->nullable()->index();
             $table->unsignedBigInteger('action_id');
             $table->string('note');
             $table->timestamp('date_issued')->nullable();
             $table->timestamp('date_recalled')->nullable();
-            $table->timestamp('date_updated')->useCurrent()->useCurrentOnUpdate();
-            $table->timestamp('date_created')->useCurrent();
+            $table->timestamp('date_updated')->useCurrent()->useCurrentOnUpdate()->index();
+            $table->timestamp('date_created')->useCurrent()->index();
         });
     }
 

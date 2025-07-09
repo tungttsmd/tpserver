@@ -467,6 +467,11 @@
                 pointer-events: none !important;
                 /* KHÔNG nhận sự kiện chuột */
             }
+
+            .tpserver .recenterDiv {
+                justify-content: space-between !important;
+                margin-right: 0.75rem !important;
+            }
         </style>
 
 
@@ -497,28 +502,6 @@
         <!-- AdminLTE App -->
         <script src="{{ asset('dist/js/adminlte.min.js') }}"></script>
         <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
-
-        <script>
-            // Xử lý nút random và autofocus cho create form
-            function generateCode(length = 12) {
-                const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-                let code = '';
-                for (let i = 0; i < length; i++) {
-
-                    if (i % 4 == 0) {
-                        code += '-';
-                    } else {
-                        code += chars.charAt(Math.floor(Math.random() * chars.length));
-                    }
-
-                }
-
-                // Gán vào input có id="serial_number"
-                document.querySelector('.form-create#serial_number').value = 'TPSC' + code;
-            }
-            let target = document.querySelector('.form-create#serial_number');
-            if (target) target.focus();
-        </script>
         <script>
             // Xử lý thao tác cho máy scanner: Lắng nghe phím bất kỳ ngoài input để focus lại input và chọn hết nội dung
             document.addEventListener('keydown', function(e) {
