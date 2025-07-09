@@ -4,59 +4,55 @@
 
   <div class="card-body">
       <div class="row">
-          {{-- QR CODE + THÔNG TIN LINH KIỆN BÊN PHẢI --}}
-          <div class="md:w-1/2 w-full flex flex-col items-center justify-start">
-              <div class="pr-4 pl-4 w-full flex flex-col h-[500px]">
+          {{-- CỘT PHẢI: QR CODE + THÔNG TIN LINH KIỆN --}}
+          <div class="w-full md:w-1/2 h-full px-4 flex flex-col gap-4">
 
-                  {{-- Khung QR --}}
-                  <div
-                      class="d-flex flex-column flex-grow items-center justify-center mb-4 border border-dashed rounded-xl relative transition-opacity duration-300 qr-frame {{ session('successData') ? '' : 'opacity-50' }}">
-                      <img src="{{ session('successData.link_qr') ?? asset('img/qrcode-default.jpg') }}"
-                          class="max-w-full max-h-full p-10 object-contain" alt="QR Code">
-                      @unless (session('successData'))
-                          <p class="text-gray-500 text-center">QR code here</p>
-                      @endunless
-                  </div>
+              {{-- QR Code (chiếm 50%) --}}
+              <div
+                  class="flex-1 basis-1/2 border-2 border-dashed border-gray-300 rounded-2xl flex items-center justify-center transition-opacity duration-300 {{ $createSuccess ? '' : 'opacity-50' }}">
+                  <img src="{{ $createSuccess['qrcode'] ?? asset('img/qrcode-default.jpg') }}" alt="QR Code"
+                      class="max-w-[70%] max-h-[70%] object-contain p-4">
 
-                  {{-- Alert thông báo --}}
-                  @if (session('successData'))
-                      <div
-                          class="flex items-center bg-green-100 text-green-800 text-sm font-medium px-4 py-3 rounded shadow-sm">
+                  @unless ($createSuccess)
+                      <p class="absolute bottom-4 text-sm text-gray-500">QR code sẽ hiển thị tại đây</p>
+                  @endunless
+              </div>
+
+              {{-- Thông tin (chiếm 50%) --}}
+              <div class="flex-1 basis-1/2 overflow-y-auto">
+
+                  @if ($createSuccess)
+                      {{-- Alert --}}
+                      <div class="flex items-center bg-green-100 text-green-800 text-sm font-medium px-3 py-3 rounded">
                           <i class="fas fa-check-circle mr-2"></i>
-                          <span><strong>Thêm mới thành công!</strong></span>
+                          <span>Thêm mới thành công!</span>
                       </div>
 
                       {{-- Thông tin chi tiết --}}
-                      <div class="border rounded-lg p-4 bg-white shadow mt-auto detail-container">
-                          <h5 class="text-green-600 font-semibold mb-2 flex items-center">
+                      <div class="mt-4 border rounded-xl p-4 bg-white shadow max-h-80 overflow-y-auto">
+                          <h5 class="text-green-600 font-semibold mb-3 flex items-center">
                               <i class="fas fa-info-circle mr-2"></i>Thông tin linh kiện
                           </h5>
-                          <ul class="divide-y divide-gray-200 text-sm">
-                              @foreach ([
-        'serial_number' => 'Serial',
-        'category' => 'Phân loại',
-        'location' => 'Vị trí',
-        'condition' => 'Tình trạng',
-        'status' => 'Trạng thái',
-        'description' => 'Mô tả',
-    ] as $key => $label)
-                                  <li class="py-2 break-words">
-                                      <strong>{{ $label }}:</strong>
-                                      {{ session('successData')[$key] ?? '-' }}
+                          <ul class="text-sm divide-y divide-gray-200">
+                              @foreach ($createSuccess as $key => $value)
+                                  @continue($key === 'qrcode' || $key === 'serial_number')
+                                  <li class="py-2">
+                                      <span class="font-semibold capitalize">{{ str_replace('_', ' ', $key) }}:</span>
+                                      <span class="ml-1">{{ $value ?? '-' }}</span>
                                   </li>
                               @endforeach
-                              <li class="py-2 break-words">
-                                  <strong>Ngày tạo:</strong> {{ now()->format('d/m/Y H:i') }}
-                              </li>
                           </ul>
                       </div>
                   @else
-                      <p class="text-gray-500 text-center mt-auto text-sm">
-                          <i class="fas fa-info-circle mr-2"></i>Thông tin sẽ hiển thị sau khi thêm mới
+                      <p class="text-center text-sm text-gray-500 mt-4">
+                          <i class="fas fa-info-circle mr-1"></i>
+                          Thông tin sẽ hiển thị sau khi thêm mới
                       </p>
                   @endif
+
               </div>
           </div>
+
 
           {{-- FORM BÊN TRÁI --}}
           <div class="col-md-6 border-end">
@@ -75,29 +71,26 @@
               <form wire:submit.prevent="formCreateSubmit">
 
                   {{-- SERIAL NUMBER tách riêng để thêm autofocus --}}
-                  @props([
-                      'name' => 'serial_number',
-                      'label' => 'Serial number',
-                      'placeholder' => 'Nhập số serial chính xác (ví dụ: SN123456789)',
-                  ])
                   <div class="mb-1">
-                      <label for="serial-number-{{ $name }}" class="form-label">{{ $label }}</label>
-                      <div class="input-group">
-                          <span class="input-group-text"><i class="fas fa-barcode"></i></span>
-                          <input wire:model.defer="{{ $name }}" type="text" name="{{ $name }}"
-                              id="serial-number-generate" class="form-create form-control input-hover rounded mr-3"
-                              placeholder="{{ $placeholder }}" autofocus {{ $attributes }}>
+                      <label for="serial-number-generate" class="form-label">Serial number<span class="text-warning">
+                              *</span></label>
+                      <div class="input-group border-main">
+                          <span class="input-group-text border-0"><i class="fas fa-barcode"></i></span>
+                          <input wire:model.defer="serial_number" type="text" name="serial_number"
+                              id="serial-number-generate" class="border-0 form-create form-control input-hover"
+                              placeholder="Nhập số serial chính xác (ví dụ: SN123456789)" autofocus required>
                       </div>
-                      <p class="mt-2 fw-bold" id="code-output-{{ $name }}"></p>
+                      <p class="mt-2 fw-bold" id="code-output-serial_number"></p>
                   </div>
 
                   {{-- CÁC FIELD CÒN LẠI --}}
                   @php
-
                       $categoryOptions = [];
                       $conditionOptions = [];
                       $locationOptions = [];
                       $vendorOptions = [];
+                      $manufacturerOptions = [];
+
                       foreach ($categories as $category) {
                           $categoryOptions[$category->id] = $category->name;
                       }
@@ -110,16 +103,11 @@
                       foreach ($vendors as $vendor) {
                           $vendorOptions[$vendor->id] = $vendor->name;
                       }
+                      foreach ($manufacturers as $manufacturer) {
+                          $manufacturerOptions[$manufacturer->id] = $manufacturer->name;
+                      }
 
                       $fields = [
-                          [
-                              'livewire' => 'category_id',
-                              'name' => 'category',
-                              'label' => 'Phân loại',
-                              'icon' => 'fas fa-cogs',
-                              'type' => 'select',
-                              'options' => $categoryOptions,
-                          ],
                           [
                               'livewire' => 'condition_id',
                               'name' => 'condition',
@@ -145,56 +133,101 @@
                           'type' => 'select',
                           'options' => $vendorOptions,
                       ];
+                      $manufacturerFields = [
+                          'livewire' => 'manufacturer_id',
+                          'name' => 'manufacturer',
+                          'label' => 'Hãng sản xuất',
+                          'icon' => 'fas fa-industry',
+                          'type' => 'select',
+                          'options' => $manufacturerOptions,
+                      ];
+                      $categoryFields = [
+                          'livewire' => 'category_id',
+                          'name' => 'category',
+                          'label' => 'Phân loại',
+                          'icon' => 'fas fa-cogs',
+                          'type' => 'select',
+                          'options' => $categoryOptions,
+                      ];
+
                   @endphp
+
+                  <div class="d-flex gap-3 flex-wrap">
+
+                      <div class="flex-grow-1">
+                          <label for="name" class="form-label">Tên linh kiện<span class="text-warning">
+                                  *</span></label>
+                          <div class="input-group border-main">
+                              <span class="input-group-text icon-scale border-0"><i class="fas fa-tags"></i></span>
+                              <input wire:model.defer="name" type="text" class="form-control input-hover border-0"
+                                  required placeholder="Nhập tên linh kiện">
+                          </div>
+                      </div>
+
+
+                      {{-- Ngày nhập kho --}}
+                      <div class="flex-grow-1" style="min-width: 200px;">
+                          <label for="date_created" class="form-label">Ngày nhập kho<span class="text-warning">
+                                  *</span></label>
+                          <div class="input-group border-main">
+                              <span class="input-group-text icon-scale border-0"><i
+                                      class="fas fa-calendar-alt"></i></span>
+                              <input wire:model.defer="date_created" type="date"
+                                  class="form-control input-hover border-0" required>
+                          </div>
+                      </div>
+                  </div>
                   <div class="mb-1 mt-1">
-                      <label for="name" class="form-label">Tên linh kiện</label>
-                      <div class="input-group">
-                          <span class="input-group-text icon-scale"><i class="fas fa-tags"></i></span>
-                          <input wire:model.defer="name" type="text" class="form-control input-hover" required
-                              placeholder="Nhập tên linh kiện">
+                      <label for="{{ $categoryFields['name'] }}" class="form-label">{{ $categoryFields['label'] }}<span
+                              class="text-warning"> *</span>
+                      </label>
+                      <div class="input-group  border-main">
+                          <span class="input-group-text border-0"><i class="{{ $categoryFields['icon'] }}"></i></span>
+                          <select wire:model.defer="{{ $categoryFields['livewire'] }}"
+                              id="{{ $categoryFields['name'] }}" class="form-control input-hover border-0" required>
+                              <option>-- Chọn {{ strtolower($categoryFields['label']) }}
+                                  --
+                              </option>
+                              @foreach ($categoryFields['options'] as $key => $option)
+                                  <option value="{{ $key }}"
+                                      {{ old($categoryFields['name']) == $option ? 'selected' : '' }}>
+                                      {{ $option }}
+                                  </option>
+                              @endforeach
+                          </select>
                       </div>
                   </div>
                   <div class="d-flex gap-3 flex-wrap">
-                      {{-- Ngày nhập kho --}}
-                      <div class="flex-grow-1" style="min-width: 200px;">
-                          <label for="date_issued" class="form-label">Ngày nhập kho</label>
-                          <div class="input-group">
-                              <span class="input-group-text icon-scale"><i class="fas fa-calendar-alt"></i></span>
-                              <input wire:model.defer="date_issued" type="date" class="form-control input-hover"
-                                  required>
+                      <div class="flex-grow-1 min-w-[200px]">
+                          <label for="warranty_start" class="form-label">Ngày bắt đầu bảo hành <span
+                                  class="text-warning"> *</span></label>
+                          <div class="input-group border-main">
+                              <span class="input-group-text icon-scale border-0"><i
+                                      class="fas fa-shield-alt"></i></span>
+                              <input wire:model.defer="warranty_start" type="date" id="warranty_start"
+                                  class="form-control input-hover border-0" required value="{{ $warranty_start }}">
                           </div>
                       </div>
 
-                      {{-- Nhà cung cấp --}}
-                      <div class="flex-grow-1" style="min-width: 200px;">
-                          <label for="{{ $vendorFields['name'] }}"
-                              class="form-label">{{ $vendorFields['label'] }}</label>
-                          <div class="input-group">
-                              <span class="input-group-text"><i class="{{ $vendorFields['icon'] }}"></i></span>
-                              <select wire:model.defer="{{ $vendorFields['livewire'] }}"
-                                  id="{{ $vendorFields['name'] }}" class="form-control input-hover" required>
-                                  <option value="">-- Chọn {{ strtolower($vendorFields['label']) }}
-                                      --</option>
-                                  @foreach ($vendorFields['options'] as $key => $option)
-                                      <option value="{{ $key }}"
-                                          {{ $vendorFields['name'] == $option ? 'selected' : '' }}>
-                                          {{ $option }}
-                                      </option>
-                                  @endforeach
-                              </select>
+                      <div class="flex-grow-1 min-w-[200px]">
+                          <label for="warranty_end" class="form-label">Ngày kết thúc bảo hành<span class="text-warning">
+                                  *</span></label>
+                          <div class="input-group border-main">
+                              <span class="input-group-text icon-scale border-0"><i class="fas fa-calendar"></i></span>
+                              <input wire:model.defer="warranty_end" type="date" id="warranty_end"
+                                  class="form-control input-hover border-0" required value="{{ $warranty_end }}">
                           </div>
                       </div>
                   </div>
-
-
                   @foreach ($fields as $keyId => $field)
                       <div class="mb-1 mt-1">
-                          <label for="{{ $field['name'] }}" class="form-label">{{ $field['label'] }}</label>
+                          <label for="{{ $field['name'] }}" class="form-label">{{ $field['label'] }}
+                          </label>
                           <div class="input-group">
                               <span class="input-group-text"><i class="{{ $field['icon'] }}"></i></span>
                               <select wire:model.defer="{{ $field['livewire'] }}" id="{{ $field['name'] }}"
-                                  class="form-control input-hover" required>
-                                  <option value="{{ $keyId }}">-- Chọn {{ strtolower($field['label']) }} --
+                                  class="form-control input-hover">
+                                  <option>-- Chọn {{ strtolower($field['label']) }} --
                                   </option>
                                   @foreach ($field['options'] as $key => $option)
                                       <option value="{{ $key }}"
@@ -208,43 +241,64 @@
                   @endforeach
 
                   <div class="d-flex gap-3 flex-wrap">
-                      <div class="flex-grow-1 min-w-[200px]">
-                          <label for="warranty_start" class="form-label">Ngày bắt đầu bảo hành</label>
+                      {{-- Hãng sản xuất --}}
+                      <div class="flex-grow-1" style="min-width: 200px;">
+                          <label for="{{ $manufacturerFields['name'] }}"
+                              class="form-label">{{ $manufacturerFields['label'] }}</label>
                           <div class="input-group">
-                              <span class="input-group-text icon-scale"><i class="fas fa-shield-alt"></i></span>
-                              <input wire:model.defer="warranty_start" type="date" id="warranty_start"
-                                  class="form-control input-hover" required value="{{ $warranty_start }}">
+                              <span class="input-group-text"><i class="{{ $manufacturerFields['icon'] }}"></i></span>
+                              <select wire:model.defer="{{ $manufacturerFields['livewire'] }}"
+                                  id="{{ $manufacturerFields['name'] }}" class="form-control input-hover">
+                                  <option>-- Chọn {{ strtolower($manufacturerFields['label']) }}
+                                      --</option>
+                                  @foreach ($manufacturerFields['options'] as $key => $option)
+                                      <option value="{{ $key }}"
+                                          {{ $manufacturerFields['name'] == $option ? 'selected' : '' }}>
+                                          {{ $option }}
+                                      </option>
+                                  @endforeach
+                              </select>
                           </div>
                       </div>
 
-                      <div class="flex-grow-1 min-w-[200px]">
-                          <label for="warranty_end" class="form-label">Ngày kết thúc bảo hành</label>
+                      {{-- Nhà cung cấp --}}
+                      <div class="flex-grow-1" style="min-width: 200px;">
+                          <label for="{{ $vendorFields['name'] }}"
+                              class="form-label">{{ $vendorFields['label'] }}</label>
                           <div class="input-group">
-                              <span class="input-group-text icon-scale"><i class="fas fa-calendar"></i></span>
-                              <input wire:model.defer="warranty_end" type="date" id="warranty_end"
-                                  class="form-control input-hover" required value="{{ $warranty_end }}">
+                              <span class="input-group-text"><i class="{{ $vendorFields['icon'] }}"></i></span>
+                              <select wire:model.defer="{{ $vendorFields['livewire'] }}"
+                                  id="{{ $vendorFields['name'] }}" class="form-control input-hover">
+                                  <option value="">-- Chọn {{ strtolower($vendorFields['label']) }}
+                                      --</option>
+                                  @foreach ($vendorFields['options'] as $key => $option)
+                                      <option value="{{ $key }}"
+                                          {{ $vendorFields['name'] == $option ? 'selected' : '' }}>
+                                          {{ $option }}
+                                      </option>
+                                  @endforeach
+                              </select>
                           </div>
                       </div>
                   </div>
-
 
                   {{-- MÔ TẢ --}}
                   <div class="mb-1 mt-1">
                       <label for="note" class="form-label">Mô tả</label>
-                      <textarea wire:model.defer="note" name="note" rows="3" class="form-control input-hover">'Tpserver lưu dữ liệu'</textarea>
+                      <textarea wire:model.defer="note" name="note" rows="3" class="form-control input-hover mb-4"
+                          placeholder="Ghi chú về linh kiện"></textarea>
                   </div>
 
                   {{-- NÚT --}}
                   <div class="gapflex d-flex gap-2">
-                      <button type="submit" class="flex-fill btn bg-main btn-hover">
+                      <button type="submit" class="flex-fill btn btn-success btn-hover-warning">
                           <i class="fas fa-plus me-2"></i> Thêm mới
                       </button>
-                      <a type="button" class="flex-fill btn btn-secondary" href="{{ route('components.index') }}">
-                          <i class="fas fa-arrow-left me-1"></i> Quay lại danh sách
-                      </a>
+                      <button type="button" wire:click="previousView" class="flex-fill btn btn-secondary">
+                          <i class="fas fa-arrow-left me-1"></i> Quay lại
+                      </button>
                   </div>
               </form>
-
           </div>
       </div>
   </div>

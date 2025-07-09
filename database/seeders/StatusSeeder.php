@@ -14,12 +14,10 @@ class StatusSeeder extends Seeder
 
         // Danh sách trạng thái
         $statuses = [
-            ['name' => 'Đã xuất kho'],
             ['name' => 'Tồn kho'],
             ['name' => 'Đã bán'],
             ['name' => 'Lắp máy'],
-            ['name' => 'Kỹ thuật'],
-            ['name' => 'Khác'],
+            ['name' => 'Lí do khác'],
         ];
 
         foreach ($statuses as $status) {

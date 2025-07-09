@@ -32,10 +32,10 @@
             {{-- Nhóm nút --}}
             <div class="col-auto">
                 <div class="btn-group btn-group-sm mb-2" role="group" aria-label="Chọn chế độ quét">
-                    <a href="#" class="d-inline-flex align-items-center btn btn-success rounded text-md"
-                        onclick="Livewire.emit('changeView', 'component-form-scan')">
+                    <button type="button" class="d-inline-flex align-items-center btn btn-success rounded text-md"
+                        onclick="Livewire.emit('changeView', 'component-form-create')">
                         <i class="fas fa-plus"></i> Thêm mới
-                    </a>
+                    </button>
                     <div class="ml-4 rounded-lg  overflow-hidden border g-0 d-inline-flex   ">
                         <a href="#"
                             class="btn rounded-0 {{ $mode === 'manual' ? 'bg-main text-white border-1 ' : 'bg-light text-dark ' }}"

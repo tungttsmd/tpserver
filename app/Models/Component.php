@@ -10,7 +10,7 @@ use Spatie\Permission\Traits\HasRoles;
 class Component extends Model
 {
     use HasRoles, HasPermissions, HasFactory;
-    protected $fillable = ['serial_number', 'category', 'vendor', 'location', 'condition', 'status', 'description', 'exported_at'];
+    protected $fillable = ['serial_number', 'name', 'category_id', 'vendor_id', 'location_id', 'condition_id', 'status_id', 'manufacturer_id', 'note', 'warranty_start', 'warranty_end', 'date_created'];
     public $timestamps = false;
     public function category()
     {

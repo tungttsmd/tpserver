@@ -472,6 +472,17 @@
                 justify-content: space-between !important;
                 margin-right: 0.75rem !important;
             }
+
+            .tpserver .border-main {
+                border: 1px solid orange !important;
+                border-radius: 4px !important;
+            }
+
+            .tpserver .btn-hover-warning:hover {
+                background-color: limegreen !important;
+                border: 1px solid limegreen !important;
+                transform: scale(1.02);
+            }
         </style>
 
 

@@ -10,14 +10,15 @@ return new class extends Migration {
         Schema::create('components', function (Blueprint $table) {
             $table->id();
             $table->string('serial_number')->unique()->index();
-            $table->string('name')->unique()->index();
+            $table->string('name')->unique()->index()->nullable();
             $table->unsignedBigInteger('category_id')->index();
-            $table->unsignedBigInteger('vendor_id')->index();
-            $table->unsignedBigInteger('condition_id')->index();
-            $table->unsignedBigInteger('location_id')->index();
-            $table->unsignedBigInteger('manufacturer_id')->index();
-            $table->unsignedBigInteger('status_id')->index();
-            $table->text('note');
+
+            $table->unsignedBigInteger('vendor_id')->index()->nullable();
+            $table->unsignedBigInteger('condition_id')->index()->nullable();
+            $table->unsignedBigInteger('location_id')->index()->nullable();
+            $table->unsignedBigInteger('manufacturer_id')->index()->nullable();
+            $table->unsignedBigInteger('status_id')->index()->nullable();
+            $table->text('note')->nullable();
             $table->timestamp('warranty_start')->nullable()->index();
             $table->timestamp('warranty_end')->nullable()->index();
             $table->timestamp('date_updated')->useCurrent()->useCurrentOnUpdate()->index();

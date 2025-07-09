@@ -8,27 +8,26 @@ use Livewire\Component;
 use App\Models\Component as HardwareComponent;
 use App\Models\Condition;
 use App\Models\Location;
+use App\Models\Manufacturer;
+use App\Models\Status;
 use App\Models\UserLog;
 use App\Models\Vendor;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class ComponentForm extends Component
 {
     use WithPagination;
-    public $serial_number, $category_id, $vendor_id, $location_id, $condition_id, $status_id, $name, $date_issued, $warranty_start, $warranty_end, $note;
-    public $category;
-    public $vendor;
-    public $location;
-    public $condition;
-    public $status;
-    public $description;
+    public $serial_number, $category_id, $vendor_id, $location_id, $condition_id, $manufacturer_id, $status_id, $name, $date_issued, $warranty_start, $warranty_end, $note;
+    public $date_created;
     public $currentView = 'component-form-scan'; // view mặc định
     public $view_form_content = '';
     public $serialNumber = null;
+    public $previous_view = null;
     protected $listeners = ['scanRequest' => 'scanResponse', 'setScanModeRequest' => 'setScanModeResponse', 'formCreateRequest' => 'formCreateResponse'];
     public $mode = 'manual';
-    public $successData = null;
+    public $createSuccess = null;
 
     public function formRenderTrigger()
     {
@@ -51,6 +50,17 @@ class ComponentForm extends Component
     }
     public function mount($form)
     {
+        // Giá trị mặc định cho form 'Y-m-d' là định dạng dùng cho truyền đúng dữ liệu type date
+        if (!$this->date_created) {
+            $this->date_created = Carbon::now()->format('Y-m-d');
+        }
+        if (!$this->warranty_start) {
+            $this->warranty_start = Carbon::now()->format('Y-m-d');
+        }
+        if (!$this->warranty_end) {
+            $this->warranty_end = Carbon::now()->format('Y-m-d');
+        }
+
         switch ($form) {
             case 'component-form-create':
                 $this->view_form_content = 'livewire.partials.component-form-create';
@@ -141,54 +151,110 @@ class ComponentForm extends Component
             ->get();
         $vendors = Vendor::select('id', 'name')
             ->get();
-        return ['categories' => $categories, 'conditions' => $conditions, 'vendors' => $vendors, 'locations' => $locations];
+        $manufacturers = Manufacturer::select('id', 'name')
+            ->get();
+        return ['categories' => $categories, 'conditions' => $conditions, 'vendors' => $vendors, 'locations' => $locations, 'manufacturers' => $manufacturers];
     }
     public function rules()
     {
         return [
-            'serial_number'   => 'required|unique:components,serial_number',
-            'name'            => 'required|string|max:255',
-            'category_id'        => 'required|exists:categories,id',
-            'condition_id'       => 'required|exists:conditions,id',
-            'location_id'        => 'required|exists:locations,id',
-            'vendor_id'          => 'required|exists:vendors,id',
-            'note'            => 'nullable|string|max:1000',
-            'date_issued'     => 'required|date',
-            'warranty_start'  => 'required|date',
-            'warranty_end'    => 'required|date|after_or_equal:warranty_start',
+            'serial_number' => 'required|string|max:255|unique:components,serial_number',
+            'name' => 'nullable|string|max:255|unique:components,name',
+            'category_id' => 'required|exists:categories,id',
+            'vendor_id' => 'nullable|exists:vendors,id',
+            'condition_id' => 'nullable|exists:conditions,id',
+            'location_id' => 'nullable|exists:locations,id',
+            'manufacturer_id' => 'nullable|exists:manufacturers,id',
+            // 'status_id' => 'nullable|exists:statuses,id',
+            'note' => 'nullable|string|max:10000',
+
+            // NGÀY hợp lệ: tránh lỗi 1111-11-11
+            'warranty_start' => 'nullable|date|after_or_equal:1970-01-01',
+            'warranty_end' => 'nullable|date|after_or_equal:warranty_start',
         ];
     }
+
     public function formCreateSubmit()
     {
-
         $this->validate();
 
-        $qrcode = "https://api.qrserver.com/v1/create-qr-code/?data={$this->serialNumber}&size=240x240" ?? asset('img/qrcode-default.jpg');
+        if ($this->warranty_start && strtotime($this->warranty_start) < strtotime('01/01/1970')) {
+            $this->addError('warranty_start', 'Ngày bảo hành phải sau 01/01/1970.');
+            return;
+        }
+        if ($this->warranty_end && strtotime($this->warranty_end) < strtotime('01/01/1970')) {
+            $this->addError('warranty_end', 'Ngày bảo hành phải sau 01/01/1970.');
+            return;
+        }
 
-        $component = HardwareComponent::create([
-            'serial_number'   => $this->serial_number,
-            'name'            => $this->name,
-            'category_id'     => $this->category,
-            'condition_id'    => $this->condition,
-            'location_id'     => $this->location,
-            'vendor_id'       => $this->vendor,
-            'date_issued'     => $this->date_issued,
-            'warranty_start'  => $this->warranty_start,
-            'warranty_end'    => $this->warranty_end,
-            'note'     => $this->note,
-        ]);
+        $qrcode = "https://api.qrserver.com/v1/create-qr-code/?data={$this->serial_number}&size=240x240";
 
-        $this->successData = [
-            'serial_number' => $component->serial_number,
-            'category'      => $component->category->name ?? '',
-            'condition'     => $component->condition->name ?? '',
-            'location'      => $component->location->name ?? '',
-            'vendor'        => $component->vendor->name ?? '',
-            'status'        => $component->status ?? 'N/A',
-            'note'   => $component->note,
-            'qrcode'       => $qrcode,
+        $insert = [
+            'serial_number' => $this->serial_number,
+            'name' => $this->name,
+            'category_id' => $this->category_id,
+            'condition_id' => $this->condition_id,
+            'location_id' => $this->location_id,
+            'vendor_id' => $this->vendor_id,
+            'manufacturer_id' => $this->manufacturer_id,
+            'status_id' => 1,
+            'note' => $this->note,
+            'warranty_start' => $this->isValidMysqlTimestamp($this->warranty_start) ? $this->warranty_start : null,
+            'warranty_end' => $this->isValidMysqlTimestamp($this->warranty_end) ? $this->warranty_end : null,
+            'date_created' => $this->date_created ?? now(),
         ];
 
-        $this->resetExcept('successData');
+        // Thêm mới dữ liệu
+        $component = HardwareComponent::create($insert);
+
+        // Load quan hệ từ dữ liệu vừa thêm mới
+        $component->load(['category', 'condition', 'location', 'vendor', 'manufacturer']);
+
+        // Truy xuất tên từ quan hệ
+        $this->createSuccess = [
+            'serial_number' => $component->serial_number ?? null,
+            'name' => $component->name ?? null,
+            'category' => $component->category->name,
+            'condition' => $component->condition->name ?? null,
+            'location' => $component->location->name ?? null,
+            'vendor' => $component->vendor->name ?? null,
+            'manufacturer' => $component->manufacturer->name ?? null,
+            'note' => $component->note ?? null,
+            'warranty_start' => $component->warranty_start ?? null,
+            'warranty_end' => $component->warranty_end ?? null,
+            'date_created' => $component->date_created ?? null,
+            'qrcode' => $qrcode ?? null,
+        ];
+
+        $this->resetExcept('serialNumber', 'view_form_content', 'createSuccess');
+        $this->setDefaultDates(); // ← set lại mặc định cho các field ngày
+
+    }
+    public function isValidMysqlTimestamp($date)
+    {
+        if (!$date)
+            return false;
+        try {
+            $ts = strtotime($date);
+            return $ts !== false && $ts >= 0 && $ts <= 2147483647;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+    public function setDefaultDates()
+    {
+        $today = now()->format('Y-m-d H:i:s');
+        $this->date_created = $this->date_created ?? $today;
+        $this->warranty_start = $this->warranty_start ?? $today;
+        $this->warranty_end = $this->warranty_end ?? $today;
+    }
+    public function previousView()
+    {
+        if ($this->previous_view) {
+            $this->view_form_content = $this->previous_view;
+        } else {
+            // fallback nếu không có
+            $this->view_form_content = 'livewire.partials.component-form-scan';
+        }
     }
 }
