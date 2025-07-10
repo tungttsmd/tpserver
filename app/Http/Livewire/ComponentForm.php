@@ -9,19 +9,13 @@ use App\Models\Component as HardwareComponent;
 use App\Models\Condition;
 use App\Models\Location;
 use App\Models\Manufacturer;
-use App\Models\Status;
-use App\Models\UserLog;
 use App\Models\Vendor;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Validator;
 
 class ComponentForm extends Component
 {
     use WithPagination;
-    public $serial_number, $category_id, $vendor_id, $location_id, $condition_id, $manufacturer_id, $status_id, $name, $date_issued, $warranty_start, $warranty_end, $note;
-    public $date_created;
-    public $currentView = 'component-form-scan'; // view mặc định
+    public $date_created, $serial_number, $category_id, $vendor_id, $location_id, $condition_id, $manufacturer_id, $status_id, $name, $date_issued, $warranty_start, $warranty_end, $note;
     public $view_form_content = '';
     public $serialNumber = null;
     public $previous_view = null;
@@ -46,30 +40,10 @@ class ComponentForm extends Component
         } else {
             $handler = $this->loadCreateFormData();
         }
+        // Lưu lại vào session
         return view('livewire.component-form', $handler);
     }
-    public function mount($form)
-    {
-        // Giá trị mặc định cho form 'Y-m-d' là định dạng dùng cho truyền đúng dữ liệu type date
-        if (!$this->date_created) {
-            $this->date_created = Carbon::now()->format('Y-m-d');
-        }
-        if (!$this->warranty_start) {
-            $this->warranty_start = Carbon::now()->format('Y-m-d');
-        }
-        if (!$this->warranty_end) {
-            $this->warranty_end = Carbon::now()->format('Y-m-d');
-        }
 
-        switch ($form) {
-            case 'component-form-create':
-                $this->view_form_content = 'livewire.partials.component-form-create';
-                break;
-            default:
-                $this->view_form_content = 'livewire.partials.component-form-scan';
-                break;
-        }
-    }
     public function smartMatching($component)
     {
         $serial = $this->serialNumber;
@@ -226,10 +200,10 @@ class ComponentForm extends Component
             'qrcode' => $qrcode ?? null,
         ];
 
-        $this->resetExcept('serialNumber', 'view_form_content', 'createSuccess');
+        $this->resetExcept('serialNumber', 'view_form_content', 'createSuccess', 'historyViewList');
         $this->setDefaultDates(); // ← set lại mặc định cho các field ngày
-
     }
+
     public function isValidMysqlTimestamp($date)
     {
         if (!$date)
@@ -248,13 +222,32 @@ class ComponentForm extends Component
         $this->warranty_start = $this->warranty_start ?? $today;
         $this->warranty_end = $this->warranty_end ?? $today;
     }
-    public function previousView()
+
+    public function backward()
     {
-        if ($this->previous_view) {
-            $this->view_form_content = $this->previous_view;
-        } else {
-            // fallback nếu không có
-            $this->view_form_content = 'livewire.partials.component-form-scan';
+        // $previousView = session()->get('historyViewList');
+        // dd($previousView);
+    }
+    public function mount($form)
+    {
+        // Giá trị mặc định cho form 'Y-m-d' là định dạng dùng cho truyền đúng dữ liệu type date
+        if (!$this->date_created) {
+            $this->date_created = Carbon::now()->format('Y-m-d');
+        }
+        if (!$this->warranty_start) {
+            $this->warranty_start = Carbon::now()->format('Y-m-d');
+        }
+        if (!$this->warranty_end) {
+            $this->warranty_end = Carbon::now()->format('Y-m-d');
+        }
+
+        switch ($form) {
+            case 'component-form-create':
+                $this->view_form_content = 'livewire.partials.component-form-create';
+                break;
+            default:
+                $this->view_form_content = 'livewire.partials.component-form-scan';
+                break;
         }
     }
 }

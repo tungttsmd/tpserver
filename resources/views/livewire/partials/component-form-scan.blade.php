@@ -32,6 +32,9 @@
             {{-- Nhóm nút --}}
             <div class="col-auto">
                 <div class="btn-group btn-group-sm mb-2" role="group" aria-label="Chọn chế độ quét">
+                    <button type="button" wire:click="backward" class="flex-fill btn btn-secondary">
+                        <i class="fas fa-arrow-left me-1"></i> Quay lại
+                    </button>
                     <button type="button" class="d-inline-flex align-items-center btn btn-success rounded text-md"
                         onclick="Livewire.emit('changeView', 'component-form-create')">
                         <i class="fas fa-plus"></i> Thêm mới

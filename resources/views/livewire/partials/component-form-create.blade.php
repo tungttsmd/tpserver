@@ -294,7 +294,7 @@
                       <button type="submit" class="flex-fill btn btn-success btn-hover-warning">
                           <i class="fas fa-plus me-2"></i> Thêm mới
                       </button>
-                      <button type="button" wire:click="previousView" class="flex-fill btn btn-secondary">
+                      <button type="button" wire:click="backward" class="flex-fill btn btn-secondary">
                           <i class="fas fa-arrow-left me-1"></i> Quay lại
                       </button>
                   </div>

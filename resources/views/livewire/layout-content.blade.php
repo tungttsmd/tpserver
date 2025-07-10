@@ -1,4 +1,4 @@
-<div>
+<div >
     @if ($currentView === 'component-index')
         <livewire:component-table table="component-index" />
     @elseif ($currentView === 'component-stock')
