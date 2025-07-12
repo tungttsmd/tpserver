@@ -37,7 +37,7 @@ return new class extends Migration {
                 $table->index($columnNames['team_foreign_key'], 'roles_team_foreign_key_index');
             }
             $table->string('name', 166); // For MyISAM use string('name', 225); // (or 166 for InnoDB with Redundant/Compact row format)
-            $table->string('role_color', 166); // For MyISAM use string('name', 225); // (or 166 for InnoDB with Redundant/Compact row format)
+            $table->string('role_color', 166)->nullable(); // For MyISAM use string('name', 225); // (or 166 for InnoDB with Redundant/Compact row format)
             $table->string('display_name')->nullable();
             $table->string('guard_name', 25); // For MyISAM use string('guard_name', 25);
             $table->timestamps();

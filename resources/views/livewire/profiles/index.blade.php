@@ -7,15 +7,15 @@
         <div class="col-lg-10">
             <div class="card shadow-lg rounded-xl">
                 {{-- Avatar và cover --}}
-                <div style="margin-bottom: 64px; border-top-left-radius: 12px;border-top-right-radius: 12px; border: 2px solid {{ $roleColor }}"
+                <div style="padding-top: 128px; margin-bottom: 64px; border-top-left-radius: 12px;border-top-right-radius: 12px; border: 2px solid {{ $roleColor }}"
                     class="inline-flex col-12 items-end text-center bg-[url('{{ $data['user']->cover_url }}')] bg-cover bg-no-repeat bg-center">
                     <img src="{{ asset($data['user']->avatar_url) }}"
                         onerror="this.onerror=null;this.src='https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png';"
                         class="img-circle elevation-2 object-cover" alt="User Image"
-                        style="margin-bottom: -48px; width: 160px; height : 160px; object-fit: cover; margin-top: 20px; border: 8px solid {{ $roleColor }}";
+                        style="margin-bottom: -48px; margin-left: 16px; width: 160px; height : 160px; object-fit: cover; margin-top: 20px; border: 8px solid {{ $roleColor }}";
                         border-radius: 50%;">
-                    <h5 class="pl-4 pr-4 pt-1 pb-1 rounded-full mt-3 h2"
-                        style="color: {{ $roleColor }}; margin-bottom: -45px; padding: 0px;">
+                    <h5 class="rounded-full mt-3 h2"
+                        style="color: {{ $roleColor }}; margin-bottom: -48px; padding: 0px;">
                         <strong>{{ $data['user']->alias }}</strong>
                     </h5>
                 </div>
@@ -55,14 +55,14 @@
                         @if ($data['user']->canEditUser())
                             <div class="d-flex flex-wrap gap">
                                 <livewire:component-controller component='change-avatar' />
-                                
+
 
                                 <a href="{{ route('profile.edit-alias', $data['user']->id) }}"
                                     class="btn btn-outline-primary">
                                     <i class="fas fa-user-edit mr-2"></i> Sửa alias
                                 </a>
                                 @if ($data['user']->canEditPassword())
-                                <livewire:component-controller component='change-password' />
+                                    <livewire:component-controller component='change-password' />
                                 @endif
                                 <livewire:component-controller component='button-logout-2' />
                             </div>
