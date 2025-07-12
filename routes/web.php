@@ -4,7 +4,7 @@ use App\Http\Controllers\DatabaseController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ComponentController;
-use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\PanelController;
 use App\Http\Controllers\ComponentExportLogController;
 use App\Http\Controllers\UserLogController;
 use App\Http\Controllers\ProfileController;
@@ -40,7 +40,7 @@ Route::middleware('auth')->group(function () {
     Route::put('/roles/{role}/permissions', [RoleController::class, 'update'])->name('roles.permissions.update')->middleware('permission:role.update');
 
     // 3. Dashboard và logs (chung cho admin hoặc user có quyền xem logs)
-    Route::get('/index', [DashboardController::class, 'index'])->name('index')->middleware('permission:dashboard.view');
+    Route::get('/index', [PanelController::class, 'index'])->name('index')->middleware('permission:dashboard.view');
     Route::get('/logs', [UserLogController::class, 'index'])->name('logs.index')->middleware('permission:log.view');
     Route::get('/export-logs', [ComponentExportLogController::class, 'index'])->name('logs.index-component-export')->middleware('permission:component.download_log');
     Route::get('/recall-logs', [ComponentRecallLogController::class, 'index'])->name('logs.index-component-recall')->middleware('permission:component.download_log');

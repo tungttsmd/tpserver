@@ -30,6 +30,7 @@ class DatabaseSeeder extends Seeder
             LocationSeeder::class,
             ConditionSeeder::class,
             ManufacturerSeeder::class,
+            RoleSeeder::class,
         ]);
     }
 }

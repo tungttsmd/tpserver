@@ -7,10 +7,10 @@
     <title>Trang Chủ</title>
     <!-- Thêm Bootstrap từ CDN -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-   
+    
     {{-- Auth login custom css --}}
-    <link href="{{ asset('css/auth/login.css') }}" rel="stylesheet">
-    <link href="{{ asset('css/layouts/app.css') }}" rel="stylesheet">
+    <link href="{{asset('css/auth/login.css')}}" rel="stylesheet">
+    
 </head>
 
 <body>

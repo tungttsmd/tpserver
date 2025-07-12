@@ -3,12 +3,31 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
-class DashboardController extends Controller
+class PanelController extends Controller
 {
     public function index()
     {
-        return view('index');
+        // Nhúng dữ liệu user Khởi tạo layout
+        $user = Auth::user();
+        $roles = $user ? $user->roles : collect();
+
+        $firstRole = $roles->first();
+
+        $roleColor = $firstRole ? $firstRole->role_color : null;
+        $roleName = $firstRole ? $firstRole->name : null;
+        $data = [
+            'roleColor' => $roleColor,
+            'userRole' => $roleName,
+            'userAlias' => $user->alias,
+            'username' => $user->username,
+            'userAvatar' => $user->avatar_url,
+            'userCover' => $user->cover_url,
+            'userId' => $user->id,
+        ];
+
+        return view('index', $data);
     }
 
     public function create()

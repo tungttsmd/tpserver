@@ -1,9 +1,7 @@
 @extends('layouts.app')
 
-@section('title', 'Trang chủ')
+@section('title', 'ERP')
 
 @section('content')
-
-
 
 @endsection

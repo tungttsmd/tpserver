@@ -10,10 +10,6 @@
         <table class="table table-bordered text-center align-middle custom-table">
             <thead>
                 <tr>
-                    @if ($view_table_action_buttons)
-                        <th>Hành động</th>
-                    @endif
-
                     @foreach ($columns as $field)
                         <th wire:click="sortBy('{{ $field }}')"
                             style="cursor: pointer; user-select: none;width: {{ $columnWidths[$field] ?? 'auto' }};">
@@ -30,12 +26,9 @@
             <tbody>
                 @foreach ($components as $component)
                     <tr>
-
-                        @if ($view_table_action_buttons)
-                            <td>
-                                @include($view_table_action_buttons)
-                            </td>
-                        @endif
+                        <td>
+                            x
+                        </td>
                         @foreach ($columns as $field)
                             <td>
                                 @php $relationship = rtrim($field, '_id') @endphp
