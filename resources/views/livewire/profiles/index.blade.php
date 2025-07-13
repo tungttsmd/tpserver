@@ -19,9 +19,9 @@
                         <strong>{{ $data['user']->alias }}</strong>
                     </h5>
                 </div>
-                <div class="flex row justify-between gap-4 w-full">
-                    {{-- Thông tin người dùng --}}
-                    <div class="col-md-9">
+                <div class="flex flex-wrap p-4">
+                    <div class="w-full xl:w-9/12 p-4  rounded-sm">
+                        {{-- Thông tin người dùng --}}
                         <ul class="list-group list-group-flush">
                             <li class="list-group-item"><strong>ID:</strong> {{ $data['user']->id }}</li>
                             <li class="list-group-item"><strong>Username:</strong>
@@ -34,9 +34,9 @@
 
                         </ul>
                     </div>
-                    <div>
-                        <strong>Quyền:</strong>
+                    <div class="w-full xl:w-3/12 p-4 border rounded-sm">
                         <ul class="mt-2 mb-0 ps-3">
+                            <li><strong>Quyền hạn:</strong></li>
                             @forelse($data['user']->getAllPermissions() as $permission)
                                 <li>{{ $permission->display_name }}</li>
                             @empty
@@ -46,7 +46,7 @@
                     </div>
                 </div>
 
-                <div class="mt-4">
+                <div class="mt-4 border">
                     <div
                         class="d-flex flex-wrap align-items-center gap
                             {{ $data['user']->canEditUser() ? 'justify-content-between' : 'justify-content-end' }}">
