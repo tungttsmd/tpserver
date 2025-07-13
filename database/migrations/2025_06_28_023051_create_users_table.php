@@ -15,8 +15,10 @@ return new class extends Migration {
             $table->string('avatar_url')->nullable();
             $table->string('cover_url')->nullable();
             $table->rememberToken();
-            $table->timestamp('date_updated')->useCurrent()->useCurrentOnUpdate()->index();
-            $table->timestamp('date_created')->useCurrent()->index();
+
+            $table->timestamps(); // Thêm index thủ công cho $table->timestamps();
+            $table->index('created_at');
+            $table->index('updated_at');
         });
     }
 

@@ -24,8 +24,8 @@ class ManufacturerSeeder extends Seeder
 
         foreach ($manufacturers as $name) {
             DB::table('manufacturers')->updateOrInsert(['name' => $name], [
-                'date_created' => now(),
-                'date_updated' => now(),
+                'created_at' => now(),
+                'updated_at' => now(),
             ]);
         }
     }

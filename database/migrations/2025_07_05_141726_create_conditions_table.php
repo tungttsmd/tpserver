@@ -16,8 +16,10 @@ return new class extends Migration
         Schema::create('conditions', function (Blueprint $table) {
             $table->id();
             $table->string('name')->unique()->index();
-            $table->timestamp('date_updated')->useCurrent()->useCurrentOnUpdate()->index();
-            $table->timestamp('date_created')->useCurrent()->index();
+
+            $table->timestamps(); // Thêm index thủ công cho $table->timestamps();
+            $table->index('created_at');
+            $table->index('updated_at');
         });
     }
 

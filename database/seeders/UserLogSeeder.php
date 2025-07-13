@@ -38,8 +38,8 @@ class UserLogSeeder extends Seeder
             $data[] = [
                 'user_id' => $userId,
                 'action_id' => (string)$actionId, // cột string nên cast thành chuỗi
-                'note' => $actions[$actionId] . ' performed by user #' . $userId,
-                'date_created' => $date_log
+                'note' => $date_log->format('Y-m-d H:i:s') . ': Thao tác: [' . $actions[$actionId] . '] được thực hiện bởi user [#' . $userId . ']',
+                'created_at' => $date_log
             ];
         }
 

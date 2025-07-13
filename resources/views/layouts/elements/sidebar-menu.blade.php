@@ -11,37 +11,33 @@
             <ul class="nav nav-treeview">
                 <li class="nav-item">
                     <a href="#" class="nav-link"
-                        onclick="event.preventDefault(); Livewire.emit('viewRender', 'components.table.index')"><i
-                            class="fas fa-plus nav-icon"></i>Thêm mới
+                        onclick="event.preventDefault(); Livewire.emit('route', 'components', 'create')">
+                        <i class="fas fa-plus nav-icon"></i>Thêm mới
                         linh kiện</a>
                     </a>
                 </li>
 
                 <li class="nav-item">
-                    <a href="#" class="nav-link" onclick="Livewire.emit('changeView', 'component-form-scan')">
+                    <a href="#" class="nav-link"
+                        onclick="event.preventDefault(); Livewire.emit('route', 'components', 'scan')">
                         <i class="fas fa-qrcode mr-2 nav-icon"></i>
                         <p>Scan/tra cứu linh kiện</p>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="#" class="nav-link" onclick="Livewire.emit('changeView', 'component-index')">
+                    <a href="#" class="nav-link"
+                        onclick="event.preventDefault(); Livewire.emit('route', 'components', null, 'current-stock')">
                         <i class="fas fa-boxes nav-icon"></i>
-                        <p>Danh sách kho hàng</p>
+                        <p>Đang tồn kho</p>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="#" class="nav-link" onclick="Livewire.emit('changeView', 'component-stock')">
+                    <a href="#" class="nav-link"
+                        onclick="event.preventDefault(); Livewire.emit('route', 'components', null, 'stockout')">
                         <i class="fas fa-pallet nav-icon"></i>
-                        <p>Sản phẩm còn hàng</p>
+                        <p>Đã xuất kho</p>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link" onclick="Livewire.emit('changeView', 'component-export')">
-                        <i class="fas fa-truck-loading nav-icon"></i>
-                        <p>Danh sách xuất kho</p>
-                    </a>
-                </li>
-
             </ul>
         </li>
 

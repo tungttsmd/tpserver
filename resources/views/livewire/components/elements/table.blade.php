@@ -2,7 +2,7 @@
     <table class="table text-center align-middle custom-table">
         <thead>
             <tr>
-                <th>2</th>
+                <th>Hành động</th>
                 @foreach ($data['columns'] as $field)
                     <th wire:click="sortBy('{{ $field }}')"
                         style="cursor: pointer; user-select: none;width: {{ $columnWidths[$field] ?? 'auto' }};">

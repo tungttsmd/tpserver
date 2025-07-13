@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -53,8 +54,8 @@ class ActionLogSeeder extends Seeder
                 'target' => 'user',
                 'name' => $info['name'],
                 'note' => $info['note'],
-                'date_created' => now(),
-                'date_updated' => now(),
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
             ];
         }
 
@@ -64,11 +65,11 @@ class ActionLogSeeder extends Seeder
                 'target' => 'component',
                 'name' => $info['name'],
                 'note' => $info['note'],
-                'date_created' => now(),
-                'date_updated' => now(),
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
             ];
         }
 
-        DB::table('action_logs')->insert($data);
+        DB::table(table: 'action_logs')->insert($data);
     }
 }

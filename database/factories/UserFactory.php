@@ -20,8 +20,8 @@ class UserFactory extends Factory
             'password' => bcrypt('123'),
             'avatar_url' => "https://i.pravatar.cc/150?u={$id}",
             'cover_url' => "https://picsum.photos/seed/{$username}/800/200",
-            'date_created' => $date_created,
-            'date_updated' => $date_updated,
+            'created_at' => $date_created,
+            'updated_at' => $date_updated,
             'remember_token' => Str::random(10),
         ];
     }

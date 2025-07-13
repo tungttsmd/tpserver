@@ -15,9 +15,11 @@ return new class extends Migration
     {
         Schema::create('statuses', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->timestamp('date_updated')->useCurrent()->useCurrentOnUpdate()->index();
-            $table->timestamp('date_created')->useCurrent()->index();
+            $table->string('name')->index();
+
+            $table->timestamps(); // Thêm index thủ công cho $table->timestamps();
+            $table->index('created_at');
+            $table->index('updated_at');
         });
     }
 

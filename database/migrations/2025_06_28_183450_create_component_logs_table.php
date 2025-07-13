@@ -15,15 +15,20 @@ return new class extends Migration
     {
         Schema::create('component_logs', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('component_id');
-            $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('customer_id')->nullable()->index();
-            $table->unsignedBigInteger('action_id');
-            $table->string('note');
-            $table->timestamp('date_issued')->nullable();
-            $table->timestamp('date_recalled')->nullable();
-            $table->timestamp('date_updated')->useCurrent()->useCurrentOnUpdate()->index();
-            $table->timestamp('date_created')->useCurrent()->index();
+            $table->unsignedBigInteger('component_id')->index(); // Mã linh kiện thao tác nghiệp vụ
+            $table->unsignedBigInteger('user_id')->nullable()->index(); // Người thực hiện nghiệp vụ
+            $table->unsignedBigInteger('action_id')->nullable()->index(); // Loại nghiệp vụ
+            $table->unsignedBigInteger('customer_id')->nullable()->index(); // Khách liên quan nghiệp vụ
+            $table->unsignedBigInteger('vendor_id')->nullable()->index(); // Nhà cung cấp liên quan nghiệp vụ
+            
+            $table->string('note')->nullable(); // Mô tả nội dung thực hiện nghiệp vụ
+
+            $table->timestamp('stockin_at')->nullable()->index(); // Ngày nhập kho dành cho nghiệp vụ nhập (nếu có)
+            $table->timestamp('stockout_at')->nullable()->index(); // Ngày xuất kho dành cho nghiệp vụ xuất (nếu có)
+            
+            $table->timestamps(); // Thêm index thủ công cho $table->timestamps();
+            $table->index('created_at');
+            $table->index('updated_at');
         });
     }
 

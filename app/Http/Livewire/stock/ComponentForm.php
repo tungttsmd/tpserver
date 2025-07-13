@@ -147,7 +147,6 @@ class ComponentForm extends Component
             'warranty_end' => 'nullable|date|after_or_equal:warranty_start',
         ];
     }
-
     public function formCreateSubmit()
     {
         $this->validate();
@@ -203,7 +202,6 @@ class ComponentForm extends Component
         $this->resetExcept('serialNumber', 'view_form_content', 'createSuccess', 'historyViewList');
         $this->setDefaultDates(); // ← set lại mặc định cho các field ngày
     }
-
     public function isValidMysqlTimestamp($date)
     {
         if (!$date)
@@ -221,12 +219,6 @@ class ComponentForm extends Component
         $this->date_created = $this->date_created ?? $today;
         $this->warranty_start = $this->warranty_start ?? $today;
         $this->warranty_end = $this->warranty_end ?? $today;
-    }
-
-    public function backward()
-    {
-        // $previousView = session()->get('historyViewList');
-        // dd($previousView);
     }
     public function mount($form)
     {

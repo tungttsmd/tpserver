@@ -27,8 +27,8 @@ class CategorySeeder extends Seeder
         foreach ($categories as &$item) {
             $date_created = $faker->dateTimeBetween('-2 years', 'now');
             $date_updated = (clone $date_created)->modify('+' . rand(0, 60) . ' days');
-            $item['date_created'] = $date_created;
-            $item['date_updated'] = $date_updated;
+            $item['created_at'] = $date_created;
+            $item['updated_at'] = $date_updated;
         }
 
         DB::table('categories')->insert($categories);

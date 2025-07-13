@@ -18,9 +18,11 @@ return new class extends Migration
             $table->unsignedBigInteger('action_id'); // component, user...
             $table->string('target'); // component, user...
             $table->string('name')->unique()->index();
-            $table->string('note');
-            $table->timestamp('date_updated')->useCurrent()->useCurrentOnUpdate()->index();
-            $table->timestamp('date_created')->useCurrent()->index();
+            $table->string('note')->index();
+
+            $table->timestamps(); // Thêm index thủ công cho $table->timestamps();
+            $table->index('created_at');
+            $table->index('updated_at');
         });
     }
 

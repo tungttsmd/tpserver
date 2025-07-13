@@ -26,19 +26,19 @@ class ComponentFactory extends Factory
         $date_updated = (clone $date_created)->modify('+' . rand(0, 60) . ' days');
 
         return [
-            'serial_number'    => strtoupper($this->faker->bothify('TPSC-####-???')),
+            'serial_number'    => strtoupper($this->faker->unique()->bothify('TPSC-####-???')),
             'name'             => $this->faker->unique()->words(2, true),
             'category_id'      => $this->faker->numberBetween(1, 10),
             'vendor_id'        => $this->faker->numberBetween(1, 10),
             'condition_id'     => $this->faker->numberBetween(1, 10),
             'location_id'      => $this->faker->numberBetween(1, 10),
             'manufacturer_id'  => $this->faker->numberBetween(1, 10),
-            'status_id'        => $this->faker->numberBetween(1, 5),
+            'status_id'        => $this->faker->numberBetween(1, 2),
             'note'             => $this->faker->sentence(),
             'warranty_start'   => $warranty_start,
             'warranty_end'     => $warranty_end,
-            'date_created'     => $date_created,
-            'date_updated'     => $date_updated,
+            'created_at'     => $date_created,
+            'updated_at'     => $date_updated,
         ];
     }
 }

@@ -23,14 +23,14 @@ class ComponentLogSeeder extends Seeder
             // note là số ngẫu nhiên, ví dụ 1-1000
             $note = (string) $faker->numberBetween(1, 1000);
 
-            $dateIssued = null;
-            $dateRecalled = null;
+            $dateStockIn = null;
+            $dateStockOut = null;
 
             if ($actionId === 3) {
-                $dateIssued = $faker->dateTimeBetween('-1 year', 'now');
+                $dateStockIn = $faker->dateTimeBetween('-1 year', 'now');
             }
             if ($actionId === 4) {
-                $dateRecalled = $faker->dateTimeBetween('-1 year', 'now');
+                $dateStockOut = $faker->dateTimeBetween('-1 year', 'now');
             }
 
             $dateCreated = $faker->dateTimeBetween('-1 year', 'now');
@@ -41,10 +41,10 @@ class ComponentLogSeeder extends Seeder
                 'component_id' => $componentId,
                 'action_id' => $actionId,
                 'note' => $note,
-                'date_issued' => $dateIssued,
-                'date_recalled' => $dateRecalled,
-                'date_created' => $dateCreated,
-                'date_updated' => $dateCreated,
+                'stockin_at' => $dateStockIn,
+                'stockout_at' => $dateStockOut,
+                'created_at' => $dateCreated,
+                'updated_at' => $dateCreated,
             ];
         }
 

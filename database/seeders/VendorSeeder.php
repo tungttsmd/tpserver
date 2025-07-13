@@ -22,8 +22,8 @@ class VendorSeeder extends Seeder
                 'email' => $faker->unique()->companyEmail,
                 'address' => $faker->address,
                 'note' => $faker->sentence(6),
-                'date_created' => $date_created,
-                'date_updated' => $date_updated,
+                'created_at' => $date_created,
+                'updated_at' => $date_updated,
             ];
         }
 

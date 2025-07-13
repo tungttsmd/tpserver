@@ -18,9 +18,9 @@ class UserSeeder extends Seeder
     public function run()
     {
         $specialUsers = [
-            ['username' => 'admin', 'password' => bcrypt('123'), 'role' => 'admin', 'alias' => 'Quản trị viên'],
-            ['username' => 'manager', 'password' => bcrypt('123'), 'role' => 'manager', 'alias' => 'Quản lý nhân viên'],
-            ['username' => 'storekeeper', 'password' => bcrypt('123'), 'role' => 'storekeeper', 'alias' => 'Thủ kho'],
+            ['username' => 'admin', 'password' => bcrypt('123'), 'role' => 'admin', 'alias' => 'Trần Hưng Đạo'],
+            ['username' => 'manager', 'password' => bcrypt('123'), 'role' => 'manager', 'alias' => 'Trần Quốc Tuấn'],
+            ['username' => 'storekeeper', 'password' => bcrypt('123'), 'role' => 'storekeeper', 'alias' => 'Trưng Trắc'],
         ];
 
         foreach ($specialUsers as $user) {

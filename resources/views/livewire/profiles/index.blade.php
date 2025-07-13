@@ -55,8 +55,6 @@
                         @if ($data['user']->canEditUser())
                             <div class="d-flex flex-wrap gap">
                                 <livewire:component-controller component='change-avatar' />
-
-
                                 <a href="{{ route('profile.edit-alias', $data['user']->id) }}"
                                     class="btn btn-outline-primary">
                                     <i class="fas fa-user-edit mr-2"></i> Sửa alias
