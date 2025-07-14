@@ -1,3 +1,4 @@
+<div class="">
     {{-- {{ dd(get_defined_vars()) }} // Debug LayoutController --}}
 
     {{-- Header --}}
@@ -251,3 +252,4 @@
         </div>
 
     </div>
+</div>

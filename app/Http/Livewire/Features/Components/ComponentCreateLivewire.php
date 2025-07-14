@@ -10,8 +10,9 @@ use App\Models\Location;
 use App\Models\Manufacturer;
 use App\Models\Vendor;
 use Carbon\Carbon;
+use Livewire\Component;
 
-class ComponentCreateLivewire extends RouteController
+class ComponentCreateLivewire extends Component
 {
     public $stockin_at, $serial_number, $category_id, $vendor_id, $location_id, $condition_id, $manufacturer_id, $status_id, $name, $date_issued, $warranty_start, $warranty_end, $note;
     public $serialNumber = null;

@@ -1,14 +1,14 @@
-{{-- {{ dd(get_defined_vars()) }} // Debug LayoutController --}}
-
-
-{{-- Phải có wire:key để ép livewire refresh bởi vì mặc định livewire sẽ dựa vào DOM thay đổi (không đúng trong lúc này) --}}
-{{-- extract(session('route') từ RouteController): $controller, $action, $filter --}}
-
-@php
-    $refresh = $controller . $action . $filter;
-@endphp
-
 <div class="overflow-auto">
+    {{-- {{ dd(get_defined_vars()) }} // Debug LayoutController --}}
+
+
+    {{-- Phải có wire:key để ép livewire refresh bởi vì mặc định livewire sẽ dựa vào DOM thay đổi (không đúng trong lúc này) --}}
+    {{-- extract(session('route') từ RouteController): $controller, $action, $filter --}}
+
+
+    @php
+        $refresh = $controller . $action . $filter;
+    @endphp
     @if ($controller === 'components')
         @if ($action === 'scan')
             <livewire:features.components.component-scan-livewire wire:key="{{ $refresh }}" />

@@ -2,11 +2,11 @@
 
 namespace App\Http\Livewire\Features\Components;
 
-use App\Http\Livewire\RouteController;
 use App\Models\Component as HardwareComponent;
+use Livewire\Component;
 use Livewire\WithPagination;
 
-class ComponentScanLivewire extends RouteController
+class ComponentScanLivewire extends Component
 {
     use WithPagination;
     public $date_created, $serial_number, $category_id, $vendor_id, $location_id, $condition_id, $manufacturer_id, $status_id, $name, $date_issued, $warranty_start, $warranty_end, $note;

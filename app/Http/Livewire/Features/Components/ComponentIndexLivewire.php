@@ -11,9 +11,10 @@ use App\Models\Manufacturer;
 use App\Models\Status;
 use App\Models\Vendor;
 use Illuminate\Support\Facades\Schema;
+use Livewire\Component;
 use Livewire\WithPagination;
 
-class ComponentIndexLivewire extends RouteController
+class ComponentIndexLivewire extends Component
 {
     use WithPagination;
 
