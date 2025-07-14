@@ -1,4 +1,4 @@
-<div class="">
+<div class="tpserver components w-full">
     {{-- {{ dd(get_defined_vars()) }} // Debug LayoutController --}}
 
     {{-- Header --}}

@@ -25,7 +25,7 @@
 
 <body class="hold-transition sidebar-mini">
     <div class="wrapper">
-        <nav class="main-header p-1 shadow-sm navbar navbar-expand navbar-white navbar-light">
+        <nav class="tp-server layouts main-header p-1 shadow-sm navbar navbar-expand navbar-white navbar-light">
             <div class="flex-nowrap justify-between inline-flex gap-5"style="width: 100%">
                 <div class="row w-full">
                     <div class="col-6 flex-nowrap inline-flex gap-8 pl-3">
@@ -62,7 +62,7 @@
         </aside>
 
 
-        <div class="content-wrapper p-2">
+        <div class="tp-server layouts content-wrapper p-2">
             {{-- Main content by livewire controller --}}
             @include('layouts.elements.content')
         </div>

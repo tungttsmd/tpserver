@@ -1,6 +1,5 @@
-<div class="tpserver components table container max-w-full ">
+<div class="tpserver components table w-full">
     {{-- {{ dd(get_defined_vars()) }} // Debug LayoutController --}}
-
 
     {{-- Bộ lọc --}}
     @include('livewire.elements.components.filter')

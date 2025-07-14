@@ -16,29 +16,52 @@ class ComponentCreateLivewire extends Component
 {
     public $stockin_at, $serial_number, $category_id, $vendor_id, $location_id, $condition_id, $manufacturer_id, $status_id, $name, $date_issued, $warranty_start, $warranty_end, $note;
     public $serialNumber = null;
-    protected $listeners = ['routeRefreshCall' => '$refresh', 'formCreateRequest' => 'formCreateResponse'];
+    protected $listeners = ['routeRefreshCall' => '$refresh', 'createSubmit' => 'createSubmit', 'toggleWarranty' => 'toggleWarranty'];
     public $createSuccess = null;
+    public $toggleWarranty = null;
 
     public function mount()
     {
-        logger('Mount ComponentCreateLivewire', ['serial_number' => $this->serial_number]);
-        $this->setDefaultDates();
+        $this->setDefaultDate();
     }
+    public function setDefaultDate($warranty = null)
+    {
+        $today = Carbon::now()->format('Y-m-d');
 
+        $this->stockin_at = $today;
+
+        if ($warranty === true) {
+            $this->warranty_start = $today;
+            $this->warranty_end = $today;
+        } else {
+            $this->warranty_start = null;
+            $this->warranty_end = null;
+        }
+    }
+    public function toggleWarranty($value = null)
+    {
+        $this->setDefaultDate($value);
+        $this->toggleWarranty = $value;
+    }
+    public function getRelationData()
+    {
+        return [
+            'categories' => Category::select('id', 'name')->get(),
+            'conditions' => Condition::select('id', 'name')->get(),
+            'locations' => Location::select('id', 'name')->get(),
+            'vendors' => Vendor::select('id', 'name')->get(),
+            'manufacturers' => Manufacturer::select('id', 'name')->get(),
+        ];
+    }
     public function render()
     {
-        $data = $this->loadCreateFormData();
+        $data = $this->getRelationData();
         return view('livewire.features.components.create', $data);
     }
 
-    public function formCreateSubmit()
+    public function createSubmit()
     {
-        try {
-            $this->validate();
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            // Bạn có thể xử lý lỗi khác hoặc show form error
-            dd($e->errors());
-        }
+        $this->validate();
 
         // Kiểm tra ngày bảo hành hợp lệ
         if ($this->warranty_start && strtotime($this->warranty_start) < strtotime('1970-01-01')) {
@@ -51,21 +74,20 @@ class ComponentCreateLivewire extends Component
         }
 
         $qrcode = "https://api.qrserver.com/v1/create-qr-code/?data={$this->serial_number}&size=240x240";
+        $barcode = "https://bwipjs-api.metafloor.com/?bcid=code128&text={$this->serial_number}&scale=3&width=64&height=8&includetext&textxalign=center&background=ffffff";
 
         $insert = [
             'serial_number' => $this->serial_number,
             'name' => $this->name,
-            'category_id' => $this->category_id,
-            'condition_id' => $this->condition_id,
-            'location_id' => $this->location_id,
-            'vendor_id' => $this->vendor_id,
-            'manufacturer_id' => $this->manufacturer_id,
-            'status_id' => 1, // mặc định mới
-            'note' => $this->note,
+            'category_id' => $this->category_id ?? null,
+            'condition_id' => $this->condition_id ?? null,
+            'location_id' => $this->location_id ?? null,
+            'vendor_id' => $this->vendor_id ?? null,
+            'manufacturer_id' => $this->manufacturer_id ?? null,
+            'status_id' => 1, // Mặc định thêm mới là Đang tồn kho
+            'note' => $this->note ?? null,
             'warranty_start' => $this->isValidMysqlTimestamp($this->warranty_start) ? $this->warranty_start : null,
             'warranty_end' => $this->isValidMysqlTimestamp($this->warranty_end) ? $this->warranty_end : null,
-            'date_created' => $this->date_issued ?? now(),
-            'stockin_at' => $this->stockin_at ?? now()->format('Y-m-d'),
         ];
 
         $component = HardwareComponent::create($insert);
@@ -82,35 +104,25 @@ class ComponentCreateLivewire extends Component
             'note' => $component->note,
             'warranty_start' => $component->warranty_start,
             'warranty_end' => $component->warranty_end,
-            'date_created' => $component->date_created,
             'qrcode' => $qrcode,
+            'barcode' => $barcode,
         ];
 
         $this->resetExcept('serialNumber', 'view_form_content', 'createSuccess', 'historyViewList');
-        $this->setDefaultDates();
+        $this->setDefaultDate();
     }
-
-    public function loadCreateFormData()
-    {
-        return [
-            'categories' => Category::select('id', 'name')->get(),
-            'conditions' => Condition::select('id', 'name')->get(),
-            'locations' => Location::select('id', 'name')->get(),
-            'vendors' => Vendor::select('id', 'name')->get(),
-            'manufacturers' => Manufacturer::select('id', 'name')->get(),
-        ];
-    }
-
     public function rules()
     {
         return [
             'serial_number' => 'required|string|max:255|unique:components,serial_number',
-            'name' => 'nullable|string|max:255|unique:components,name',
-            'category_id' => 'required|exists:categories,id',
+            'name' => 'required|string|max:255|unique:components,name',
+
+            'category_id' => 'nullable|exists:categories,id',
             'vendor_id' => 'nullable|exists:vendors,id',
             'condition_id' => 'nullable|exists:conditions,id',
             'location_id' => 'nullable|exists:locations,id',
             'manufacturer_id' => 'nullable|exists:manufacturers,id',
+
             'note' => 'nullable|string|max:10000',
             'warranty_start' => 'nullable|date|after_or_equal:1970-01-01',
             'warranty_end' => 'nullable|date|after_or_equal:warranty_start',
@@ -126,24 +138,5 @@ class ComponentCreateLivewire extends Component
         } catch (\Exception $e) {
             return false;
         }
-    }
-
-    public function setDefaultDates()
-    {
-        $today = now()->format('Y-m-d');
-
-        $this->stockin_at = $this->stockin_at ?? $today;
-        $this->serial_number = $this->serial_number ?? '';
-        $this->category_id = $this->category_id ?? null;
-        $this->vendor_id = $this->vendor_id ?? null;
-        $this->location_id = $this->location_id ?? null;
-        $this->condition_id = $this->condition_id ?? null;
-        $this->manufacturer_id = $this->manufacturer_id ?? null;
-        $this->status_id = $this->status_id ?? 1;
-        $this->name = $this->name ?? '';
-        $this->date_issued = $this->date_issued ?? null;
-        $this->warranty_start = $this->warranty_start ?? $today;
-        $this->warranty_end = $this->warranty_end ?? $today;
-        $this->note = $this->note ?? '';
     }
 }

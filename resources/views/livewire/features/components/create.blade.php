@@ -1,43 +1,49 @@
-<div class="">
+<div class="tpserver components w-full">
     <div class="card-header bg-main text-white text-center rounded-top-4">
         <h4 class="mb-0"><i class="fas fa-plus mr-2"></i> Thêm linh kiện mới</h4>
     </div>
 
-    <div class="card-body">
+    <div class="card-body mt-2">
         <div class="row">
+           
             {{-- CỘT PHẢI: QR CODE + THÔNG TIN LINH KIỆN --}}
-            <div class="w-full md:w-1/2 h-full px-4 flex flex-col gap-4">
-
+            <div class="p-0 w-full md:w-1/2 p-4 h-full flex flex-col gap-4">
                 {{-- QR Code (chiếm 50%) --}}
                 <div
-                    class="flex-1 basis-1/2 border-2 border-dashed border-gray-300 rounded-2xl flex items-center justify-center transition-opacity duration-300 {{ $createSuccess ? '' : 'opacity-50' }}">
+                    class="flex-1 flex-col basis-1/2 border-2 border-dashed border-gray-300 rounded-2xl flex items-center justify-center transition-opacity duration-300 p-5 {{ $createSuccess ? '' : 'opacity-60' }}">
                     <img src="{{ $createSuccess['qrcode'] ?? asset('img/qrcode-default.jpg') }}" alt="QR Code"
-                        class="max-w-[70%] max-h-[70%] object-contain p-4">
-
+                        class="max-w-[70%] max-h-[70%] object-contain">
                     @unless ($createSuccess)
-                        <p class="absolute bottom-4 text-sm text-gray-500">QR code sẽ hiển thị tại đây</p>
+                        <p class="bottom-4 text-sm text-gray-500 mb-12">QR code/Barcode sẽ hiển thị tại đây</p>
                     @endunless
                 </div>
+                
+                @if ($createSuccess)
+                    <div
+                        class="text-md flex flex-col items-center border-2 border-dashed border-gray-300 mt-1 p-1 rounded">
+                        <p class="text-back-600 mt-2">Serial number</p>
+                        <img src="{{ $createSuccess['barcode'] }}" alt="Barcode" class="max-w-[64%]">
+                    </div>
+                @endif
 
                 {{-- Thông tin (chiếm 50%) --}}
                 <div class="flex-1 basis-1/2 overflow-y-auto">
 
                     @if ($createSuccess)
                         {{-- Alert --}}
-                        <div
-                            class="flex items-center bg-green-100 text-green-800 text-sm font-medium px-3 py-3 rounded">
+                        <div class="flex items-center bg-green-100 text-green-800 text-sm font-medium p-3 mb-3 rounded">
                             <i class="fas fa-check-circle mr-2"></i>
                             <span>Thêm mới thành công!</span>
                         </div>
 
                         {{-- Thông tin chi tiết --}}
-                        <div class="mt-4 border rounded-xl p-4 bg-white shadow max-h-80 overflow-y-auto">
+                        <div class="border rounded-xl p-4 bg-white max-h-60 overflow-y-auto mb-6">
                             <h5 class="text-green-600 font-semibold mb-3 flex items-center">
                                 <i class="fas fa-info-circle mr-2"></i>Thông tin linh kiện
                             </h5>
                             <ul class="text-sm divide-y divide-gray-200">
                                 @foreach ($createSuccess as $key => $value)
-                                    @continue($key === 'qrcode' || $key === 'serial_number')
+                                    @continue($key === 'qrcode' || $key === 'serial_number' || $key === 'barcode')
                                     <li class="py-2">
                                         <span class="font-semibold capitalize">{{ str_replace('_', ' ', $key) }}:</span>
                                         <span class="ml-1">{{ $value ?? '-' }}</span>
@@ -46,7 +52,7 @@
                             </ul>
                         </div>
                     @else
-                        <p class="text-center text-sm text-gray-500 mt-4">
+                        <p class="text-center text-sm text-gray-500 mb-4">
                             <i class="fas fa-info-circle mr-1"></i>
                             Thông tin sẽ hiển thị sau khi thêm mới
                         </p>
@@ -54,7 +60,6 @@
 
                 </div>
             </div>
-
 
             {{-- FORM BÊN TRÁI --}}
             <div class="col-md-6 border-end">
@@ -70,13 +75,13 @@
                     </div>
                 @endif
 
-                <form wire:submit.prevent="formCreateSubmit">
+                <form wire:submit.prevent="createSubmit">
                     {{-- SERIAL NUMBER tách riêng để thêm autofocus --}}
                     <div class="mb-1">
                         <label for="serial-number-generate" class="form-label">Serial number<span class="text-warning">
                                 *</span></label>
                         <div class="input-group border-main">
-                            <span class="input-group-text border-0"><i class="fas fa-barcode"></i></span>
+                            <span class="input-group-text border-0""><i class="fas fa-barcode"></i></span>
                             <input wire:model.defer="serial_number" type="text" name="serial_number"
                                 id="serial-number-generate" class="border-0 form-create form-control input-hover"
                                 placeholder="Nhập số serial chính xác (ví dụ: SN123456789)" autofocus required>
@@ -159,7 +164,8 @@
                             <label for="name" class="form-label">Tên linh kiện<span class="text-warning">
                                     *</span></label>
                             <div class="input-group border-main">
-                                <span class="input-group-text icon-scale border-0"><i class="fas fa-tags"></i></span>
+                                <span class="input-group-text border-0" icon-scale border-0"><i
+                                        class="fas fa-tags"></i></span>
                                 <input wire:model.defer="name" type="text" class="form-control input-hover border-0"
                                     required placeholder="Nhập tên linh kiện">
                             </div>
@@ -171,21 +177,58 @@
                             <label for="stockin_at" class="form-label">Ngày nhập kho<span class="text-warning">
                                     *</span></label>
                             <div class="input-group border-main">
-                                <span class="input-group-text icon-scale border-0"><i
+                                <span class="input-group-text border-0" icon-scale border-0"><i
                                         class="fas fa-calendar-alt"></i></span>
                                 <input wire:model.defer="stockin_at" type="date"
                                     class="form-control input-hover border-0" required>
                             </div>
                         </div>
                     </div>
+
+                    {{-- Bảo hành --}}
+                    <div class="p-3 mt-3 rounded" style="border: 1px solid #28a745">
+                        <div class="text-success p-1 flex rounded gap-3 flex-wrap items-center">
+                            <input type="checkbox"
+                                onclick="event.preventDefault(); Livewire.emit('toggleWarranty', {{ $toggleWarranty ? 'null' : 'true' }})"
+                                {{ $warranty_start ? 'checked' : '' }}>
+
+                            <i class="fas fa-shield-alt nav-icon"></i>
+                            <p class="mb-0">Linh kiện có bảo hành</p>
+                        </div>
+
+                        @if ($toggleWarranty)
+                            <div class="flex gap-3 flex-wrap mt-3">
+                                <div class="flex-grow-1 min-w-[200px]">
+                                    <label for="warranty_start" class="form-label">Ngày bắt đầu bảo hành</label>
+                                    <div class="input-group border rounded">
+                                        <span class="input-group-text border-0"><i class="fas fa-shield-alt"></i></span>
+                                        <input wire:model.defer="warranty_start" type="date" id="warranty_start"
+                                            class="form-control input-hover border-0" required>
+                                    </div>
+                                </div>
+
+                                <div class="flex-grow-1 min-w-[200px]">
+                                    <label for="warranty_end" class="form-label">Ngày kết thúc bảo hành</label>
+                                    <div class="input-group border rounded">
+                                        <span class="input-group-text border-0"><i class="fas fa-calendar"></i></span>
+                                        <input wire:model.defer="warranty_end" type="date" id="warranty_end"
+                                            class="form-control input-hover border-0" required>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+                    </div>
+
+                    {{-- Phân loại --}}
                     <div class="mb-1 mt-1">
-                        <label for="{{ $categoryFields['name'] }}"
-                            class="form-label">{{ $categoryFields['label'] }}<span class="text-warning"> *</span>
+                        <label for="{{ $categoryFields['name'] }}" class="form-label">{{ $categoryFields['label'] }}
                         </label>
-                        <div class="input-group  border-main">
-                            <span class="input-group-text border-0"><i class="{{ $categoryFields['icon'] }}"></i></span>
+                        <div class="input-group border rounded">
+                            <span class="input-group-text border-0" border-0"><i
+                                    class="{{ $categoryFields['icon'] }}"></i></span>
                             <select wire:model.defer="{{ $categoryFields['livewire'] }}"
-                                id="{{ $categoryFields['name'] }}" class="form-control input-hover border-0" required>
+                                id="{{ $categoryFields['name'] }}" class="form-control input-hover border-0"
+                                required>
                                 <option>-- Chọn {{ strtolower($categoryFields['label']) }}
                                     --
                                 </option>
@@ -195,41 +238,18 @@
                                         {{ $option }}
                                     </option>
                                 @endforeach
-                            </select>
+                            </select><i class="ml-2"></i><i class="ml-2"></i>
                         </div>
                     </div>
-                    <div class="d-flex gap-3 flex-wrap">
-                        <div class="flex-grow-1 min-w-[200px]">
-                            <label for="warranty_start" class="form-label">Ngày bắt đầu bảo hành <span
-                                    class="text-warning"> *</span></label>
-                            <div class="input-group border-main">
-                                <span class="input-group-text icon-scale border-0"><i
-                                        class="fas fa-shield-alt"></i></span>
-                                <input wire:model.defer="warranty_start" type="date" id="warranty_start"
-                                    class="form-control input-hover border-0" required value="{{ $warranty_start }}">
-                            </div>
-                        </div>
 
-                        <div class="flex-grow-1 min-w-[200px]">
-                            <label for="warranty_end" class="form-label">Ngày kết thúc bảo hành<span
-                                    class="text-warning">
-                                    *</span></label>
-                            <div class="input-group border-main">
-                                <span class="input-group-text icon-scale border-0"><i
-                                        class="fas fa-calendar"></i></span>
-                                <input wire:model.defer="warranty_end" type="date" id="warranty_end"
-                                    class="form-control input-hover border-0" required value="{{ $warranty_end }}">
-                            </div>
-                        </div>
-                    </div>
                     @foreach ($fields as $keyId => $field)
                         <div class="mb-1 mt-1">
                             <label for="{{ $field['name'] }}" class="form-label">{{ $field['label'] }}
                             </label>
-                            <div class="input-group">
-                                <span class="input-group-text"><i class="{{ $field['icon'] }}"></i></span>
+                            <div class="input-group border rounded">
+                                <span class="input-group-text border-0""><i class="{{ $field['icon'] }}"></i></span>
                                 <select wire:model.defer="{{ $field['livewire'] }}" id="{{ $field['name'] }}"
-                                    class="form-control input-hover">
+                                    class="form-control input-hover border-0">
                                     <option>-- Chọn {{ strtolower($field['label']) }} --
                                     </option>
                                     @foreach ($field['options'] as $key => $option)
@@ -238,7 +258,7 @@
                                             {{ $option }}
                                         </option>
                                     @endforeach
-                                </select>
+                                </select><i class="ml-2"></i>
                             </div>
                         </div>
                     @endforeach
@@ -248,11 +268,11 @@
                         <div class="flex-grow-1" style="min-width: 200px;">
                             <label for="{{ $manufacturerFields['name'] }}"
                                 class="form-label">{{ $manufacturerFields['label'] }}</label>
-                            <div class="input-group">
-                                <span class="input-group-text"><i
+                            <div class="input-group border rounded">
+                                <span class="input-group-text border-0""><i
                                         class="{{ $manufacturerFields['icon'] }}"></i></span>
                                 <select wire:model.defer="{{ $manufacturerFields['livewire'] }}"
-                                    id="{{ $manufacturerFields['name'] }}" class="form-control input-hover">
+                                    id="{{ $manufacturerFields['name'] }}" class="form-control input-hover border-0">
                                     <option>-- Chọn {{ strtolower($manufacturerFields['label']) }}
                                         --</option>
                                     @foreach ($manufacturerFields['options'] as $key => $option)
@@ -261,7 +281,7 @@
                                             {{ $option }}
                                         </option>
                                     @endforeach
-                                </select>
+                                </select><i class="ml-2"></i>
                             </div>
                         </div>
 
@@ -269,10 +289,11 @@
                         <div class="flex-grow-1" style="min-width: 200px;">
                             <label for="{{ $vendorFields['name'] }}"
                                 class="form-label">{{ $vendorFields['label'] }}</label>
-                            <div class="input-group">
-                                <span class="input-group-text"><i class="{{ $vendorFields['icon'] }}"></i></span>
+                            <div class="input-group border rounded">
+                                <span class="input-group-text border-0""><i
+                                        class="{{ $vendorFields['icon'] }}"></i></span>
                                 <select wire:model.defer="{{ $vendorFields['livewire'] }}"
-                                    id="{{ $vendorFields['name'] }}" class="form-control input-hover">
+                                    id="{{ $vendorFields['name'] }}" class="form-control input-hover border-0">
                                     <option value="">-- Chọn {{ strtolower($vendorFields['label']) }}
                                         --</option>
                                     @foreach ($vendorFields['options'] as $key => $option)
@@ -281,7 +302,7 @@
                                             {{ $option }}
                                         </option>
                                     @endforeach
-                                </select>
+                                </select><i class="ml-2"></i>
                             </div>
                         </div>
                     </div>
