@@ -14,10 +14,8 @@
     @endphp
 
     <div class="flex-col flex justify-between grow h-[100vh]">
-
         @if ($controller === 'components')
             @if ($action === 'scan')
-                @section('title', 'Scan linh kiện')
                 <livewire:features.components.component-scan-livewire wire:key="{{ $refresh }}" />
             @elseif ($action === 'create')
                 <livewire:features.components.component-create-livewire wire:key="{{ $refresh }}" />

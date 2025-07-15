@@ -37,7 +37,7 @@
 
             {{-- Main content + footer sticky --}}
             <div class="bg-white flex flex-col flex-1 overflow-auto">
-                <main class="flex-1 px-4 pb-4 pt-0 overflow-y-auto">
+                <main class="flex-1 p-0 overflow-y-auto">
                     <livewire:route-controller />
                 </main>
 

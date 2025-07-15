@@ -1,25 +1,12 @@
-<div class="tpserver components w-full">
-    {{-- Header --}}
-    <header
-        class="sticky top-0 z-50 w-full bg-main text-white shadow-md flex items-center justify-between px-4 py-2 z-50">
-        {{-- Trái: menu + tiêu đề --}}
-        <div class="flex items-center gap-4">
-            {{-- Nút mở sidebar --}}
-            @include('layouts.elements.headernav-push-menu')
+@extends('layouts.content')
+@section('prop')
+    @php
+        $title = 'Thêm mới linh kiện';
+        $icon = 'fas fa-plus';
+    @endphp
+@endsection
 
-            {{-- Tiêu đề --}}
-            <h1 class="text-lg font-semibold whitespace-nowrap">
-                <i class="fas fa-plus mr-2"></i> Thêm mới linh kiện
-            </h1>
-        </div>
-
-        {{-- Phải: nút scan + logout --}}
-        <div class="flex items-center gap-3">
-            @include('layouts.elements.headernav-scan')
-            <livewire:component-controller component="button-logout" />
-        </div>
-    </header>
-
+@section('content')
     <div class="row pt-2 w-full">
         {{-- CỘT PHẢI: QR CODE + THÔNG TIN LINH KIỆN --}}
         <div class="p-0 w-full md:w-1/2 p-4 h-full flex flex-col gap-4">
@@ -178,10 +165,9 @@
                         <label for="name" class="form-label">Tên linh kiện<span class="text-warning">
                                 *</span></label>
                         <div class="input-group border-main">
-                            <span class="input-group-text border-0" icon-scale border-0"><i
-                                    class="fas fa-tags"></i></span>
-                            <input wire:model.defer="name" type="text" class="form-control input-hover border-0"
-                                required placeholder="Nhập tên linh kiện">
+                            <span class="input-group-text border-0" icon-scale border-0"><i class="fas fa-tags"></i></span>
+                            <input wire:model.defer="name" type="text" class="form-control input-hover border-0" required
+                                placeholder="Nhập tên linh kiện">
                         </div>
                     </div>
 
@@ -193,8 +179,8 @@
                         <div class="input-group border-main">
                             <span class="input-group-text border-0" icon-scale border-0"><i
                                     class="fas fa-calendar-alt"></i></span>
-                            <input wire:model.defer="stockin_at" type="date"
-                                class="form-control input-hover border-0" required>
+                            <input wire:model.defer="stockin_at" type="date" class="form-control input-hover border-0"
+                                required>
                         </div>
                     </div>
                 </div>
@@ -240,8 +226,8 @@
                     <div class="input-group border rounded">
                         <span class="input-group-text border-0" border-0"><i
                                 class="{{ $categoryFields['icon'] }}"></i></span>
-                        <select wire:model.defer="{{ $categoryFields['livewire'] }}"
-                            id="{{ $categoryFields['name'] }}" class="form-control input-hover border-0" required>
+                        <select wire:model.defer="{{ $categoryFields['livewire'] }}" id="{{ $categoryFields['name'] }}"
+                            class="form-control input-hover border-0" required>
                             <option>-- Chọn {{ strtolower($categoryFields['label']) }}
                                 --
                             </option>
@@ -300,13 +286,11 @@
 
                     {{-- Nhà cung cấp --}}
                     <div class="flex-grow-1" style="min-width: 200px;">
-                        <label for="{{ $vendorFields['name'] }}"
-                            class="form-label">{{ $vendorFields['label'] }}</label>
+                        <label for="{{ $vendorFields['name'] }}" class="form-label">{{ $vendorFields['label'] }}</label>
                         <div class="input-group border rounded">
-                            <span class="input-group-text border-0""><i
-                                    class="{{ $vendorFields['icon'] }}"></i></span>
-                            <select wire:model.defer="{{ $vendorFields['livewire'] }}"
-                                id="{{ $vendorFields['name'] }}" class="form-control input-hover border-0">
+                            <span class="input-group-text border-0""><i class="{{ $vendorFields['icon'] }}"></i></span>
+                            <select wire:model.defer="{{ $vendorFields['livewire'] }}" id="{{ $vendorFields['name'] }}"
+                                class="form-control input-hover border-0">
                                 <option value="">-- Chọn {{ strtolower($vendorFields['label']) }}
                                     --</option>
                                 @foreach ($vendorFields['options'] as $key => $option)
@@ -336,4 +320,4 @@
             </form>
         </div>
     </div>
-</div>
+@endsection

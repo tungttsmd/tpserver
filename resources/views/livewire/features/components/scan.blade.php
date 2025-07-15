@@ -1,29 +1,14 @@
-<div class="tpserver components w-full">
-    {{-- {{ dd(get_defined_vars()) }} // Debug LayoutController --}}
+@extends('layouts.content')
+@section('prop')
+    @php
+        $title = 'Scan linh kiện';
+        $icon = 'fas fa-qrcode';
+    @endphp
+@endsection
 
-    {{-- Header --}}
-    <header
-        class="sticky top-0 z-50 w-full bg-main text-white shadow-md flex items-center justify-between px-4 py-2 z-50">
-        {{-- Trái: menu + tiêu đề --}}
-        <div class="flex items-center gap-4">
-            {{-- Nút mở sidebar --}}
-            @include('layouts.elements.headernav-push-menu')
-
-            {{-- Tiêu đề --}}
-            <h1 class="text-lg font-semibold whitespace-nowrap">
-                <i class="fas fa-qrcode mr-2"></i> Scan linh kiện
-            </h1>
-        </div>
-
-        {{-- Phải: nút scan + logout --}}
-        <div class="flex items-center gap-3">
-            @include('layouts.elements.headernav-scan')
-            <livewire:component-controller component="button-logout" />
-        </div>
-    </header>
-
+@section('content')
     {{-- Form và Thông tin linh kiện --}}
-    <div class="row pt-3    w-full">
+    <div class="row pt-3 w-full">
         {{-- Cột Form --}}
         <div class="col-12 p-0">
             {{-- Thông báo --}}
@@ -62,13 +47,12 @@
                                 placeholder="Nhập serial để tra cứu" autocomplete="off" />
                         </div>
                     @elseif ($filter === 'manual')
-                        <form
-                            onsubmit="event.preventDefault(); Livewire.emitTo('features.components.component-scan-livewire', 'trigger')">
+                        <form id="formTriggerLivewire" wire:submit.prevent="trigger">
                             <div class="input-group">
                                 <span class="input-group-text"><i class="fas fa-barcode"></i></span>
                                 <input id="scanInputFocus" type="text" wire:model.defer="serialNumber"
-                                    class="form-control" placeholder="Sử dụng máy quét để tra cứu"
-                                    onfocus="this.select()" style="background-color: #e9ecef">
+                                    class="form-control" placeholder="Sử dụng máy quét để tra cứu" onfocus="this.select()"
+                                    style="background-color: #e9ecef">
                                 <button type="submit" class="btn btn-primary" hidden>
                                     <i class="fas fa-search"></i>
                                 </button>
@@ -81,7 +65,7 @@
         </div>
 
         {{-- Cột Thông tin linh kiện --}}
-        <div class="row col-12 g-3"> {{-- ✅ Wrap 2 khối vào row mới --}}
+        <div class="row col-12"> {{-- ✅ Wrap 2 khối vào row mới --}}
             @if (is_object($component))
                 {{-- Thông tin linh kiện --}}
                 <div class="col-12 col-lg-6">
@@ -162,7 +146,7 @@
             @else
                 @if ($serialNumber)
                     <div
-                        class="justify-content-center col-lg-6 bg-yellow-100 text-yellow-800 p-3 rounded flex items-center gap-2">
+                        class="h-[78vh] justify-content-center col-lg-6 bg-yellow-100 text-yellow-800 p-3 rounded flex items-center gap-2">
                         <i class="fas fa-info-circle"></i> Không tìm thấy linh kiện phù hợp với serial đã nhập.
                     </div>
                 @endif
@@ -178,7 +162,7 @@
                             <i class="fas fa-list mr-1 text-gray-500"></i> Các linh kiện tương tự:
                         </h4>
 
-                        <div class="overflow-y-auto" style="max-height: 400px;">
+                        <div class="overflow-y-auto h-[68vh]">
                             <ul class="space-y-2">
                                 @foreach ($suggestions as $item)
                                     <li class="mt-2 d-flex flex-col gap-2 p-2 bg-gray-100 rounded shadow-sm">
@@ -207,7 +191,7 @@
                                                 </p>
                                                 <p class="mr-2 text-sm flex items-center text-orange-500 italic"><i
                                                         class="fas fa-file-import mr-1 text-orange-500"></i>
-                                                    Ngày tạo: {{ $item->date_created ?? 'N/A' }}
+                                                    Ngày tạo: {{ $item->created_at ?? 'N/A' }}
                                                 </p>
                                             </div>
 
@@ -234,7 +218,7 @@
                                                 {{ $end->format('d/m/Y') }})
                                             </strong>
 
-                                            @if ($mode === 'manual')
+                                            @if ($filter === 'manual')
                                                 <a href="#" class="text-main bright-hover scale-hover"
                                                     onclick="triggerManualScan('{{ $item->serial_number }}')">
                                                     <i class="fas fa-eye m-0"></i> Xem
@@ -252,7 +236,7 @@
                             </ul>
                         </div>
                         <div class="mt-2">
-                            {{ $suggestions->links('livewire.pagination.arrow-paginator') }}
+                            {{ $suggestions->links('livewire.elements.components.arrow-paginator') }}
                         </div>
                     @else
                         <p class="text-gray-500 italic text-md ml-4">Không có linh kiện tương tự.</p>
@@ -262,4 +246,4 @@
 
         </div>
     </div>
-</div>
+@endsection
