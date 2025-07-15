@@ -1,6 +1,7 @@
-<nav class="mt-2">
+<nav class="mt-2 max-h-[68vh] overflow-y-auto">
     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
         <li class="nav-item has-treeview">
+            @section('title',)
             <a href="#" class="nav-link">
                 <i class="nav-icon fas fa-cogs"></i>
                 <p>
@@ -20,7 +21,7 @@
                 <li class="nav-item">
                     <a href="#" class="nav-link"
                         onclick="event.preventDefault(); Livewire.emit('route', 'components', 'scan')">
-                        <i class="fas fa-qrcode mr-2 nav-icon"></i>
+                        <i class="fas fa-qrcode nav-icon"></i>
                         <p>Scan/tra cứu linh kiện</p>
                     </a>
                 </li>

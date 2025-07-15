@@ -2,27 +2,38 @@
     {{-- {{ dd(get_defined_vars()) }} // Debug LayoutController --}}
 
     {{-- Header --}}
-    <div class="card-header bg-main text-white text-center rounded-top-4">
-        <h4 class="mb-0">
-            <i class="fas fa-qrcode mr-2"></i> Scan code linh kiện
-        </h4>
-    </div>
+    <header
+        class="sticky top-0 z-50 w-full bg-main text-white shadow-md flex items-center justify-between px-4 py-2 z-50">
+        {{-- Trái: menu + tiêu đề --}}
+        <div class="flex items-center gap-4">
+            {{-- Nút mở sidebar --}}
+            @include('layouts.elements.headernav-push-menu')
+
+            {{-- Tiêu đề --}}
+            <h1 class="text-lg font-semibold whitespace-nowrap">
+                <i class="fas fa-qrcode mr-2"></i> Scan linh kiện
+            </h1>
+        </div>
+
+        {{-- Phải: nút scan + logout --}}
+        <div class="flex items-center gap-3">
+            @include('layouts.elements.headernav-scan')
+            <livewire:component-controller component="button-logout" />
+        </div>
+    </header>
 
     {{-- Form và Thông tin linh kiện --}}
-    <div class="row g-4 p-4">
+    <div class="row pt-3    w-full">
         {{-- Cột Form --}}
         <div class="col-12 p-0">
             {{-- Thông báo --}}
             @include('livewire.elements.components.alert')
 
             {{-- Form Row --}}
-            <div class="row mb-3 gx-3 align-items-center">
+            <div class="row mb-3 align-items-center">
                 {{-- Nhóm nút --}}
                 <div class="col-auto">
-                    <div class="btn-group btn-group-sm mb-2" role="group" aria-label="Chọn chế độ quét">
-                        <button type="button" wire:click="backward" class="flex-fill btn btn-secondary">
-                            <i class="fas fa-arrow-left me-1"></i> Quay lại
-                        </button>
+                    <div class="btn-group btn-group-sm p-2" role="group" aria-label="Chọn chế độ quét">
                         <button type="button" class="d-inline-flex align-items-center btn btn-success rounded text-md"
                             onclick="Livewire.emit('route', 'components','create')">
                             <i class="fas fa-plus"></i> Thêm mới
@@ -250,6 +261,5 @@
             </div>
 
         </div>
-
     </div>
 </div>

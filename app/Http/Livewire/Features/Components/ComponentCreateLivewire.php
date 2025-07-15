@@ -79,6 +79,7 @@ class ComponentCreateLivewire extends Component
         $insert = [
             'serial_number' => $this->serial_number,
             'name' => $this->name,
+            'stockin_at' => $this->stockin_at,
             'category_id' => $this->category_id ?? null,
             'condition_id' => $this->condition_id ?? null,
             'location_id' => $this->location_id ?? null,
@@ -96,16 +97,17 @@ class ComponentCreateLivewire extends Component
         $this->createSuccess = [
             'serial_number' => $component->serial_number,
             'name' => $component->name,
+            'stockin_at' => $component->stockin_at,
             'category' => $component->category->name ?? null,
             'condition' => $component->condition->name ?? null,
             'location' => $component->location->name ?? null,
             'vendor' => $component->vendor->name ?? null,
             'manufacturer' => $component->manufacturer->name ?? null,
-            'note' => $component->note,
-            'warranty_start' => $component->warranty_start,
-            'warranty_end' => $component->warranty_end,
-            'qrcode' => $qrcode,
-            'barcode' => $barcode,
+            'note' => $component->note ?? null,
+            'warranty_start' => $component->warranty_start ?? null,
+            'warranty_end' => $component->warranty_end ?? null,
+            'qrcode' => $qrcode ?? null,
+            'barcode' => $barcode ?? null,
         ];
 
         $this->resetExcept('serialNumber', 'view_form_content', 'createSuccess', 'historyViewList');
@@ -116,6 +118,8 @@ class ComponentCreateLivewire extends Component
         return [
             'serial_number' => 'required|string|max:255|unique:components,serial_number',
             'name' => 'required|string|max:255|unique:components,name',
+            'stockin_at' => 'nullable|date|after_or_equal:1970-01-01',
+
 
             'category_id' => 'nullable|exists:categories,id',
             'vendor_id' => 'nullable|exists:vendors,id',

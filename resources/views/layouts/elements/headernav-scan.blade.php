@@ -2,9 +2,9 @@
     @csrf
     {{-- SERIAL NUMBER tách riêng để thêm autofocus --}}
     <div class="scan-box w-full">
-        <div class="input-group flex-nowrap">
+        <div class="input-group flex-nowrap w-full">
             <button type="submit" style="border-top-right-radius: 0px; border-bottom-right-radius: 0px"
-                class="align-items-center inline-flex flex-nowrap btn bg-main btn-hover">
+                class="align-items-center inline-flex flex-nowrap text-main btn bg-white btn-hover">
                 <i class="fas fa-qrcode mr-2"></i> Scan
             </button>
             <input type="text" name="serial_number" id="serial_number"
