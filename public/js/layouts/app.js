@@ -58,3 +58,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
     window.addEventListener("resize", checkWidth);
 });
+
+// Mở modal
+window.addEventListener("show-popup", function () {
+    document.getElementById("popup-overlay").style.display = "flex";
+});
+
+function closePopup() {
+    document.getElementById("popup-overlay").style.display = "none";
+}

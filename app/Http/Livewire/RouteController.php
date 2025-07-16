@@ -9,7 +9,7 @@ class RouteController extends Component
 {
     use WithPagination;
     // Lắng nghe Livewire.emit('route', controller, action, filter) để gọi hàm route
-    protected $listeners = ['route' => 'routeController'];
+    protected $listeners = ['route' => 'routeController', 'modal' => 'modalController'];
 
     public function routeController($controller, $action = null, $filter = null)
     {
@@ -32,6 +32,10 @@ class RouteController extends Component
 
         // Refresh component con
         $this->emit('routeRefreshCall');
+    }
+    public function modalController()
+    {
+        $this->dispatchBrowserEvent('show-popup');
     }
     public function render()
     {
@@ -68,146 +72,146 @@ class RouteController extends Component
 //     }
 // }
 
-    // public function render()
-    // {
-    //     if ($this->viewRender === 'features.components.component-index-livewire') {
-    //         $data = $this->tableIndexRender();
-    //         return view('livewire.features.components.component-index-livewire', ['data' => $data]);
-    //     } elseif ($this->viewRender === 'livewire.profiles.index') {
-    //         $data = $this->indexProfileRender();
-    //     } elseif ($this->viewRender === 'livewire.profiles.index') {
-    //         $data = $this->editProfileRender();
-    //     } else {
-    //         $data = [];
-    //     }
+// public function render()
+// {
+//     if ($this->viewRender === 'features.components.component-index-livewire') {
+//         $data = $this->tableIndexRender();
+//         return view('livewire.features.components.component-index-livewire', ['data' => $data]);
+//     } elseif ($this->viewRender === 'livewire.profiles.index') {
+//         $data = $this->indexProfileRender();
+//     } elseif ($this->viewRender === 'livewire.profiles.index') {
+//         $data = $this->editProfileRender();
+//     } else {
+//         $data = [];
+//     }
 
-    //     return view($this->viewRender, [
-    //         'data' => $data,
-    //         'livewire' =>  get_class($this) // livewire dùng để debug xem blade đang được gọi bởi livewire nào
-    //     ]);
-    // }
-    // public function viewRender($viewRender)
-    // {
-    //     $this->viewRender = "livewire.$viewRender";
-    // }
-    // public function resetFilters()
-    // {
-    //     $this->reset(['search', 'category', 'condition', 'status', 'perPage', 'sort', 'dir']);
-    //     $this->resetPage();  // reset phân trang về trang 1
-    // }
+//     return view($this->viewRender, [
+//         'data' => $data,
+//         'livewire' =>  get_class($this) // livewire dùng để debug xem blade đang được gọi bởi livewire nào
+//     ]);
+// }
+// public function viewRender($viewRender)
+// {
+//     $this->viewRender = "livewire.$viewRender";
+// }
+// public function resetFilters()
+// {
+//     $this->reset(['search', 'category', 'condition', 'status', 'perPage', 'sort', 'dir']);
+//     $this->resetPage();  // reset phân trang về trang 1
+// }
 
-    // public function sortBy($sort_column)
-    // {
-    //     if ($this->sort === $sort_column) {
-    //         $this->dir = $this->dir === 'asc' ? 'desc' : 'asc';
-    //     } else {
-    //         $this->sort = $sort_column;
-    //         $this->dir = 'asc';
-    //     }
-    // }
-    // public function tableIndexRender()
-    // {
-    //     $query = HardwareComponent::with([
-    //         'category',
-    //         'vendor',
-    //         'condition',
-    //         'location',
-    //         'manufacturer',
-    //         'status'
-    //     ]);
+// public function sortBy($sort_column)
+// {
+//     if ($this->sort === $sort_column) {
+//         $this->dir = $this->dir === 'asc' ? 'desc' : 'asc';
+//     } else {
+//         $this->sort = $sort_column;
+//         $this->dir = 'asc';
+//     }
+// }
+// public function tableIndexRender()
+// {
+//     $query = HardwareComponent::with([
+//         'category',
+//         'vendor',
+//         'condition',
+//         'location',
+//         'manufacturer',
+//         'status'
+//     ]);
 
-    //     // Lấy danh sách cột của bảng 'components'
-    //     $this->columns = Schema::getColumnListing('components');
+//     // Lấy danh sách cột của bảng 'components'
+//     $this->columns = Schema::getColumnListing('components');
 
-    //     // Lấy danh sách các quan hệ dựa trên cột có hậu tố "_id"
-    //     $relationships = [];
-    //     foreach ($this->columns as $column) {
-    //         if (str_ends_with($column, '_id')) {
-    //             $relationships[] = substr($column, 0, -3); // cắt bỏ '_id'
-    //         }
-    //     }
-    //     $this->relationships = $relationships;
+//     // Lấy danh sách các quan hệ dựa trên cột có hậu tố "_id"
+//     $relationships = [];
+//     foreach ($this->columns as $column) {
+//         if (str_ends_with($column, '_id')) {
+//             $relationships[] = substr($column, 0, -3); // cắt bỏ '_id'
+//         }
+//     }
+//     $this->relationships = $relationships;
 
-    //     // Tìm kiếm theo serial_number hoặc note
-    //     if ($this->search) {
-    //         $query->where(function ($q) {
-    //             $q->where('serial_number', 'like', '%' . $this->search . '%')
-    //                 ->orWhere('note', 'like', '%' . $this->search . '%');
-    //         });
-    //     }
+//     // Tìm kiếm theo serial_number hoặc note
+//     if ($this->search) {
+//         $query->where(function ($q) {
+//             $q->where('serial_number', 'like', '%' . $this->search . '%')
+//                 ->orWhere('note', 'like', '%' . $this->search . '%');
+//         });
+//     }
 
-    //     if ($this->viewRender === 'components.table.stock') {
-    //         $query->where('status_id', 2); // "Sẵn kho"
-    //     } elseif ($this->viewRender === 'components.table.issue') {
-    //         $query->where('status_id', '!=', 2); // Đã xuất kho
-    //     }
+//     if ($this->viewRender === 'components.table.stock') {
+//         $query->where('status_id', 2); // "Sẵn kho"
+//     } elseif ($this->viewRender === 'components.table.issue') {
+//         $query->where('status_id', '!=', 2); // Đã xuất kho
+//     }
 
-    //     // Lọc theo status_id (từ dropdown chẳng hạn)
-    //     if ($this->status) {
-    //         $query->where('status_id', $this->status);
-    //     }
+//     // Lọc theo status_id (từ dropdown chẳng hạn)
+//     if ($this->status) {
+//         $query->where('status_id', $this->status);
+//     }
 
-    //     // Lọc theo category_id
-    //     if ($this->category) {
-    //         $query->where('category_id', $this->category);
-    //     }
+//     // Lọc theo category_id
+//     if ($this->category) {
+//         $query->where('category_id', $this->category);
+//     }
 
-    //     // Lọc theo condition_id
-    //     if ($this->condition) {
-    //         $query->where('condition_id', $this->condition);
-    //     }
+//     // Lọc theo condition_id
+//     if ($this->condition) {
+//         $query->where('condition_id', $this->condition);
+//     }
 
-    //     if (in_array($this->sort, $this->columns)) {
-    //         $query->orderBy($this->sort, $this->dir);
-    //     }
+//     if (in_array($this->sort, $this->columns)) {
+//         $query->orderBy($this->sort, $this->dir);
+//     }
 
-    //     return [
-    //         'components' => $query->paginate($this->perPage),
-    //         'columns' => $this->columns,
-    //         'relationships' => $this->relationships,
-    //     ];
-    // }
-    // public function indexProfileRender()
-    // {
-    //     $user = Auth::user();
-    //     return ['user' => $user, 'role' => $user->roles->first()];
-    // }
-    // public function editProfileRender()
-    // {
-    //     $user = Auth::user();
-    //     return ['user' => $user];
-    // }
-    // public function updatePassword()
-    // {
-    //     $this->validate();
+//     return [
+//         'components' => $query->paginate($this->perPage),
+//         'columns' => $this->columns,
+//         'relationships' => $this->relationships,
+//     ];
+// }
+// public function indexProfileRender()
+// {
+//     $user = Auth::user();
+//     return ['user' => $user, 'role' => $user->roles->first()];
+// }
+// public function editProfileRender()
+// {
+//     $user = Auth::user();
+//     return ['user' => $user];
+// }
+// public function updatePassword()
+// {
+//     $this->validate();
 
-    //     if (!Hash::check($this->current_password, Auth::user()->password)) {
-    //         $this->addError('current_password', 'Mật khẩu hiện tại không đúng.');
-    //         return;
-    //     }
+//     if (!Hash::check($this->current_password, Auth::user()->password)) {
+//         $this->addError('current_password', 'Mật khẩu hiện tại không đúng.');
+//         return;
+//     }
 
-    //     Auth::user()->update([
-    //         'password' => bcrypt($this->password),
-    //     ]);
+//     Auth::user()->update([
+//         'password' => bcrypt($this->password),
+//     ]);
 
-    //     $this->reset(['current_password', 'password', 'password_confirmation']);
-    //     session()->flash('success', 'Đổi mật khẩu thành công.');
-    // }
-    // public function updateAvatar()
-    // {
-    //     $this->validate([
-    //         'avatar' => 'required|image|mimes:jpg,jpeg,png|max:2048',
-    //     ]);
+//     $this->reset(['current_password', 'password', 'password_confirmation']);
+//     session()->flash('success', 'Đổi mật khẩu thành công.');
+// }
+// public function updateAvatar()
+// {
+//     $this->validate([
+//         'avatar' => 'required|image|mimes:jpg,jpeg,png|max:2048',
+//     ]);
 
-    //     $user = Auth::user();
+//     $user = Auth::user();
 
-    //     // Xoá ảnh cũ nếu có
-    //     if ($user->avatar && Storage::disk('public')->exists($user->avatar)) {
-    //         Storage::disk('public')->delete($user->avatar);
-    //     }
+//     // Xoá ảnh cũ nếu có
+//     if ($user->avatar && Storage::disk('public')->exists($user->avatar)) {
+//         Storage::disk('public')->delete($user->avatar);
+//     }
 
-    //     $path = $this->avatar->store('avatars', 'public');
-    //     $user->update(['avatar' => $path]);
+//     $path = $this->avatar->store('avatars', 'public');
+//     $user->update(['avatar' => $path]);
 
-    //     $this->reset('avatar');
-    //     session()->flash('success', 'Cập nhật ảnh đại diện thành công.');
+//     $this->reset('avatar');
+//     session()->flash('success', 'Cập nhật ảnh đại diện thành công.');

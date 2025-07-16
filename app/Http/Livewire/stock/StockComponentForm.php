@@ -12,7 +12,7 @@ use App\Models\Manufacturer;
 use App\Models\Vendor;
 use Carbon\Carbon;
 
-class ComponentForm extends Component
+class StockComponentForm extends Component
 {
     use WithPagination;
     public $date_created, $serial_number, $category_id, $vendor_id, $location_id, $condition_id, $manufacturer_id, $status_id, $name, $date_issued, $warranty_start, $warranty_end, $note;

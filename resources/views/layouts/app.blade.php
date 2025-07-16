@@ -51,6 +51,9 @@
             </div>
 
         </div>
+
+        {{-- Modals --}}
+        @include('livewire.modals.components.edit')
     </div>
 
     <!-- JS -->

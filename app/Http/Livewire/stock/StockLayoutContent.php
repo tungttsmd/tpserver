@@ -3,7 +3,7 @@ namespace App\Http\Livewire;
 
 use Livewire\Component;
 
-class LayoutContent extends Component
+class StockLayoutContent extends Component
 {
     public $currentView = 'component-form-create'; // view mặc định
 

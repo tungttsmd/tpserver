@@ -20,7 +20,10 @@
             <tbody>
                 @foreach ($data['components'] as $component)
                     <tr>
-                        <td>@include('livewire.elements.components.' . (session('route')['filter'] ?? null) . '-action')</td>
+                        <td>@include(
+                            'livewire.elements.components.' . (session('route')['filter'] ?? null) . '-action',
+                            ['component_id' => 2]
+                        )</td>
                         @foreach ($data['columns'] as $field)
                             <td>
                                 @php $relationship = rtrim($field, '_id') @endphp

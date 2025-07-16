@@ -2,7 +2,8 @@
          class="btn btn-sm btn-info mb-1">
          <i class="fas fa-eye"></i>
      </a>
-     <a href="{{ route('components.edit', $component->id) }}" class="btn btn-sm btn-warning mb-1">
+     <a href="#" class="btn btn-sm btn-warning mb-1" <a href="#"
+         onclick="event.preventDefault(); Livewire.emit('modal', '{{ $component_id }}')">
          <i class="fas fa-edit"></i>
      </a>
      <form action="{{ route('components.destroy', $component->id) }}" method="POST" class="d-inline"

@@ -14,11 +14,13 @@ use Livewire\Component;
 
 class ComponentCreateLivewire extends Component
 {
+    protected $listeners = ['routeRefreshCall' => '$refresh', 'createSubmit' => 'createSubmit', 'toggleWarranty' => 'toggleWarranty'];
+
     public $stockin_at, $serial_number, $category_id, $vendor_id, $location_id, $condition_id, $manufacturer_id, $status_id, $name, $date_issued, $warranty_start, $warranty_end, $note;
     public $serialNumber = null;
-    protected $listeners = ['routeRefreshCall' => '$refresh', 'createSubmit' => 'createSubmit', 'toggleWarranty' => 'toggleWarranty'];
     public $createSuccess = null;
     public $toggleWarranty = null;
+
 
     public function mount()
     {
@@ -135,7 +137,8 @@ class ComponentCreateLivewire extends Component
 
     public function isValidMysqlTimestamp($date)
     {
-        if (!$date) return false;
+        if (!$date)
+            return false;
         try {
             $ts = strtotime($date);
             return $ts !== false && $ts >= 0 && $ts <= 2147483647;

@@ -7,7 +7,7 @@ use Livewire\WithPagination;
 use App\Models\Component as HardwareComponent;
 use Illuminate\Support\Facades\Schema;
 
-class ComponentTable extends Component
+class StockComponentTable extends Component
 {
     use WithPagination;
 
