@@ -8,7 +8,7 @@
         <div class="row justify-content-center">
             <div class="col-lg-8 col-md-10">
                 <div class="card shadow-lg rounded-4">
-                    <div class="card-header bg-main text-white text-center rounded-top-4">
+                    <div class="card-header bg-warning text-center rounded-top-4">
                         <h4 class="mb-0"><i class="fas fa-edit me-2"></i> Cập nhật thông tin linh kiện</h4>
                     </div>
 

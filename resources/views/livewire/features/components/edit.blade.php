@@ -1,4 +1,4 @@
-<form wire:submit.prevent="update">
+<form wire:submit.prevent="update" class="h-[64vh] overflow-y-scroll">
     @php
         $categoryOptions = [];
         $conditionOptions = [];
@@ -27,8 +27,7 @@
         <label for="serial_number" class="form-label">Serial number<span class="text-warning"> *</span></label>
         <div class="input-group border-main">
             <span class="input-group-text border-0"><i class="fas fa-barcode"></i></span>
-            {{ dd($componentId) }}
-            <div class="form-control input-hover bg-light" readonly>{{ $serial_number }}</div>
+            <div class="form-control input-hover bg-light" readonly>{{ $component->serial_number }}</div>
         </div>
         <p class="mt-2 fw-bold" id="code-output-serial_number"></p>
     </div>
@@ -57,13 +56,16 @@
     {{-- Bảo hành --}}
     <div class="p-3 mt-3 rounded" style="border: 1px solid #28a745">
         <div class="text-success p-1 flex rounded gap-3 flex-wrap items-center">
-            <input type="checkbox"
-                onclick="event.preventDefault(); Livewire.emit('toggleWarranty', {{ $toggleWarranty ? 'null' : 'true' }})"
-                {{ $warranty_start ? 'checked' : '' }}>
+            {{-- <input type="checkbox"
+                onclick="event.preventDefault(); Livewire.emit('toggleWarranty', {{ $toggleWarranty ? 'null' : 'true' }})" --}}
+            {{-- {{ $warranty_start ? 'checked' : '' }}> --}}
             <i class="fas fa-shield-alt nav-icon"></i>
             <p class="mb-0">Linh kiện có bảo hành</p>
         </div>
-
+        <div class="text-sm text-gray-500 mt-1">
+            {{ $stockin_at }} end = {{ $warranty_end }}
+            {{ print_r($component) }}
+        </div>
         @if ($toggleWarranty)
             <div class="flex gap-3 flex-wrap mt-3">
                 <div class="flex-grow-1 min-w-[200px]">
