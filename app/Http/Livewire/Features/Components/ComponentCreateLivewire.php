@@ -10,6 +10,7 @@ use App\Models\Location;
 use App\Models\Manufacturer;
 use App\Models\Vendor;
 use Carbon\Carbon;
+use Illuminate\Validation\ValidationException;
 use Livewire\Component;
 
 class ComponentCreateLivewire extends Component
@@ -63,15 +64,31 @@ class ComponentCreateLivewire extends Component
 
     public function createSubmit()
     {
-        $this->validate();
+        try {
+            $this->validate();
+        } catch (ValidationException $e) {
+            // Lấy lỗi validation dưới dạng array (key => [message,...])
+            $errors = $e->validator->errors()->toArray();
+
+            // Có thể convert thành chuỗi gộp message để dễ show alert
+            $messages = collect($errors)->flatten()->implode(' ');
+
+            $this->dispatchBrowserEvent('danger-alert', [
+                'message' => 'Dữ liệu không hợp lệ, vui lòng kiểm tra lại!',
+                'errors' => $errors,
+                'messages' => $messages,
+            ]);
+
+            return; // dừng hàm update
+        }
 
         // Kiểm tra ngày bảo hành hợp lệ
         if ($this->warranty_start && strtotime($this->warranty_start) < strtotime('1970-01-01')) {
-            $this->addError('warranty_start', 'Ngày bảo hành phải sau 01/01/1970.');
+            $this->dispatchBrowserEvent('danger-alert', ['message' => 'Ngày bảo hành phải sau 01/01/1970.']);
             return;
         }
         if ($this->warranty_end && strtotime($this->warranty_end) < strtotime('1970-01-01')) {
-            $this->addError('warranty_end', 'Ngày bảo hành phải sau 01/01/1970.');
+            $this->dispatchBrowserEvent('danger-alert', ['message' => 'Ngày bảo hành phải sau 01/01/1970.']);
             return;
         }
 
@@ -112,6 +129,9 @@ class ComponentCreateLivewire extends Component
             'barcode' => $barcode ?? null,
         ];
 
+        $this->dispatchBrowserEvent('success-alert', [
+            'message' => 'Thêm mới thành công!',
+        ]);
         $this->resetExcept('serialNumber', 'view_form_content', 'createSuccess', 'historyViewList');
         $this->setDefaultDate();
     }
@@ -120,7 +140,7 @@ class ComponentCreateLivewire extends Component
         return [
             'serial_number' => 'required|string|max:255|unique:components,serial_number',
             'name' => 'required|string|max:255|unique:components,name',
-            'stockin_at' => 'nullable|date|after_or_equal:1970-01-01',
+            'stockin_at' => 'date|after_or_equal:1970-01-01',
 
 
             'category_id' => 'nullable|exists:categories,id',

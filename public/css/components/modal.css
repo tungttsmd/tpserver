@@ -1,22 +1,22 @@
-.bg-light-subtle {
+.tpserver.edit .bg-light-subtle {
     background-color: #f9fafc;
 }
 
-.input-hover:focus {
+.tpserver.edit .input-hover:focus {
     border-color: #0d6efd;
     box-shadow: 0 0 8px rgba(13, 110, 253, 0.4);
 }
 
-.btn-hover:hover {
+.tpserver.edit .btn-hover:hover {
     background-color: #0b5ed7;
     transform: scale(1.02);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
-.input-group-text {
+.tpserver.edit .input-group-text {
     background-color: #e9ecef;
 }
 
-.bg-main {
+.tpserver.edit .bg-main {
     background-color: #ffc107 !important;
 }

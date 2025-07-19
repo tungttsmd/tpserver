@@ -23,7 +23,6 @@ return new class extends Migration
             
             $table->string('note')->nullable(); // Mô tả nội dung thực hiện nghiệp vụ
 
-            $table->timestamp('stockin_at')->nullable()->index(); // Ngày nhập kho dành cho nghiệp vụ nhập (nếu có)
             $table->timestamp('stockout_at')->nullable()->index(); // Ngày xuất kho dành cho nghiệp vụ xuất (nếu có)
             
             $table->timestamps(); // Thêm index thủ công cho $table->timestamps();

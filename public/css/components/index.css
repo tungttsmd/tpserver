@@ -3,7 +3,7 @@
 }
 
 .tpserver.components.table thead th::before {
-    border: 6px solid #4b6cb7;
+    border: 6px solid #553686;
     content: "";
     position: absolute;
     top: -10px;
@@ -22,7 +22,7 @@
 .tpserver.components.table .custom-table thead th {
     position: sticky;
     top: 0;
-    background-color: #4b6cb7;
+    background-color: #553686;
     color: white;
     z-index: 10;
     white-space: nowrap;
@@ -35,7 +35,7 @@
 .tpserver.components.table .custom-table tbody td {
     background-color: #fff;
     border: 1px solid #dee2e6;
-    color: #212529;
+    color: #553686;
     white-space: nowrap;
     vertical-align: middle;
     padding: 8px 12px;

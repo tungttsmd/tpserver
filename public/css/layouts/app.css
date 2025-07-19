@@ -74,7 +74,6 @@
     color: white;
 }
 
-
 .tp-server.layouts .has-treeview > .nav-link {
     padding-left: 10px;
 }
@@ -147,7 +146,7 @@
 }
 
 .tp-server.layouts .text-main {
-    color: #4b6cb7 !important;
+    color: #0a0f2c !important;
 }
 
 .tp-server.layouts .bright-hover:hover {
@@ -186,9 +185,21 @@ footer.tpserver.footer.main-footer {
 
 /* global style */
 .bg-main {
-    background-color: #4b6cb7 !important;
+    background-image: linear-gradient(
+        90deg,
+        #553686
+    ) !important;
     color: white !important;
 }
+
+.bg-dark-main {
+    background-image: linear-gradient(
+        90deg,
+        #303242
+    ) !important;
+    color: white !important;
+}
+
 .hv-opacity:hover {
     opacity: 0.8 !important;
 }

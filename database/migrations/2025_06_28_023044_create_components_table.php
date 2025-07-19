@@ -17,6 +17,11 @@ return new class extends Migration {
             $table->unsignedBigInteger('location_id')->nullable()->index();
             $table->unsignedBigInteger('manufacturer_id')->nullable()->index();
             $table->unsignedBigInteger('status_id')->nullable()->index();
+
+            // Tại sao không để trường này trong component log? Bởi nó luôn luôn bắt buộc khi thêm một component
+            // Không cho phép sửa đổi trường này nếu không đủ thẩm quyền, đảm bảo tính toàn vẹn của dữ liệu 
+            $table->timestamp('stockin_at')->index(); // Ngày nhập kho dành cho nghiệp vụ nhập (nếu có)
+
             $table->timestamp('warranty_start')->nullable()->index();
             $table->timestamp('warranty_end')->nullable()->index();
             $table->text('note')->nullable();

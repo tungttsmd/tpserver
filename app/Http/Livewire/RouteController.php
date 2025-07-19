@@ -8,11 +8,14 @@ use Livewire\WithPagination;
 class RouteController extends Component
 {
     use WithPagination;
-    // Lắng nghe Livewire.emit('route', controller, action, filter) để gọi hàm route
+
+    public $modalType = null, $recordId = null, $modalTitle = null, $modalIcon = null, $modalColor = null;
     protected $listeners = ['route' => 'routeController', 'modal' => 'modalController'];
 
     public function routeController($controller, $action = null, $filter = null)
     {
+        // Lắng nghe Livewire.emit('route', controller, action, filter) để gọi hàm route
+
         // Mô hình MVC livewire SPA. Lưu ý cần 1 view tên là routes/index
 
         // Lưu route hiện tại
@@ -33,9 +36,14 @@ class RouteController extends Component
         // Refresh component con
         $this->emit('routeRefreshCall');
     }
-    public function modalController()
+    public function modalController($modalType, $id, $title, $color, $icon)
     {
-        $this->dispatchBrowserEvent('show-popup');
+        $this->modalType = $modalType;
+        $this->recordId = $id;
+        $this->modalTitle = $title;
+        $this->modalIcon = $icon;
+        $this->modalColor = $color;
+        $this->dispatchBrowserEvent('show-popup', ['modalType' => $modalType, 'recordId' => $id]);
     }
     public function render()
     {

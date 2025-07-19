@@ -35,6 +35,11 @@ class ComponentFactory extends Factory
             'manufacturer_id'  => $this->faker->numberBetween(1, 10),
             'status_id'        => $this->faker->numberBetween(1, 2),
             'note'             => $this->faker->sentence(),
+            
+            // Tại sao không để trường này trong component log? Bởi nó luôn luôn bắt buộc khi thêm một component
+            // Không cho phép sửa đổi trường này nếu không đủ thẩm quyền, đảm bảo tính toàn vẹn của dữ liệu 
+            'stockin_at'       => $date_created, 
+            
             'warranty_start'   => $warranty_start,
             'warranty_end'     => $warranty_end,
             'created_at'     => $date_created,

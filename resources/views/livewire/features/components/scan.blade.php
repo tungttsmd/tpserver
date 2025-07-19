@@ -191,7 +191,7 @@
                                                 </p>
                                                 <p class="mr-2 text-sm flex items-center text-orange-500 italic"><i
                                                         class="fas fa-file-import mr-1 text-orange-500"></i>
-                                                    Ngày tạo: {{ $item->created_at ?? 'N/A' }}
+                                                    Nhập kho: {{ $item->stockin_at ?? 'N/A' }}
                                                 </p>
                                             </div>
 

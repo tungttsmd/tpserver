@@ -1,5 +1,21 @@
-<div class="relative user-panel d-flex align-items-start hv-brightness">
-    <!-- overlay clickable -->
+<div class="relative user-panel pb-12 d-flex align-items-start hv-brightness"
+    style="
+    box-shadow: 0px 0px 20px  rgba(255,255,255,0.6);
+    position: relative;
+    background-image: url('{{ $userCover }}');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;">
+
+    <!-- Overlay tối -->
+    <div
+        style="
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(0,0,0,0.2), rgba(0,0,0,0.6));
+        z-index: 1;
+    ">
+    </div>
     <a onclick="event.preventDefault(); Livewire.emit('viewRender','profiles.index')" href="#"
         class=" absolute inset-0 z-10" style="z-index: 100"></a>
 
@@ -8,8 +24,8 @@
         <!-- avatar -->
         <img src="{{ asset($userAvatar) }}"
             onerror="this.onerror=null;this.src='https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png';"
-            class="mt-3 img-circle elevation-2 object-cover user-avatar border-role-{{ $userRole }}" alt="User Image"
-            style="width: 60px;border: 5px solid {{ $roleColor }}">
+            class="mt-3 img-circle elevation-2 object-cover user-avatar border-role-{{ $userRole }}"
+            alt="User Image" style="width: 60px;border: 5px solid {{ $roleColor }}">
     </div>
 
     <div class="user-role-badge transition-opacity opacity-100 p-0 flex justify-center absolute w-full z-20">

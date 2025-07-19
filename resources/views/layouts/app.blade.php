@@ -26,34 +26,28 @@
     <div class="flex h-screen overflow-hidden">
 
         {{-- Sidebar cố định --}}
-        <aside class="tp-server layouts sidebar main-sidebar sidebar-dark-primary elevation-4">
-            @include('layouts.elements.sidebar-cover')
+        <aside
+            class="relative flex flex-col h-full tp-server layouts sidebar main-sidebar sidebar-dark-primary bg-dark-main elevation-4">
+
             @include('layouts.elements.sidebar-user')
             @include('layouts.elements.sidebar-menu')
+            @include('layouts.elements.sidebar-cover')
+
         </aside>
+
 
         {{-- Nội dung chính + footer --}}
         <div class="tp-server layouts content-wrapper flex flex-col flex-1 overflow-hidden">
 
             {{-- Main content + footer sticky --}}
-            <div class="bg-white flex flex-col flex-1 overflow-auto">
-                <main class="flex-1 p-0 overflow-y-auto">
+            <div class="bg-white flex flex-col flex-1 ">
+                <main class="relatvie flex-1 p-0 overflow-y-auto">
                     <livewire:route-controller />
-                </main>
 
-                <footer class="bg-white border-t text-center py-1 text-sm">
-                    <small>
-                        Copyright &copy; 2025
-                        <a href="https://www.facebook.com/servertp/" class="text-blue-500 underline">TPSERVER
-                            VIETNAM</a>. All rights reserved.
-                    </small>
-                </footer>
+                </main>
             </div>
 
         </div>
-
-        {{-- Modals --}}
-        @include('livewire.modals.components.edit')
     </div>
 
     <!-- JS -->
@@ -62,6 +56,7 @@
     <script src="{{ asset('dist/js/adminlte.min.js') }}"></script>
     <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
     <script src="{{ asset('js/layouts/app.js') }}"></script>
+    <script src="{{ asset('js/layouts/modal.js') }}"></script>
     @livewireScripts
 
 </body>

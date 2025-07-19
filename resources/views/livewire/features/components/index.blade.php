@@ -24,5 +24,5 @@
     </div>
 
     {{-- Component style --}}
-    <link rel="stylesheet" href="{{ asset('css/components/table/index.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/components/index.css') }}">
 @endsection

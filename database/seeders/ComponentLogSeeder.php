@@ -41,7 +41,6 @@ class ComponentLogSeeder extends Seeder
                 'component_id' => $componentId,
                 'action_id' => $actionId,
                 'note' => $note,
-                'stockin_at' => $dateStockIn,
                 'stockout_at' => $dateStockOut,
                 'created_at' => $dateCreated,
                 'updated_at' => $dateCreated,

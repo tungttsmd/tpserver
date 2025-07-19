@@ -14,6 +14,7 @@
     @endphp
 
     <div class="flex-col flex justify-between grow h-[100vh]">
+
         @if ($controller === 'components')
             @if ($action === 'scan')
                 <livewire:features.components.component-scan-livewire wire:key="{{ $refresh }}" />
@@ -41,12 +42,21 @@
                 </div>
             </div>
         @endif
-
+        <footer class="absolute bottom-0 left-0 w-full bg-main border-t text-center py-1 text-sm">
+            <small>
+                Copyright &copy; 2025
+                <a href="https://www.facebook.com/servertp/" class="text-blue-500 underline">TPSERVER
+                    VIETNAM</a>. All rights reserved.
+            </small>
+        </footer>
         {{-- Nội dung được bọc trong Livewire LayoutController --}}
 
         {{-- Nội dung sẽ được render ở đây thông qua livewire --}}
 
 
     </div>
+    
+    {{-- Modals --}}
+    @include('livewire.modals.components.index')
 
 </div>

@@ -1,4 +1,4 @@
-<div style="max-height: 58vh; width: 1px;"">
+<div class="tpserver components table" style="max-height: 58vh; width: 1px;"">
     <table class="table text-center align-middle custom-table">
         <thead>
             <tr>

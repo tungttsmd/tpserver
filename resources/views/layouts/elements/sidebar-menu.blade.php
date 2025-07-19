@@ -1,4 +1,4 @@
-<nav class="mt-2 max-h-[68vh] overflow-y-auto">
+<nav class="mt-3 max-h-[64vh] overflow-y-auto">
     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
         <li class="nav-item has-treeview">
             @section('title')

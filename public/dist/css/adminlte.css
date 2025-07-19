@@ -12035,6 +12035,10 @@ body:not(.layout-fixed) .main-sidebar .sidebar {
   background-color: #fff;
 }
 
+.layout-navbar-fixed .dark-mode .wrapper .sidebar-light-dark .brand-link:not([class*="navbar"]) {
+  background-color: #fff;
+}
+
 @media (min-width: 576px) {
   .layout-sm-navbar-fixed .dark-mode .wrapper .sidebar-dark-primary .brand-link:not([class*="navbar"]) {
     background-color: #343a40;
