@@ -1,7 +1,7 @@
     <div class="row col-12 overflow-y-auto h-[64vh]"> {{-- ✅ Wrap 2 khối vào row mới --}}
         {{-- Cột Thông tin linh kiện --}}
         @if (is_object($component))
-        {{-- Thông tin linh kiện --}}
+            {{-- Thông tin linh kiện --}}
             <div class="col-lg-12">
                 <div class="mt-0 text-gray-600 bg-gray-50 p-3 rounded space-y-1">
                     <div class="d-flex flex-column flex-md-row justify-between gap-4 mb-2">
@@ -78,12 +78,10 @@
                 </div>
             </div>
         @else
-            @if ($serialNumber)
-                <div
-                    class="h-[78vh] justify-content-center col-lg-12 bg-yellow-100 text-yellow-800 p-3 rounded flex items-center gap-2">
-                    <i class="fas fa-info-circle"></i> Không tìm thấy linh kiện phù hợp với serial đã nhập.
-                </div>
-            @endif
+            <div
+                class="h-[78vh] justify-content-center col-lg-12 bg-yellow-100 text-yellow-800 p-3 rounded flex items-center gap-2">
+                <i class="fas fa-info-circle"></i> Không tìm thấy linh kiện phù hợp với serial đã nhập.
+            </div>
         @endif
 
         {{-- Nội dung gợi ý tìm kiếm --}}

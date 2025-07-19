@@ -20,3 +20,16 @@
 .tpserver.edit .bg-main {
     background-color: #ffc107 !important;
 }
+.tpserver.stockout .bg-light-subtle {
+    background-color: #f9fafc;
+}
+
+.tpserver.stockout .btn:hover {
+    transform: scale(1.02);
+    transition: all 0.2s ease-in-out;
+}
+
+.tpserver.stockout .list-group-item {
+    padding-top: 8px;
+    padding-bottom: 8px;
+}

@@ -24,7 +24,7 @@
     @endphp
 
     <div class="overflow-y-scroll h-[64vh]">
-    
+
         <div class="mb-3">
             <label for="serial_number" class="form-label">Serial number<span class="text-warning"> *</span></label>
             <div class="input-group border-main">
@@ -61,10 +61,6 @@
                 <input type="checkbox" wire:model="toggleWarranty">
                 <i class="fas fa-shield-alt nav-icon"></i>
                 <p class="mb-0">Linh kiện có bảo hành</p>
-            </div>
-            <div class="text-sm text-gray-500 mt-1">
-                {{ $stockin_at }} end = {{ $warranty_end }}
-                {{-- {{ print_r($component) }} --}}
             </div>
             @if ($toggleWarranty)
                 <div class="flex gap-3 flex-wrap mt-3">
