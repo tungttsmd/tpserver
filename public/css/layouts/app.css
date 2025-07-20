@@ -185,18 +185,19 @@ footer.tpserver.footer.main-footer {
 
 /* global style */
 .bg-main {
-    background-image: linear-gradient(
-        90deg,
-        #553686
-    ) !important;
+    background-image: linear-gradient(90deg, #553686) !important;
     color: white !important;
 }
-
+.bg-success-subtle {
+    background-color: #d1e7dd !important;
+    color: #0f5132 !important;
+}
 .bg-dark-main {
-    background-image: linear-gradient(
-        90deg,
-        #303242
-    ) !important;
+    background-image: linear-gradient(90deg, #303242) !important;
+    color: white !important;
+}
+.hv-bg-main {
+    background-color: #553686 !important;
     color: white !important;
 }
 

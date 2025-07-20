@@ -21,15 +21,15 @@
     background-color: #ffc107 !important;
 }
 .tpserver.stockout .bg-light-subtle {
-    background-color: #f9fafc;
+    background-color: #f9fafc !important;
 }
 
 .tpserver.stockout .btn:hover {
-    transform: scale(1.02);
-    transition: all 0.2s ease-in-out;
+    transform: scale(1.02) !important;
+    transition: all 0.2s ease-in-out !important;
 }
 
 .tpserver.stockout .list-group-item {
-    padding-top: 8px;
-    padding-bottom: 8px;
+    padding-top: 8px !important;
+    padding-bottom: 8px !important;
 }
