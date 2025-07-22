@@ -77,25 +77,6 @@
                     </div>
                 </div>
                 <hr>
-                <div class="flex gap-3 mb-4 w-full mt-3">
-                    <button
-                        class="btn-tab rounded-sm bg-success-subtle justify-center flex grow {{ $stockoutType === null ? 'active' : '' }}"
-                        wire:click="setStockoutType(null)" type="button">
-                        <i class="bi bi-box-arrow-in-right mr-3"></i> Xuất kho nội bộ
-                    </button>
-
-                    <button
-                        class="btn-tab rounded-sm bg-success-subtle justify-center flex grow {{ $stockoutType === 'customer' ? 'active' : '' }}"
-                        wire:click="setStockoutType('customer')" type="button">
-                        <i class="bi bi-cart-check mr-3"></i> Bán cho khách
-                    </button>
-
-                    <button
-                        class="btn-tab rounded-sm bg-success-subtle justify-center flex grow {{ $stockoutType === 'vendor' ? 'active' : '' }}"
-                        wire:click="setStockoutType('vendor')" type="button">
-                        <i class="bi bi-arrow-counterclockwise mr-3"></i> Hoàn trả hàng/sửa chữa
-                    </button>
-                </div>
 
                 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"
                     rel="stylesheet">
@@ -121,83 +102,79 @@
                 </style>
 
 
-                @php
-                    $actionOptions = [];
-                    $customerOptions = [];
-                    $vendorOptions = [];
+                <div class="flex gap-3 mb-4 w-full mt-3">
+                    <button
+                        class="btn-tab rounded-sm bg-success-subtle justify-center flex grow {{ $stockoutType === 'internal' ? 'active' : '' }}"
+                        wire:click="setStockoutType('internal')" type="button">
+                        <i class="bi bi-box-arrow-in-right mr-3"></i> Xuất kho nội bộ
+                    </button>
 
-                    foreach ($actions as $action) {
-                        $actionOptions[$action->id] = $action->note;
-                    }
-                    foreach ($vendors as $vendor) {
-                        $vendorOptions[
-                            $vendor->id
-                        ] = "Tên: $vendor->name - Email: $vendor->email - SĐT: $vendor->phone";
-                    }
-                    foreach ($customers as $customer) {
-                        $customerOptions[
-                            $customer->id
-                        ] = "Tên: $customer->name - Email: $customer->email - SĐT: $customer->phone";
-                    }
+                    <button
+                        class="btn-tab rounded-sm bg-success-subtle justify-center flex grow {{ $stockoutType === 'customer' ? 'active' : '' }}"
+                        wire:click="setStockoutType('customer')" type="button">
+                        <i class="bi bi-cart-check mr-3"></i> Bán cho khách
+                    </button>
 
-                    $fields = [
-                        [
-                            'livewire' => 'action_id',
-                            'name' => 'action',
-                            'label' => 'Thao tác',
-                            'icon' => 'fas fa-action',
-                            'type' => 'select',
-                            'options' => $actionOptions,
-                        ],
-                        [
-                            'livewire' => 'customer_id',
-                            'name' => 'customer',
-                            'label' => 'Khách hàng',
-                            'icon' => 'fas fa-user-tie',
-                            'type' => 'select',
-                            'options' => $customerOptions,
-                        ],
-                        [
-                            'livewire' => 'vendor_id',
-                            'name' => 'vendor',
-                            'label' => 'Nhà cung cấp',
-                            'icon' => 'fas fa-store',
-                            'type' => 'select',
-                            'options' => $vendorOptions,
-                        ],
-                    ];
-                @endphp
-
-                <div class="mb-3">
-                    <label for="action_id" class="form-label">Thao tác xuất kho</label>
-                    <div class="input-group border rounded">
-                        <span class="input-group-text border-0"><i class="fas fa-paw"></i></span>
-                        <select wire:model.defer="action_id" id="action_id" class="form-control input-hover border-0">
-                            @foreach ($actions as $option)
-                                <option value="{{ $option->id }}">{{ $option->note }}</option>
-                            @endforeach
-                        </select>
-                    </div>
+                    <button
+                        class="btn-tab rounded-sm bg-success-subtle justify-center flex grow {{ $stockoutType === 'vendor' ? 'active' : '' }}"
+                        wire:click="setStockoutType('vendor')" type="button">
+                        <i class="bi bi-arrow-counterclockwise mr-3"></i> Hoàn trả hàng/sửa chữa
+                    </button>
                 </div>
 
-
-                @foreach ($fields as $field)
-                    @if ($stockoutType === $field['name'])
-                        <div class="mb-3">
-                            <label for="{{ $field['livewire'] }}" class="form-label">{{ $field['label'] }}</label>
-                            <div class="input-group border rounded">
-                                <span class="input-group-text border-0"><i class="{{ $field['icon'] }}"></i></span>
-                                <select wire:model.defer="{{ $field['livewire'] }}" id="{{ $field['livewire'] }}"
-                                    class="form-control input-hover border-0">
-                                    <option value="">-- Chọn {{ strtolower($field['label']) }} --</option>
-                                    @foreach ($field['options'] as $key => $option)
-                                        <option value="{{ $key }}">{{ $option }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
+                {{-- Nội dung 3 select, chỉ 1 cái hiện --}}
+                @if ($stockoutType)
+                    {{-- Vendor --}}
+                    <div class="mb-3 {{ $stockoutType !== 'vendor' ? 'd-none' : '' }}">
+                        <label for="action_id_vendor" class="form-label">Thao tác (Vendor)</label>
+                        <div class="input-group border rounded">
+                            <span class="input-group-text border-0"><i class="fas fa-paw"></i></span>
+                            <select wire:model.defer="action_id" id="action_id_vendor"
+                                class="form-control input-hover border-0">
+                                @foreach ($actionStockoutVendor as $id => $option)
+                                    <option value="{{ $id }}">{{ $option->note }}</option>
+                                @endforeach
+                            </select>
                         </div>
-                    @endif
-                @endforeach
+                    </div>
+
+                    {{-- Customer --}}
+                    <div class="mb-3 {{ $stockoutType !== 'customer' ? 'd-none' : '' }}">
+                        <label for="action_id_customer" class="form-label">Thao tác (Khách hàng)</label>
+                        <div class="input-group border rounded">
+                            <span class="input-group-text border-0"><i class="fas fa-paw"></i></span>
+                            <select wire:model.defer="action_id" id="action_id_customer"
+                                class="form-control input-hover border-0">
+                                @foreach ($actionStockoutCustomer as $id => $option)
+                                    <option value="{{ $id }}">{{ $option->note }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+
+                    {{-- Internal --}}
+                    <div class="mb-3 {{ $stockoutType !== 'internal' ? 'd-none' : '' }}">
+                        <label for="action_id_internal" class="form-label">Thao tác (Nội bộ)</label>
+                        <div class="input-group border rounded">
+                            <span class="input-group-text border-0"><i class="fas fa-paw"></i></span>
+                            <select wire:model.defer="action_id" id="action_id_internal"
+                                class="form-control input-hover border-0">
+                                @foreach ($actionStockoutInternal as $id => $option)
+                                    <option value="{{ $id }}">{{ $option->note }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                @else
+                    <div class="mb-3">
+                        <label class="form-label">Thao tác</label>
+                        <div class="input-group border rounded">
+                            <span class="input-group-text border-0"><i class="fas fa-paw"></i></span>
+                            <input class="form-control input-hover border-0" type="text" value="Đã xảy ra lỗi"
+                                readonly>
+                        </div>
+                    </div>
+                @endif
 
                 <div class="my-6">
                     <label for="note" class="form-label pl-3"><strong>Lý do xuất kho <span
@@ -220,7 +197,8 @@
     @else
         <div
             class="h-[78vh] justify-content-center col-lg-12 bg-yellow-100 text-yellow-800 p-3 rounded flex items-center gap-2">
-            <i class="fas fa-info-circle"></i> Đã xảy ra sự cố với biểu mẫu xuất kho, xin vui lòng liên hệ quản trị viên
+            <i class="fas fa-info-circle"></i> Đã xảy ra sự cố với biểu mẫu xuất kho, xin vui lòng liên hệ quản trị
+            viên
             về vấn đề này.
         </div>
     @endif

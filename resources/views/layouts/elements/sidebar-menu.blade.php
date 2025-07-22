@@ -166,7 +166,8 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="{{ route('logs.index-component-export') }}" class="nav-link">
+                        <a href="#" class="nav-link"
+                            onclick="event.preventDefault(); Livewire.emit('route', 'logs', 'stockout', 'stockout-log')">
                             <i class="fas fa-clock nav-icon"></i>
                             <p>Lịch sử xuất kho</p>
                         </a>

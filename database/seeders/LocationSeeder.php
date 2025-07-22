@@ -10,16 +10,17 @@ class LocationSeeder extends Seeder
     public function run(): void
     {
         $locations = [
-            'Kho chính',
-            'Kho kỹ thuật',
-            'Kho linh kiện cũ',
-            'Phòng bảo hành',
-            'Phòng kỹ thuật 1',
-            'Phòng kỹ thuật 2',
-            'Tầng 1 - Tủ A1',
-            'Tầng 2 - Tủ B3',
-            'Khu vực đóng gói',
-            'Kệ linh kiện nhanh',
+            'Không xác định',
+            'Nhà điều hành',
+            100,
+            110,
+            120,
+            200,
+            210,
+            220,
+            300,
+            310,
+            320,
         ];
 
         foreach ($locations as $name) {

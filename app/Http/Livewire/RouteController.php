@@ -49,7 +49,11 @@ class RouteController extends Component
     {
         // Hành động gửi session('route') để ép toàn bộ livewire liên quan sẽ force reload trang
         // View cũng sẽ dùng dữ liệu extract từ session: $controller, $action, $filter để render
-        return view('livewire.routes.index', session('route') ?? ['controller' => null, 'action' => null, 'filter' => null]);
+        return view('livewire.routes.index',  [
+            'controller' => session('route.controller'),
+            'action' => session('route.action'),
+            'filter' => session('route.filter')
+        ]);
     }
 }
 

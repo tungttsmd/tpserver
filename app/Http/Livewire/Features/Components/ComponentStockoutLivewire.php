@@ -6,6 +6,7 @@ use App\Models\ActionLog;
 use App\Models\Component as ModelsComponent;
 use App\Models\ComponentLog;
 use App\Models\Customer;
+use App\Models\Location;
 use App\Models\User;
 use App\Models\Vendor;
 use Carbon\Carbon;
@@ -15,19 +16,38 @@ use Livewire\Component;
 class ComponentStockoutLivewire extends Component
 {
     public $componentId, $component;
-    public $qrcode;
-    public $action_id, $stockout_at, $customer_id, $vendor_id, $note;
-    protected $actions, $customers, $vendors;
-    public $stockoutType = null;
+    public $qrcode, $stockoutType, $actionDefault, $actionDefaultId;
+    public $action_id, $stockout_at, $customer_id, $vendor_id, $location_id, $note;
+    protected $actions, $customers = [], $vendors = [], $locations = [];
+    public $actionsStockoutCustomer, $actionsStockoutVendor, $actionsStockoutInternal;
+    public $actionSuggestion = [];
 
     public function render()
     {
-        $data = $this->getRelationshipData();
+        $this->actionsStockoutCustomer = ActionLog::where('target', 'componentStockoutCustomer')->get();
+        $this->actionsStockoutVendor = ActionLog::where('target', 'componentStockoutVendor')->get();
+        $this->actionsStockoutInternal = ActionLog::where('target', 'componentStockoutInternal')->get();
+
+        $data = array_merge(
+            $this->getRelationshipData(),
+            [
+                'actions' => $this->actions,
+                'actionStockoutCustomer' => $this->actionsStockoutCustomer,
+                'actionStockoutVendor' => $this->actionsStockoutVendor,
+                'actionStockoutInternal' => $this->actionsStockoutInternal,
+            ]
+        );
         return view('livewire.features.components.stockout', $data);
     }
     public function mount()
     {
-        $this->actions = ActionLog::where('target', 'componentStockoutInternal')->get();
+        $this->stockoutType = 'internal';
+
+        $this->actionsStockoutCustomer = ActionLog::where('target', 'componentStockoutCustomer')->get();
+        $this->actionsStockoutVendor = ActionLog::where('target', 'componentStockoutVendor')->get();
+        $this->actionsStockoutInternal = ActionLog::where('target', 'componentStockoutInternal')->get();
+
+        $this->location_id = $this->location_id ?? null; // Nhập nếu bán hàng
         $this->customer_id = $this->customer_id ?? null; // Nhập nếu bán hàng
         $this->vendor_id = $this->vendor_id ?? null; // Nhập nếu trả hàng
         $this->stockout_at = Carbon::now()->format('Y-m-d');
@@ -43,11 +63,12 @@ class ComponentStockoutLivewire extends Component
 
         $this->qrcode = "https://api.qrserver.com/v1/create-qr-code/?data={$this->component->serial_number}&size=240x240";
     }
-    public function stockout(User $user)
+    public function stockout()
     {
         try {
             $this->validate([
-                'vendor_id' => 'nullable|required|exists:vendors,id',
+                'location_id' => 'nullable|exists:locations,id',
+                'vendor_id' => 'nullable|exists:vendors,id',
                 'customer_id' => 'nullable|exists:customers,id',
                 'note' => 'required|string|min:5',
             ]);
@@ -67,23 +88,38 @@ class ComponentStockoutLivewire extends Component
             return; // dừng hàm update
         }
 
-        if ($this->stockoutType === 'customer') {
+        $user = auth()->user();
 
-        } elseif ($this->stockoutType === 'vendor') {
+        // Xác định thông tin liên quan tùy theo loại xuất kho
+        $locationId = null;
+        $customerId = null;
+        $vendorId = null;
 
-        } else {
-            $action_id = 18;
+        switch ($this->stockoutType) {
+            case 'customer':
+                $customerId = $this->customer_id;
+                break;
+            case 'vendor':
+                $vendorId = $this->vendor_id;
+                break;
+            case 'internal':
+            default:
+                $locationId = $this->location_id;
+                break;
         }
 
+        // Tạo log xuất kho
         ComponentLog::create([
             'component_id' => $this->componentId,
-            'user_id' => $user->id, // Nếu đang dùng auth
-            'action_id' => $action_id, // 18 là mã "Xuất kho" trong action logs
-            'customer_id' => $this->customer_id ?? null, // Nếu có thông tin customer thì truyền vào
-            'vendor_id' => $this->vendor_id ?? null,
+            'user_id' => $user->id,
+            'action_id' => $this->action_id,
+            'location_id' => $locationId,
+            'customer_id' => $customerId,
+            'vendor_id' => $vendorId,
             'note' => $this->note,
-            'stockout_at' => Carbon::parse($this->stockout_at),
+            'stockout_at' => Carbon::parse($this->stockout_at ?? now()), // fallback nếu null
         ]);
+
 
         // 'note' => "Người dùng $user->alias ($user->username) đã xuất kho linh kiện",
 
@@ -94,25 +130,13 @@ class ComponentStockoutLivewire extends Component
     public function getRelationshipData()
     {
         return [
-            'actions' => $this->actions,
+            'locations' => Location::all(),
             'customers' => Customer::all(),
             'vendors' => Vendor::all()
         ];
     }
-    public function setStockoutType($type)
+    public function setStockoutType($stockoutType)
     {
-        $this->stockoutType = $type;
-
-        if ($type === 'customer') {
-            $this->actions = ActionLog::where('target', 'componentStockoutCustomer')->get();
-            $this->vendor_id = null;
-        } elseif ($type === 'vendor') {
-            $this->actions = ActionLog::where('target', 'componentStockoutVendor')->get();
-            $this->customer_id = null;
-        } else {
-            $this->actions = ActionLog::where('target', 'componentStockoutInternal')->get();
-            $this->vendor_id = null;
-            $this->customer_id = null;
-        }
+        $this->stockoutType = $stockoutType;
     }
 }

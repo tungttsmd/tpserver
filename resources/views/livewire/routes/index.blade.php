@@ -6,15 +6,10 @@
     {{-- extract(session('route') từ RouteController): $controller, $action, $filter --}}
 
     @php
-        $controller = session('route.controller') ?? null;
-        $action = session('route.action') ?? null;
-        $filter = session('route.filter') ?? null;
         $refresh = $controller . $action . $filter;
-
     @endphp
-
+    
     <div class="flex-col flex justify-between grow h-[100vh]">
-
         @if ($controller === 'components')
             @if ($action === 'scan')
                 <livewire:features.components.component-scan-livewire wire:key="{{ $refresh }}" />
@@ -24,6 +19,10 @@
                 <livewire:features.components.component-index-livewire :filter="$filter"
                     wire:key="{{ $refresh }}" />
             @endif
+        @elseif ($controller === 'logs')
+            @if ($action === 'stockout')
+                <livewire:features.logs.component-stockout-livewire :filter="$filter" wire:key="{{ $refresh }}" />
+            @endif
         @else
             <div class="bg-white-100 flex items-center justify-center h-screen p-6 grow rounded">
                 <div class="text-main text-center max-w-md">
@@ -32,7 +31,8 @@
                     </div>
                     <h1 class="text-main text-3xl font-semibold text-gray-800 mb-2">Không tìm thấy trang</h1>
                     <p class="text-gray-600 mb-6">
-                        Trang bạn đang tìm có thể đã bị xoá hoặc không còn tồn tại.<br>Vui lòng kiểm tra lại đường dẫn
+                        Trang bạn đang tìm có thể đã bị xoá hoặc không còn tồn tại.<br>Vui lòng kiểm tra lại
+                        đường dẫn
                         hoặc quay về trang chính.
                     </p>
                     <a href="/"
@@ -47,6 +47,7 @@
                 Copyright &copy; 2025
                 <a href="https://www.facebook.com/servertp/" class="text-blue-500 underline">TPSERVER
                     VIETNAM</a>. All rights reserved.
+                <span>Controller: {{ $controller }}; Action: {{ $action }}; Filter: {{ $filter }}</span>
             </small>
         </footer>
         {{-- Nội dung được bọc trong Livewire LayoutController --}}
@@ -55,7 +56,7 @@
 
 
     </div>
-    
+
     {{-- Modals --}}
     @include('livewire.modals.components.index')
 

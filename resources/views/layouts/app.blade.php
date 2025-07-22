@@ -24,7 +24,6 @@
 <body class="hold-transition sidebar-mini">
 
     <div class="flex h-screen overflow-hidden">
-
         {{-- Sidebar cố định --}}
         <aside
             class="relative flex flex-col h-full tp-server layouts sidebar main-sidebar sidebar-dark-primary bg-dark-main elevation-4">
@@ -43,7 +42,6 @@
             <div class="bg-white flex flex-col flex-1 ">
                 <main class="relatvie flex-1 p-0 overflow-y-auto">
                     <livewire:route-controller />
-
                 </main>
             </div>
 
