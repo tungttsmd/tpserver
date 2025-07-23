@@ -9,39 +9,20 @@ use Livewire\WithPagination;
 class ComponentStockoutLivewire extends Component
 {
     use WithPagination;
-    public $sort = 'id';
-    public $dir = 'asc';
+    public $sort = 'updated_at';
+    public $dir = 'desc';
 
     public function render()
     {
-        $components = ComponentLog::with(['component', 'action', 'user', 'vendor', 'customer'])->get();
-
-        $componentLogs = ComponentLog::with(['component', 'action', 'user', 'vendor', 'customer'])
+        $componentLogs = ComponentLog::with(['component', 'action', 'user', 'vendor', 'customer', 'location'])
             ->orderBy($this->sort, $this->dir)
-            ->paginate(10);
+            ->paginate(20);
 
-        $data = [
+        return view('livewire.features.logs.stockout', [
             'componentLogs' => $componentLogs,
-            'columns' => [
-                'component_id',
-                'action_id',
-                'user_id',
-                'vendor_id',
-                'customer_id',
-                'note',
-                'created_at',
-            ],
-            'components' => $components,
-            'relationships' => [
-                'component',
-                'action',
-                'user',
-                'vendor',
-                'customer',
-            ],
-        ];
-
-        return view('livewire.features.logs.stockout', ['data' => $data, 'sort' => $this->sort, 'dir' => $this->dir]);
+            'sort' => $this->sort,
+            'dir' => $this->dir
+        ]);
     }
 
     public function sortBy($field)

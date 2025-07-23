@@ -34,4 +34,8 @@ class ComponentLog extends Model
     {
         return $this->belongsTo(\App\Models\Customer::class);
     }
+    public function location()
+    {
+        return $this->belongsTo(\App\Models\Location::class);
+    }
 }

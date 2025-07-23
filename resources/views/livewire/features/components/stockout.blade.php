@@ -126,13 +126,29 @@
                 @if ($stockoutType)
                     {{-- Vendor --}}
                     <div class="mb-3 {{ $stockoutType !== 'vendor' ? 'd-none' : '' }}">
-                        <label for="action_id_vendor" class="form-label">Thao tác (Vendor)</label>
+                        <label for="action_id_vendor" class="form-label">Thao tác</label>
+                        <div class="input-group border rounded">
+                            <span class="input-group-text border-0"><i class="fas fa-paw"></i></span>
+                            <select wire:model.defer="{{ $stockoutType !== 'vendor' ? 'action_id' : 'none' }}"
+                                id="action_id_vendor" class="form-control input-hover border-0">
+                                @foreach ($actionStockoutVendor as $id => $option)
+                                    <option value="{{ $id }}">{{ $option->note }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mb-3 {{ $stockoutType !== 'vendor' ? 'd-none' : '' }}">
+                        <label for="action_id_vendor" class="form-label">Nhà cung cấp</label>
                         <div class="input-group border rounded">
                             <span class="input-group-text border-0"><i class="fas fa-paw"></i></span>
                             <select wire:model.defer="action_id" id="action_id_vendor"
                                 class="form-control input-hover border-0">
-                                @foreach ($actionStockoutVendor as $id => $option)
-                                    <option value="{{ $id }}">{{ $option->note }}</option>
+                                @foreach ($vendorOptions as $id => $option)
+                                    <option value="{{ $id }}">
+                                        <strong>{{ $option->name }}</strong>{{ $option->phone ? ' (' . $option->phone . ')' : '' }}.
+                                        Email:
+                                        <strong> {{ $option->email ?? '---' }} </strong>
+                                    </option>
                                 @endforeach
                             </select>
                         </div>
@@ -140,13 +156,29 @@
 
                     {{-- Customer --}}
                     <div class="mb-3 {{ $stockoutType !== 'customer' ? 'd-none' : '' }}">
-                        <label for="action_id_customer" class="form-label">Thao tác (Khách hàng)</label>
+                        <label for="action_id_customer" class="form-label">Thao tác</label>
+                        <div class="input-group border rounded">
+                            <span class="input-group-text border-0"><i class="fas fa-paw"></i></span>
+                            <select wire:model.defer="{{ $stockoutType !== 'customer' ? 'action_id' : 'none' }}"
+                                id="action_id_customer" class="form-control input-hover border-0">
+                                @foreach ($actionStockoutCustomer as $id => $option)
+                                    <option value="{{ $id }}">{{ $option->note }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mb-3 {{ $stockoutType !== 'customer' ? 'd-none' : '' }}">
+                        <label for="action_id_customer" class="form-label">Khách hàng</label>
                         <div class="input-group border rounded">
                             <span class="input-group-text border-0"><i class="fas fa-paw"></i></span>
                             <select wire:model.defer="action_id" id="action_id_customer"
                                 class="form-control input-hover border-0">
-                                @foreach ($actionStockoutCustomer as $id => $option)
-                                    <option value="{{ $id }}">{{ $option->note }}</option>
+                                @foreach ($customerOptions as $id => $option)
+                                    <option value="{{ $id }}">
+                                        <strong>{{ $option->name }}</strong>{{ $option->phone ? ' (' . $option->phone . ')' : '' }}.
+                                        Email:
+                                        <strong> {{ $option->email ?? '---' }} </strong>
+                                    </option>
                                 @endforeach
                             </select>
                         </div>
@@ -154,13 +186,25 @@
 
                     {{-- Internal --}}
                     <div class="mb-3 {{ $stockoutType !== 'internal' ? 'd-none' : '' }}">
-                        <label for="action_id_internal" class="form-label">Thao tác (Nội bộ)</label>
+                        <label for="action_id_internal" class="form-label">Thao tác</label>
+                        <div class="input-group border rounded">
+                            <span class="input-group-text border-0"><i class="fas fa-paw"></i></span>
+                            <select wire:model.defer="{{ $stockoutType !== 'internal' ? 'action_id' : 'none' }}"
+                                id="action_id_internal" class="form-control input-hover border-0">
+                                @foreach ($actionStockoutInternal as $id => $option)
+                                    <option value="{{ $id }}">{{ $option->note }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mb-3 {{ $stockoutType !== 'internal' ? 'd-none' : '' }}">
+                        <label for="action_id_internal" class="form-label">Vị trí</label>
                         <div class="input-group border rounded">
                             <span class="input-group-text border-0"><i class="fas fa-paw"></i></span>
                             <select wire:model.defer="action_id" id="action_id_internal"
                                 class="form-control input-hover border-0">
-                                @foreach ($actionStockoutInternal as $id => $option)
-                                    <option value="{{ $id }}">{{ $option->note }}</option>
+                                @foreach ($locationOptions as $id => $option)
+                                    <option value="{{ $id }}">{{ $option->name }}</option>
                                 @endforeach
                             </select>
                         </div>

@@ -17,9 +17,10 @@ class ComponentStockoutLivewire extends Component
 {
     public $componentId, $component;
     public $qrcode, $stockoutType, $actionDefault, $actionDefaultId;
-    public $action_id, $stockout_at, $customer_id, $vendor_id, $location_id, $note;
+    public $action_id, $stockout_at, $customer_id, $vendor_id, $location_id, $note, $none;
     protected $actions, $customers = [], $vendors = [], $locations = [];
     public $actionsStockoutCustomer, $actionsStockoutVendor, $actionsStockoutInternal;
+    public $vendorOptions, $customerOptions, $locationOptions;
     public $actionSuggestion = [];
 
     public function render()
@@ -27,6 +28,9 @@ class ComponentStockoutLivewire extends Component
         $this->actionsStockoutCustomer = ActionLog::where('target', 'componentStockoutCustomer')->get();
         $this->actionsStockoutVendor = ActionLog::where('target', 'componentStockoutVendor')->get();
         $this->actionsStockoutInternal = ActionLog::where('target', 'componentStockoutInternal')->get();
+        $this->vendorOptions = Vendor::select('id', 'name', 'phone', 'email')->get();
+        $this->customerOptions = Customer::select('id', 'name', 'phone', 'email')->get();
+        $this->locationOptions = Location::select('id', 'name')->get();
 
         $data = array_merge(
             $this->getRelationshipData(),
@@ -35,6 +39,9 @@ class ComponentStockoutLivewire extends Component
                 'actionStockoutCustomer' => $this->actionsStockoutCustomer,
                 'actionStockoutVendor' => $this->actionsStockoutVendor,
                 'actionStockoutInternal' => $this->actionsStockoutInternal,
+                'vendorOptions' => $this->vendorOptions,
+                'customerOptions' => $this->customerOptions,
+                'locationOptions' => $this->locationOptions,
             ]
         );
         return view('livewire.features.components.stockout', $data);

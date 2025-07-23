@@ -1,13 +1,4 @@
-@extends('layouts.content')
-@section('prop')
-    @php
-        $title = 'Danh sách linh kiện';
-        $icon = 'fas fa-boxes';
-    @endphp
-@endsection
-
-@section('content')
-    <div class="py-4 w-full">
+    <div class="p-4 w-full">
         {{-- Bộ lọc --}}
         @include('livewire.elements.components.filter')
 
@@ -21,8 +12,6 @@
         <div class="m-6">
             {{ $data['components']->links('livewire.elements.components.paginator') }}
         </div>
+        {{-- Component style --}}
+        <link rel="stylesheet" href="{{ asset('css/components/index.css') }}">
     </div>
-
-    {{-- Component style --}}
-    <link rel="stylesheet" href="{{ asset('css/components/index.css') }}">
-@endsection
