@@ -122,6 +122,18 @@
                     </button>
                 </div>
 
+                {{-- Ngày xuất kho --}}
+                <div class="flex-grow-1" style="min-width: 200px;">
+                    <label for="stockout_at" class="form-label">Ngày xuất kho<span class="text-warning">
+                            *</span></label>
+                    <div class="input-group border-main">
+                        <span class="input-group-text border-0" icon-scale border-0"><i
+                                class="fas fa-calendar-alt"></i></span>
+                        <input wire:model.defer="stockout_at" type="date" class="form-control input-hover border-0"
+                            required>
+                    </div>
+                </div>
+
                 {{-- Nội dung 3 select, chỉ 1 cái hiện --}}
                 @if ($stockoutType)
                     {{-- Vendor --}}
@@ -129,10 +141,10 @@
                         <label for="action_id_vendor" class="form-label">Thao tác</label>
                         <div class="input-group border rounded">
                             <span class="input-group-text border-0"><i class="fas fa-paw"></i></span>
-                            <select wire:model.defer="{{ $stockoutType !== 'vendor' ? 'action_id' : 'none' }}"
-                                id="action_id_vendor" class="form-control input-hover border-0">
-                                @foreach ($actionStockoutVendor as $id => $option)
-                                    <option value="{{ $id }}">{{ $option->note }}</option>
+                            <select wire:model.defer="action_id" id="action_id"
+                                class="form-control input-hover border-0">
+                                @foreach ($actionStockoutVendor as $option)
+                                    <option value="{{ $option->id }}">{{ $option->note }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -141,10 +153,10 @@
                         <label for="action_id_vendor" class="form-label">Nhà cung cấp</label>
                         <div class="input-group border rounded">
                             <span class="input-group-text border-0"><i class="fas fa-paw"></i></span>
-                            <select wire:model.defer="action_id" id="action_id_vendor"
+                            <select wire:model.defer="vendor_id" id="vendor_id"
                                 class="form-control input-hover border-0">
-                                @foreach ($vendorOptions as $id => $option)
-                                    <option value="{{ $id }}">
+                                @foreach ($vendorOptions as $option)
+                                    <option value="{{ $option->id }}">
                                         <strong>{{ $option->name }}</strong>{{ $option->phone ? ' (' . $option->phone . ')' : '' }}.
                                         Email:
                                         <strong> {{ $option->email ?? '---' }} </strong>
@@ -159,10 +171,10 @@
                         <label for="action_id_customer" class="form-label">Thao tác</label>
                         <div class="input-group border rounded">
                             <span class="input-group-text border-0"><i class="fas fa-paw"></i></span>
-                            <select wire:model.defer="{{ $stockoutType !== 'customer' ? 'action_id' : 'none' }}"
-                                id="action_id_customer" class="form-control input-hover border-0">
-                                @foreach ($actionStockoutCustomer as $id => $option)
-                                    <option value="{{ $id }}">{{ $option->note }}</option>
+                            <select wire:model.defer="action_id" id="action_id"
+                                class="form-control input-hover border-0">
+                                @foreach ($actionStockoutCustomer as $option)
+                                    <option value="{{ $option->id }}">{{ $option->note }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -171,10 +183,10 @@
                         <label for="action_id_customer" class="form-label">Khách hàng</label>
                         <div class="input-group border rounded">
                             <span class="input-group-text border-0"><i class="fas fa-paw"></i></span>
-                            <select wire:model.defer="action_id" id="action_id_customer"
+                            <select wire:model.defer="customer_id" id="customer_id"
                                 class="form-control input-hover border-0">
-                                @foreach ($customerOptions as $id => $option)
-                                    <option value="{{ $id }}">
+                                @foreach ($customerOptions as $option)
+                                    <option value="{{ $option->id }}">
                                         <strong>{{ $option->name }}</strong>{{ $option->phone ? ' (' . $option->phone . ')' : '' }}.
                                         Email:
                                         <strong> {{ $option->email ?? '---' }} </strong>
@@ -189,10 +201,10 @@
                         <label for="action_id_internal" class="form-label">Thao tác</label>
                         <div class="input-group border rounded">
                             <span class="input-group-text border-0"><i class="fas fa-paw"></i></span>
-                            <select wire:model.defer="{{ $stockoutType !== 'internal' ? 'action_id' : 'none' }}"
-                                id="action_id_internal" class="form-control input-hover border-0">
-                                @foreach ($actionStockoutInternal as $id => $option)
-                                    <option value="{{ $id }}">{{ $option->note }}</option>
+                            <select wire:model.defer="action_id" id="action_id"
+                                class="form-control input-hover border-0">
+                                @foreach ($actionStockoutInternal as $option)
+                                    <option value="{{ $option->id }}">{{ $option->note }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -201,10 +213,10 @@
                         <label for="action_id_internal" class="form-label">Vị trí</label>
                         <div class="input-group border rounded">
                             <span class="input-group-text border-0"><i class="fas fa-paw"></i></span>
-                            <select wire:model.defer="action_id" id="action_id_internal"
+                            <select wire:model.defer="location_id" id="location_id"
                                 class="form-control input-hover border-0">
-                                @foreach ($locationOptions as $id => $option)
-                                    <option value="{{ $id }}">{{ $option->name }}</option>
+                                @foreach ($locationOptions as $option)
+                                    <option value="{{ $option->id }}">{{ $option->name }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -225,7 +237,7 @@
                                 class="text-warning">*</span></strong></label>
                     <textarea wire:model.defer="note" name="note" id="note"
                         class="border-warning form-control @error('note') is-invalid @enderror" rows="4"
-                        placeholder="Nhập lý do xuất kho..." required></textarea>
+                        placeholder="Nhập lý do xuất kho..."></textarea>
                 </div>
             </div>
 
@@ -246,4 +258,10 @@
             về vấn đề này.
         </div>
     @endif
+    <div class="">{{ $stockoutType }} : {{ $action_id }} : {{$componentId}}</div>
+    <script>
+        window.addEventListener('closePopup', () => {
+            console.log('closePopup event received');
+        });
+    </script>
 </div>

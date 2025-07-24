@@ -1,4 +1,4 @@
-    <div class="p-4 w-full">
+    <div class="tpserver components table p-4 w-full overflow-">
         @php
             $columns = [
                 ['label' => '#', 'value' => fn($log) => $log->component->id ?? '---', 'maxWidth' => '80px'],
@@ -35,75 +35,74 @@
                 ],
             ];
         @endphp
-
-        <table class="min-w-full border border-gray-200 text-sm text-[#553686]">
-            <thead class="bg-gray-100 text-[#553686] font-semibold">
-                <tr>
-                    <th class="px-3 py-2 border border-gray-200 text-left">#</th>
-                    <th class="px-3 py-2 border border-gray-200 text-left">Ngày xuất kho</th>
-                    <th class="px-3 py-2 border border-gray-200 text-left">Serial number</th>
-                    <th class="px-3 py-2 border border-gray-200 text-left">Tên linh kiện</th>
-                    <th class="px-3 py-2 border border-gray-200 text-left">Người thao tác</th>
-                    <th class="px-3 py-2 border border-gray-200 text-left">Thao tác</th>
-                    <th class="px-3 py-2 border border-gray-200 text-left">Nhà cung cấp</th>
-                    <th class="px-3 py-2 border border-gray-200 text-left">Khách hàng</th>
-                    <th class="px-3 py-2 border border-gray-200 text-left">Vị trí</th>
-                    <th class="px-3 py-2 border border-gray-200 text-left">Ghi chú</th>
-                    <th class="px-3 py-2 border border-gray-200 text-left">Thực hiện lúc</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($componentLogs as $index => $log)
-                    <tr class="even:bg-gray-50 hover:bg-gray-100 text-[#553686]">
-                        <td class="px-3 py-2 border border-gray-200 text-left whitespace-nowrap overflow-hidden text-ellipsis max-w-[80px]"
-                            title="{{ $log->component->id ?? '---' }}">
-                            {{ $log->component->id ?? '---' }}
-                        </td>
-                        <td class="px-3 py-2 border border-gray-200 text-left whitespace-nowrap overflow-hidden text-ellipsis max-w-[120px]"
-                            title="{{ \Carbon\Carbon::parse($log->stockout_at)->format('d/m/Y') }}">
-                            <strong>{{ \Carbon\Carbon::parse($log->stockout_at)->format('d/m/Y') }}</strong>
-                        </td>
-                        <td class="px-3 py-2 border border-gray-200 text-left whitespace-nowrap overflow-hidden text-ellipsis max-w-[150px]"
-                            title="{{ $log->component->serial_number ?? '---' }}">
-                            {{ $log->component->serial_number ?? '---' }}
-                        </td>
-                        <td class="px-3 py-2 border border-gray-200 text-left whitespace-nowrap overflow-hidden text-ellipsis max-w-[200px]"
-                            title="{{ $log->component->name ?? '---' }}">
-                            {{ $log->component->name ?? '---' }}
-                        </td>
-                        <td class="px-3 py-2 border border-gray-200 text-left whitespace-nowrap overflow-hidden text-ellipsis max-w-[180px]"
-                            title="{{ $log->user->alias ?? '---' }} ({{ $log->user->username ?? '---' }})">
-                            {{ $log->user->alias ?? '---' }} ({{ $log->user->username ?? '---' }})
-                        </td>
-                        <td class="px-3 py-2 border border-gray-200 text-left whitespace-nowrap overflow-hidden text-ellipsis max-w-[150px]"
-                            title="{{ $log->action->note ?? '---' }}">
-                            {{ $log->action->note ?? '---' }}
-                        </td>
-                        <td class="px-3 py-2 border border-gray-200 text-left whitespace-nowrap overflow-hidden text-ellipsis max-w-[150px]"
-                            title="{{ $log->vendor->name ?? '---' }}">
-                            {{ $log->vendor->name ?? '---' }}
-                        </td>
-                        <td class="px-3 py-2 border border-gray-200 text-left whitespace-nowrap overflow-hidden text-ellipsis max-w-[150px]"
-                            title="{{ $log->customer->name ?? '---' }}">
-                            {{ $log->customer->name ?? '---' }}
-                        </td>
-                        <td class="px-3 py-2 border border-gray-200 text-left whitespace-nowrap overflow-hidden text-ellipsis max-w-[150px]"
-                            title="{{ $log->location->name ?? '---' }}">
-                            {{ $log->location->name ?? '---' }}
-                        </td>
-                        <td class="px-3 py-2 border border-gray-200 text-left whitespace-nowrap overflow-hidden text-ellipsis max-w-[250px]"
-                            title="{{ $log->note ?? '---' }}">
-                            {{ $log->note ?? '---' }}
-                        </td>
-                        <td class="px-3 py-2 border border-gray-200 text-left whitespace-nowrap overflow-hidden text-ellipsis max-w-[150px]"
-                            title="{{ $log->created_at->format('d/m/Y H:i') }}">
-                            {{ $log->created_at->format('d/m/Y H:i') }}
-                        </td>
+        <div class="overflow-auto max-h-[80vh]">
+            <table class="custom-table min-w-full border border-gray-200 text-sm text-[#553686]">
+                <thead class="text-[#553686] font-semibold">
+                    <tr style="position: relative">
+                        <x-table-th>ID linh kiện</x-table-th>
+                        <x-table-th>Xuất kho</x-table-th>
+                        <x-table-th>Serial number</x-table-th>
+                        <x-table-th>Tên linh kiện</x-table-th>
+                        <x-table-th>Người thao tác</x-table-th>
+                        <x-table-th>Thao tác</x-table-th>
+                        <x-table-th>Nhà cung cấp</x-table-th>
+                        <x-table-th>Khách hàng</x-table-th>
+                        <x-table-th>Vị trí</x-table-th>
+                        <x-table-th>Ghi chú</x-table-th>
+                        <x-table-th>Thực hiện</x-table-th>
                     </tr>
-                @endforeach
-            </tbody>
+                </thead>
+                <tbody>
+                    @foreach ($componentLogs as $index => $log)
+                        <tr class="even:bg-gray-50 hover:bg-gray-100 text-[#553686]">
+                            <x-table-td :title="$log->component->id ?? '---'">
+                                <strong>{{ $log->component->id ?? '---' }}</strong>
+                            </x-table-td>
+                            <x-table-td :title="\Carbon\Carbon::parse($log->stockout_at)->format('d/m/Y')" max="120px">
+                                <strong>{{ \Carbon\Carbon::parse($log->stockout_at)->format('d/m/Y') }}</strong>
+                            </x-table-td>
 
-        </table>
+                            <x-table-td :title="$log->component->serial_number ?? '---'" max="150px">
+                                {{ $log->component->serial_number ?? '---' }}
+                            </x-table-td>
+
+                            <x-table-td :title="$log->component->name ?? '---'" max="200px">
+                                {{ $log->component->name ?? '---' }}
+                            </x-table-td>
+
+                            <x-table-td :title="($log->user->alias ?? '---') . ' (' . ($log->user->username ?? '---') . ')'" max="180px">
+                                {{ $log->user->alias ?? '---' }} ({{ $log->user->username ?? '---' }})
+                            </x-table-td>
+
+                            <x-table-td :title="$log->action->note ?? '---'" max="150px">
+                                {{ $log->action->note ?? '---' }}
+                            </x-table-td>
+
+                            <x-table-td :title="$log->vendor->name ?? '---'" max="150px">
+                                {{ $log->vendor->name ?? '---' }}
+                            </x-table-td>
+
+                            <x-table-td :title="$log->customer->name ?? '---'" max="150px">
+                                {{ $log->customer->name ?? '---' }}
+                            </x-table-td>
+
+                            <x-table-td :title="$log->location->name ?? '---'" max="150px">
+                                {{ $log->location->name ?? '---' }}
+                            </x-table-td>
+
+                            <x-table-td :title="$log->note ?? '---'" max="250px">
+                                {{ $log->note ?? '---' }}
+                            </x-table-td>
+
+                            <x-table-td :title="$log->created_at->format('d/m/Y H:i')" max="150px">
+                                {{ $log->created_at->format('d/m/Y H:i') }}
+                            </x-table-td>
+                        </tr>
+                    @endforeach
+                </tbody>
+
+            </table>
+        </div>
 
         <!-- Pagination -->
         <div class="mt-4">

@@ -10,7 +10,7 @@ use Spatie\Permission\Traits\HasRoles;
 class ComponentLog extends Model
 {
     use HasFactory, HasRoles, HasPermissions;
-    protected $fillable = ['component_id', 'action_id', 'user_id', 'customer_id', 'vendor_id', 'stockout_at', 'note'];
+    protected $fillable = ['component_id', 'action_id', 'user_id', 'customer_id', 'vendor_id', 'location_id', 'stockout_at', 'note'];
     public function component()
     {
         return $this->belongsTo(\App\Models\Component::class);

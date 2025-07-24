@@ -71,4 +71,7 @@ document.addEventListener("DOMContentLoaded", function () {
     window.closePopup = function () {
         document.getElementById("popup-overlay").style.display = "none";
     };
+    window.addEventListener("closePopup", function () {
+        window.closePopup(); // Gọi lại hàm đã định nghĩa
+    });
 });

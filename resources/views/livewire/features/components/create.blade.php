@@ -1,25 +1,24 @@
 <div class="row p-4 w-full">
     {{-- CỘT PHẢI: QR CODE + THÔNG TIN LINH KIỆN --}}
-    <div class="p-0 w-full md:w-1/2 p-4 h-full flex flex-col gap-4">
+    <div class="p-0 w-full md:w-1/2 p-4 h-full flex flex-col gap-12">
         {{-- QR Code (chiếm 50%) --}}
         <div
-            class="flex-1 flex-col basis-1/2 border-2 border-dashed border-gray-300 rounded-2xl flex items-center justify-center transition-opacity duration-300 p-5 {{ $createSuccess ? '' : 'opacity-60' }}">
+            class="flex-1 flex-row basis-1/5 border-2 border-dashed border-gray-300 rounded-2xl flex items-center justify-center transition-opacity duration-300 pl-4 {{ $createSuccess ? '' : 'opacity-60' }}">
             <img src="{{ $createSuccess['qrcode'] ?? asset('img/qrcode-default.jpg') }}" alt="QR Code"
-                class="max-w-[70%] max-h-[70%] object-contain">
+                class="mr-12 max-w-[70%] max-h-[70%] object-contain">
             @unless ($createSuccess)
-                <p class="bottom-4 text-sm text-gray-500 mb-12">QR code/Barcode sẽ hiển thị tại đây</p>
+                <p class="bottom-4 text-sm text-gray-500 mr-16">QR code & Barcode sẽ hiển thị tại đây</p>
             @endunless
+            @if ($createSuccess)
+                <div class="text-md flex flex-col items-center mr-8">
+                    <p class="text-back-600">Serial number</p>
+                    <img src="{{ $createSuccess['barcode'] }}" alt="Barcode">
+                </div>
+            @endif
         </div>
 
-        @if ($createSuccess)
-            <div class="text-md flex flex-col items-center border-2 border-dashed border-gray-300 mt-1 p-1 rounded">
-                <p class="text-back-600 mt-2">Serial number</p>
-                <img src="{{ $createSuccess['barcode'] }}" alt="Barcode" class="max-w-[64%]">
-            </div>
-        @endif
-
         {{-- Thông tin (chiếm 50%) --}}
-        <div class="flex-1 basis-1/2 overflow-y-auto">
+        <div class="flex-1 basis-4/5 overflow-y-auto">
 
             @if ($createSuccess)
                 {{-- Alert --}}
@@ -303,7 +302,7 @@
             </div>
 
             {{-- NÚT --}}
-            <div class="gapflex d-flex gap-2">
+            <div class="gapflex d-flex gap-2 mb-6">
                 <button type="submit" class="flex-fill btn btn-success btn-hover-warning">
                     <i class="fas fa-plus me-2"></i> Thêm mới
                 </button>

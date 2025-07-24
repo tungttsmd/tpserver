@@ -7,20 +7,22 @@ use App\Models\Component as ModelsComponent;
 use App\Models\ComponentLog;
 use App\Models\Customer;
 use App\Models\Location;
-use App\Models\User;
 use App\Models\Vendor;
 use Carbon\Carbon;
 use Illuminate\Validation\ValidationException;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 class ComponentStockoutLivewire extends Component
 {
+    use WithPagination;
     public $componentId, $component;
     public $qrcode, $stockoutType, $actionDefault, $actionDefaultId;
     public $action_id, $stockout_at, $customer_id, $vendor_id, $location_id, $note, $none;
     protected $actions, $customers = [], $vendors = [], $locations = [];
     public $actionsStockoutCustomer, $actionsStockoutVendor, $actionsStockoutInternal;
     public $vendorOptions, $customerOptions, $locationOptions;
+    protected $listeners = ['componentId' => 'setComponentId'];
     public $actionSuggestion = [];
 
     public function render()
@@ -48,28 +50,62 @@ class ComponentStockoutLivewire extends Component
     }
     public function mount()
     {
-        $this->stockoutType = 'internal';
+        $this->mountInit();
+    }
+    public function mountInit()
+    {
+        if (!$this->stockoutType) {
+            $this->stockoutType = 'internal';
+        }
+        if (!$this->action_id) {
+            $this->action_id = '33'; // Mã xuất kho nội bộ
+        }
 
+        // Load danh sách hành động theo từng loại
         $this->actionsStockoutCustomer = ActionLog::where('target', 'componentStockoutCustomer')->get();
         $this->actionsStockoutVendor = ActionLog::where('target', 'componentStockoutVendor')->get();
         $this->actionsStockoutInternal = ActionLog::where('target', 'componentStockoutInternal')->get();
 
-        $this->location_id = $this->location_id ?? null; // Nhập nếu bán hàng
-        $this->customer_id = $this->customer_id ?? null; // Nhập nếu bán hàng
-        $this->vendor_id = $this->vendor_id ?? null; // Nhập nếu trả hàng
-        $this->stockout_at = Carbon::now()->format('Y-m-d');
+        // Load danh sách vị trí để gán mặc định nếu có
+        $this->locationOptions = Location::select('id', 'name')->get();
+        if (!$this->location_id && $this->locationOptions->isNotEmpty()) {
+            $this->location_id = $this->locationOptions->first()->id;
+        }
 
+        // Load danh sách khách hàng (customer) nếu có
+        $this->customerOptions = Customer::select('id', 'name')->get(); // giả sử model là Customer
+        if (!$this->customer_id && $this->customerOptions->isNotEmpty()) {
+            $this->customer_id = $this->customerOptions->first()->id;
+        }
+
+        // Load danh sách nhà cung cấp (vendor) nếu có
+        $this->vendorOptions = Vendor::select('id', 'name')->get(); // giả sử model là Vendor
+        if (!$this->vendor_id && $this->vendorOptions->isNotEmpty()) {
+            $this->vendor_id = $this->vendorOptions->first()->id;
+        }
+
+        // Ngày xuất kho mặc định là hôm nay
+        $this->stockout_at = Carbon::now()->toDateString(); // == format('Y-m-d')
+
+        // Load thông tin linh kiện
         $this->component = ModelsComponent::with([
             'category',
             'vendor',
             'condition',
             'location',
             'manufacturer',
-            'status'
-        ])->where('id', $this->componentId)->first();
+            'status',
+        ])->find($this->componentId);
 
+        // Nếu không tìm thấy linh kiện thì nên xử lý fallback
+        if (!$this->component) {
+            abort(404, 'Không tìm thấy linh kiện!');
+        }
+
+        // Tạo đường dẫn QR code
         $this->qrcode = "https://api.qrserver.com/v1/create-qr-code/?data={$this->component->serial_number}&size=240x240";
     }
+
     public function stockout()
     {
         try {
@@ -77,7 +113,7 @@ class ComponentStockoutLivewire extends Component
                 'location_id' => 'nullable|exists:locations,id',
                 'vendor_id' => 'nullable|exists:vendors,id',
                 'customer_id' => 'nullable|exists:customers,id',
-                'note' => 'required|string|min:5',
+                'note' => 'nullable|string',
             ]);
         } catch (ValidationException $e) {
             // Lấy lỗi validation dưới dạng array (key => [message,...])
@@ -97,42 +133,74 @@ class ComponentStockoutLivewire extends Component
 
         $user = auth()->user();
 
-        // Xác định thông tin liên quan tùy theo loại xuất kho
-        $locationId = null;
-        $customerId = null;
-        $vendorId = null;
 
         switch ($this->stockoutType) {
             case 'customer':
                 $customerId = $this->customer_id;
+                $vendorId = null;
+                $locationId = null;
                 break;
             case 'vendor':
+                $customerId = null;
                 $vendorId = $this->vendor_id;
+                $locationId = null;
                 break;
             case 'internal':
-            default:
+                $customerId = null;
+                $vendorId = null;
                 $locationId = $this->location_id;
                 break;
         }
 
-        // Tạo log xuất kho
-        ComponentLog::create([
-            'component_id' => $this->componentId,
-            'user_id' => $user->id,
-            'action_id' => $this->action_id,
-            'location_id' => $locationId,
-            'customer_id' => $customerId,
-            'vendor_id' => $vendorId,
-            'note' => $this->note,
-            'stockout_at' => Carbon::parse($this->stockout_at ?? now()), // fallback nếu null
-        ]);
+        try {
+            // Tạo log xuất kho
+            ComponentLog::create([
+                'component_id' => $this->componentId,
+                'user_id' => $user->id,
+                'action_id' => $this->action_id,
+                'location_id' => $locationId,
+                'customer_id' => $customerId,
+                'vendor_id' => $vendorId,
+                'note' => $this->note,
+                'stockout_at' => Carbon::parse($this->stockout_at ?? now()), // fallback nếu null
+            ]);
 
+            // Cập nhật trạng thái
+            $this->component->update([
+                'status_id' => 2
+            ]);
 
-        // 'note' => "Người dùng $user->alias ($user->username) đã xuất kho linh kiện",
+            // Nội dung thông báo
+            $message = "Đã xuất kho linh kiện " . $this->component->name . " (" . $this->component->serial_number . ") thành công.";
 
-        $this->dispatchBrowserEvent('success-alert', [
-            'message' => "Đã xuất kho linh kiện " . $this->component->name . " (" . $this->component->serial_number . ") thành công.",
-        ]);
+            // dd([$this->action_id,$locationId, $this->location_id, $vendorId, $this->vendor_id, $customerId, $this->customer_id, $this->stockoutType]);
+            // 'note' => "Người dùng $user->alias ($user->username) đã xuất kho linh kiện",
+
+            // Thông báo
+            $this->dispatchBrowserEvent('success-alert', [
+                'message' => $message,
+            ]);
+        } catch (\Throwable $e) {
+            // Ghi log nếu cần
+            logger()->error('Stockout failed: ' . $e->getMessage(), [
+                'exception' => $e,
+                'componentId' => $this->componentId,
+            ]);
+
+            $this->dispatchBrowserEvent('danger-alert', [
+                'message' => 'Có lỗi xảy ra khi xuất kho. Vui lòng thử lại.',
+                'error' => $e->getMessage(),
+            ]);
+
+            return;
+        }
+        // Đóng modal
+        $this->dispatchBrowserEvent('closePopup');
+
+        // Reset tất cả trạng thái về giá trị ban đầu
+        $this->reset(['note', 'vendor_id', 'customer_id', 'location_id', 'action_id', 'stockout_at']);
+        $this->mountInit();
+        $this->emit('routeRefreshCall');
     }
     public function getRelationshipData()
     {
@@ -145,5 +213,18 @@ class ComponentStockoutLivewire extends Component
     public function setStockoutType($stockoutType)
     {
         $this->stockoutType = $stockoutType;
+
+        // Gán action_id mặc định theo stockoutType nếu chưa có
+        if ($this->stockoutType === 'customer' && $this->actionsStockoutCustomer->isNotEmpty()) {
+            $this->action_id = $this->actionsStockoutCustomer->first()->id;
+        } elseif ($this->stockoutType === 'vendor' && $this->actionsStockoutVendor->isNotEmpty()) {
+            $this->action_id = $this->actionsStockoutVendor->first()->id;
+        } elseif ($this->stockoutType === 'internal' && $this->actionsStockoutInternal->isNotEmpty()) {
+            $this->action_id = $this->actionsStockoutInternal->first()->id;
+        }
+    }
+    public function setComponentId($componentId)
+    {
+        $this->componentId = $componentId;
     }
 }
