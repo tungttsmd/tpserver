@@ -25,6 +25,7 @@
     text-decoration: none !important;
     color: #4b6cb7 !important;
 }
+
 .tp-server.layouts .user-role-badge {
     display: flex;
     position: absolute;
@@ -33,6 +34,7 @@
     width: 100%;
     justify-content: flex-start;
 }
+
 .tp-server.layouts .user-role-badge span {
     overflow: hidden;
     text-overflow: ellipsis;
@@ -42,19 +44,24 @@
     border-radius: 100px;
     padding: 0 12px !important;
 }
-.tp-server.layouts .avatar {
-}
+
+.tp-server.layouts .avatar {}
+
 .tp-server.layouts .transition-opacity {
     transition: opacity 0.3s ease;
 }
+
 .tp-server.layouts .opacity-0 {
     opacity: 0;
-    pointer-events: none; /* Không nhận sự kiện khi ẩn */
+    pointer-events: none;
+    /* Không nhận sự kiện khi ẩn */
 }
+
 .tp-server.layouts .opacity-100 {
     opacity: 1;
     pointer-events: auto;
 }
+
 .tp-server.layouts ul.nav-treeview li a.nav-link {
     padding-left: 30px;
 }
@@ -63,20 +70,22 @@
     margin: auto;
 }
 
-.tp-server.layouts .has-treeview > .nav-link > p,
-.tp-server.layouts .has-treeview > .nav-link > i {
+.tp-server.layouts .has-treeview>.nav-link>p,
+.tp-server.layouts .has-treeview>.nav-link>i {
     font-weight: 650;
     color: #c2c7d0;
 }
-.tp-server.layouts .has-treeview > .nav-link:hover > p,
-.tp-server.layouts .has-treeview > .nav-link:hover > i {
+
+.tp-server.layouts .has-treeview>.nav-link:hover>p,
+.tp-server.layouts .has-treeview>.nav-link:hover>i {
     font-weight: 650;
     color: white;
 }
 
-.tp-server.layouts .has-treeview > .nav-link {
+.tp-server.layouts .has-treeview>.nav-link {
     padding-left: 10px;
 }
+
 .tp-server.layouts .user-role-badge {
     padding: 2px 10px;
     border-radius: 12px;
@@ -108,8 +117,10 @@
 .tp-server.layouts .sidebar-cover {
     display: flex;
     align-items: center;
-    justify-content: center; /* canh giữa text */
-    height: 100px; /* chiều cao bạn muốn */
+    justify-content: center;
+    /* canh giữa text */
+    height: 100px;
+    /* chiều cao bạn muốn */
     width: 100%;
     /* hoặc cố định chiều rộng nếu cần */
     color: white;
@@ -136,7 +147,7 @@
     filter: brightness(1.8);
 }
 
-.tp-server.layouts .brand-link-bg > .brand-text {
+.tp-server.layouts .brand-link-bg>.brand-text {
     position: relative;
     z-index: 2;
 }
@@ -188,17 +199,30 @@ footer.tpserver.footer.main-footer {
     background-image: linear-gradient(90deg, #553686) !important;
     color: white !important;
 }
+
 .bg-success-subtle {
     background-color: #d1e7dd !important;
     color: #0f5132 !important;
 }
+
 .text-success-subtle {
     color: #0f5132 !important;
 }
+
+.bg-danger-subtle {
+    background-color: #f8d7da !important;
+    color: #842029 !important;
+}
+
+.text-danger-subtle {
+    color: #842029 !important;
+}
+
 .bg-dark-main {
     background-image: linear-gradient(90deg, #303242) !important;
     color: white !important;
 }
+
 .hv-bg-main {
     background-color: #553686 !important;
     color: white !important;
@@ -207,11 +231,14 @@ footer.tpserver.footer.main-footer {
 .hv-opacity:hover {
     opacity: 0.8 !important;
 }
+
 .hv-brightness:hover {
     filter: brightness(1.2) !important;
 }
 
-table td, table th {
+table td,
+table th {
     padding: 0px 2px !important;
     text-align: left !important;
-} 
+}
+

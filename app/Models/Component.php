@@ -16,6 +16,10 @@ class Component extends Model
     {
         return $this->belongsTo(Category::class, 'category_id');
     }
+    public function component_logs()
+    {
+        return $this->hasMany(ComponentLog::class, 'component_id');
+    }
     public function vendor()
     {
         return $this->belongsTo(Vendor::class, 'vendor_id');

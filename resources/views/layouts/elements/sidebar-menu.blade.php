@@ -34,7 +34,7 @@
                     </li>
                     <li class="nav-item">
                         <a href="#" class="nav-link"
-                            onclick="event.preventDefault(); Livewire.emit('route', 'components', null, 'stockout')">
+                            onclick="event.preventDefault(); Livewire.emit('route', 'components', null, 'current-stockout')">
                             <i class="fas fa-pallet nav-icon"></i>
                             <p>Đã xuất kho</p>
                         </a>

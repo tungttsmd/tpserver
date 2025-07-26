@@ -1,7 +1,7 @@
 <div class="tpserver stockout container">
     @if (is_object($component))
-        {{-- Form xuất kho --}}
-        <form wire:submit.prevent='stockout'>
+        {{-- Form thu hồi --}}
+        <form wire:submit.prevent='stockreturn'>
             <div class="overflow-y-auto max-h-[72vh]">
                 {{-- Thông tin linh kiện --}}
                 <div class="col-lg-12 p-0 overflow-y-auto max-h-[158px]">
@@ -65,21 +65,25 @@
                     {{-- Thông tin thêm --}}
                     <div class="text-md flex-col">
                         <p class="mb-2"><i class="fas fa-layer-group mr-1 text-gray-500"></i> Trạng thái:
-                            {{ optional($component->status)->name }}</p>
+                            {{ optional($component->status)->name }}
+                        </p>
                         <p class="mb-2"><i class="fas fa-map-marker-alt mr-1 text-gray-500"></i> Vị trí:
-                            {{ optional($component->location)->name }}</p>
+                            {{ optional($component->location)->name }}
+                        </p>
                         <p class="mb-2"><i class="fas fa-signature mr-1 text-gray-500"></i> Hãng:
-                            {{ optional($component->manufacturer)->name }}</p>
+                            {{ optional($component->manufacturer)->name }}
+                        </p>
                         <p class="mb-2"><i class="fas fa-building mr-1 text-gray-500"></i> Nhà cung cấp:
-                            {{ optional($component->vendor)->name }}</p>
+                            {{ optional($component->vendor)->name }}
+                        </p>
                         <p class="mb-2"><i class="fas fa-comment-alt mr-1 text-gray-500"></i> Ghi chú:
-                            {{ $component->note }}</p>
+                            {{ $component->note }}
+                        </p>
                     </div>
                 </div>
                 <hr>
 
-                <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"
-                    rel="stylesheet">
+                <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
                 <style>
                     .btn-tab {
                         padding: 0.5rem 1rem !important;
@@ -103,24 +107,20 @@
 
 
                 <div class="flex gap-3 mb-4 w-full mt-3">
-                    <button
-                        class="btn-tab rounded-sm bg-success-subtle justify-center flex grow {{ $stockoutType === 'internal' ? 'active' : '' }}"
-                        wire:click="setStockoutType('internal')" type="button">
+                    <div
+                        class="px-4 py-2 rounded-sm bg-gray justify-center flex grow {{ $location_id && !$customer_id && !$vendor_id ? 'bg-main' : '' }}">
                         <i class="bi bi-box-arrow-in-right mr-3"></i> Xuất kho nội bộ
-                    </button>
+                    </div>
 
-                    <button
-                        class="btn-tab rounded-sm bg-success-subtle justify-center flex grow {{ $stockoutType === 'customer' ? 'active' : '' }}"
-                        wire:click="setStockoutType('customer')" type="button">
+                    <div class="px-4 py-2 rounded-sm bg-gray justify-center flex grow {{ $customer_id ? 'bg-main' : '' }}">
                         <i class="bi bi-cart-check mr-3"></i> Bán cho khách
-                    </button>
+                    </div>
 
-                    <button
-                        class="btn-tab rounded-sm bg-success-subtle justify-center flex grow {{ $stockoutType === 'vendor' ? 'active' : '' }}"
-                        wire:click="setStockoutType('vendor')" type="button">
+                    <div class="px-4 py-2 rounded-sm bg-gray justify-center flex grow {{ $vendor_id ? 'bg-main' : '' }}">
                         <i class="bi bi-arrow-counterclockwise mr-3"></i> Hoàn trả hàng/sửa chữa
-                    </button>
+                    </div>
                 </div>
+
 
                 {{-- Ngày xuất kho --}}
                 <div class="flex-grow-1" style="min-width: 200px;">
@@ -129,8 +129,7 @@
                     <div class="input-group border-main">
                         <span class="input-group-text border-0" icon-scale border-0"><i
                                 class="fas fa-calendar-alt"></i></span>
-                        <input wire:model="stockout_at" type="date" class="form-control input-hover border-0"
-                            required>
+                        <input wire:model="stockout_at" type="date" class="form-control input-hover border-0" required>
                     </div>
                 </div>
 
@@ -141,8 +140,7 @@
                         <label for="action_id_vendor" class="form-label">Thao tác</label>
                         <div class="input-group border rounded">
                             <span class="input-group-text border-0"><i class="fas fa-paw"></i></span>
-                            <select wire:model="action_id" id="action_id"
-                                class="form-control input-hover border-0">
+                            <select wire:model="action_id" id="action_id" class="form-control input-hover border-0">
                                 @foreach ($actionStockoutVendor as $option)
                                     <option value="{{ $option->id }}">{{ $option->note }}</option>
                                 @endforeach
@@ -153,8 +151,7 @@
                         <label for="action_id_vendor" class="form-label">Nhà cung cấp</label>
                         <div class="input-group border rounded">
                             <span class="input-group-text border-0"><i class="fas fa-paw"></i></span>
-                            <select wire:model="vendor_id" id="vendor_id"
-                                class="form-control input-hover border-0">
+                            <select wire:model="vendor_id" id="vendor_id" class="form-control input-hover border-0">
                                 @foreach ($vendorOptions as $option)
                                     <option value="{{ $option->id }}">
                                         <strong>{{ $option->name }}</strong>{{ $option->phone ? ' (' . $option->phone . ')' : '' }}.
@@ -171,8 +168,7 @@
                         <label for="action_id_customer" class="form-label">Thao tác</label>
                         <div class="input-group border rounded">
                             <span class="input-group-text border-0"><i class="fas fa-paw"></i></span>
-                            <select wire:model="action_id" id="action_id"
-                                class="form-control input-hover border-0">
+                            <select wire:model="action_id" id="action_id" class="form-control input-hover border-0">
                                 @foreach ($actionStockoutCustomer as $option)
                                     <option value="{{ $option->id }}">{{ $option->note }}</option>
                                 @endforeach
@@ -183,8 +179,7 @@
                         <label for="action_id_customer" class="form-label">Khách hàng</label>
                         <div class="input-group border rounded">
                             <span class="input-group-text border-0"><i class="fas fa-paw"></i></span>
-                            <select wire:model="customer_id" id="customer_id"
-                                class="form-control input-hover border-0">
+                            <select wire:model="customer_id" id="customer_id" class="form-control input-hover border-0">
                                 @foreach ($customerOptions as $option)
                                     <option value="{{ $option->id }}">
                                         <strong>{{ $option->name }}</strong>{{ $option->phone ? ' (' . $option->phone . ')' : '' }}.
@@ -201,8 +196,7 @@
                         <label for="action_id_internal" class="form-label">Thao tác</label>
                         <div class="input-group border rounded">
                             <span class="input-group-text border-0"><i class="fas fa-paw"></i></span>
-                            <select wire:model="action_id" id="action_id"
-                                class="form-control input-hover border-0">
+                            <select wire:model="action_id" id="action_id" class="form-control input-hover border-0">
                                 @foreach ($actionStockoutInternal as $option)
                                     <option value="{{ $option->id }}">{{ $option->note }}</option>
                                 @endforeach
@@ -213,8 +207,7 @@
                         <label for="action_id_internal" class="form-label">Vị trí</label>
                         <div class="input-group border rounded">
                             <span class="input-group-text border-0"><i class="fas fa-paw"></i></span>
-                            <select wire:model="location_id" id="location_id"
-                                class="form-control input-hover border-0">
+                            <select wire:model="location_id" id="location_id" class="form-control input-hover border-0">
                                 @foreach ($locationOptions as $option)
                                     <option value="{{ $option->id }}">{{ $option->name }}</option>
                                 @endforeach
@@ -226,8 +219,7 @@
                         <label class="form-label">Thao tác</label>
                         <div class="input-group border rounded">
                             <span class="input-group-text border-0"><i class="fas fa-paw"></i></span>
-                            <input class="form-control input-hover border-0" type="text" value="Đã xảy ra lỗi"
-                                readonly>
+                            <input class="form-control input-hover border-0" type="text" value="Đã xảy ra lỗi" readonly>
                         </div>
                     </div>
                 @endif
@@ -242,7 +234,7 @@
             </div>
 
             <div class="d-flex justify-content-between mt-3">
-                <button type="submit" class="btn bg-success-subtle">
+                <button type="submit" class="btn bg-danger-subtle">
                     <i class="fas fa-dolly-flatbed mr-2"></i> Xác nhận xuất kho
                 </button>
                 <button type="button" onclick="closePopup()" class="btn btn-warning">
@@ -258,7 +250,11 @@
             về vấn đề này.
         </div>
     @endif
-    <div class="">debug:stockout_at:{{ $stockout_at }}stockoutType:{{ $stockoutType }}action_id:{{ $action_id }}component_id:{{$componentId}}cus:{{ $customer_id }}ven:{{ $vendor_id }}loc:{{$location_id}}</div>
+    @foreach($componentLogs->take(10) as $log)
+        <div>{{ $log->id }} - {{ $log->action }} - {{ $log->created_at }}</div>
+    @endforeach <div class="">
+        debug:stockout_at:{{ $stockout_at }}/stockoutType:{{ $stockoutType }}/action_id:{{ $action_id }}/component_id:{{$componentId}}/cus:{{ $customer_id }}/ven:{{ $vendor_id }}/loc:{{$location_id}}
+    </div>
     <script>
         window.addEventListener('closePopup', () => {
             console.log('closePopup event received');

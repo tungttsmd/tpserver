@@ -22,17 +22,22 @@ class ComponentStockoutLivewire extends Component
     protected $actions, $customers = [], $vendors = [], $locations = [];
     public $actionsStockoutCustomer, $actionsStockoutVendor, $actionsStockoutInternal;
     public $vendorOptions, $customerOptions, $locationOptions;
-    protected $listeners = ['componentId' => 'setComponentId'];
+    protected $listeners = ['componentId' => 'setComponentId', 'actionId' => 'setActionId'];
     public $actionSuggestion = [];
 
     public function render()
     {
-        $this->actionsStockoutCustomer = ActionLog::where('target', 'componentStockoutCustomer')->get();
-        $this->actionsStockoutVendor = ActionLog::where('target', 'componentStockoutVendor')->get();
-        $this->actionsStockoutInternal = ActionLog::where('target', 'componentStockoutInternal')->get();
-        $this->vendorOptions = Vendor::select('id', 'name', 'phone', 'email')->get();
-        $this->customerOptions = Customer::select('id', 'name', 'phone', 'email')->get();
-        $this->locationOptions = Location::select('id', 'name')->get();
+        $this->mountInit();
+
+        if ($this->locationOptions->isNotEmpty() && !$this->location_id) {
+            $this->location_id = $this->locationOptions->first()->id;
+        }
+        if ($this->vendorOptions->isNotEmpty() && !$this->vendor_id) {
+            $this->vendor_id = $this->vendorOptions->first()->id;
+        }
+        if ($this->customerOptions->isNotEmpty() && !$this->customer_id) {
+            $this->customer_id = $this->customerOptions->first()->id;
+        }
 
         $data = array_merge(
             $this->getRelationshipData(),
@@ -61,31 +66,17 @@ class ComponentStockoutLivewire extends Component
             $this->action_id = '33'; // Mã xuất kho nội bộ
         }
 
+        if (!$this->stockout_at) { // Ngày xuất kho mặc định là hôm nay
+            $this->stockout_at = Carbon::now()->toDateString(); // == format('Y-m-d')
+        }
         // Load danh sách hành động theo từng loại
         $this->actionsStockoutCustomer = ActionLog::where('target', 'componentStockoutCustomer')->get();
         $this->actionsStockoutVendor = ActionLog::where('target', 'componentStockoutVendor')->get();
         $this->actionsStockoutInternal = ActionLog::where('target', 'componentStockoutInternal')->get();
 
-        // Load danh sách vị trí để gán mặc định nếu có
-        $this->locationOptions = Location::select('id', 'name')->get();
-        if (!$this->location_id && $this->locationOptions->isNotEmpty()) {
-            $this->location_id = $this->locationOptions->first()->id;
-        }
-
-        // Load danh sách khách hàng (customer) nếu có
-        $this->customerOptions = Customer::select('id', 'name')->get(); // giả sử model là Customer
-        if (!$this->customer_id && $this->customerOptions->isNotEmpty()) {
-            $this->customer_id = $this->customerOptions->first()->id;
-        }
-
-        // Load danh sách nhà cung cấp (vendor) nếu có
-        $this->vendorOptions = Vendor::select('id', 'name')->get(); // giả sử model là Vendor
-        if (!$this->vendor_id && $this->vendorOptions->isNotEmpty()) {
-            $this->vendor_id = $this->vendorOptions->first()->id;
-        }
-
-        // Ngày xuất kho mặc định là hôm nay
-        $this->stockout_at = Carbon::now()->toDateString(); // == format('Y-m-d')
+        $this->vendorOptions = Vendor::select('id', 'name', 'phone', 'email')->orderBy('id', 'asc')->get();
+        $this->customerOptions = Customer::select('id', 'name', 'phone', 'email')->orderBy('id', 'asc')->get();
+        $this->locationOptions = Location::select('id', 'name')->orderBy('id', 'asc')->get();
 
         // Load thông tin linh kiện
         $this->component = ModelsComponent::with([
@@ -198,7 +189,7 @@ class ComponentStockoutLivewire extends Component
         $this->dispatchBrowserEvent('closePopup');
 
         // Reset tất cả trạng thái về giá trị ban đầu
-        $this->reset(['note', 'vendor_id', 'customer_id', 'location_id', 'action_id', 'stockout_at']);
+        $this->reset(['note']);
         $this->mountInit();
         $this->emit('routeRefreshCall');
     }

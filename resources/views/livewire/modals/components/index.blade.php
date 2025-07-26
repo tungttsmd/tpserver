@@ -20,15 +20,17 @@
                         {{-- Form --}}
 
                         @if ($modalType === 'edit')
-                            <livewire:features.components.component-edit-livewire :component-id="$recordId" />
+                        <livewire:features.components.component-edit-livewire :component-id="$recordId" />
                         @elseif ($modalType === 'show')
-                            <livewire:features.components.component-show-livewire :component-id="$recordId" />
+                        <livewire:features.components.component-show-livewire :component-id="$recordId" />
                         @elseif ($modalType === 'stockout')
-                            <livewire:features.components.component-stockout-livewire :component-id="$recordId" />
+                        <livewire:features.components.component-stockout-livewire :component-id="$recordId" />
+                        @elseif ($modalType === 'stockreturn')
+                        <livewire:features.components.component-stockreturn-livewire :component-id="$recordId" />
                         @else
-                            <div class="bg-main">
-                                <p>Không tìm thấy modal</p>
-                            </div>
+                        <div class="bg-main">
+                            <p>Không tìm thấy modal</p>
+                        </div>
                         @endif
 
                         <link rel="stylesheet" href="{{ asset('css/components/modal.css') }}">
