@@ -1,7 +1,5 @@
-<div class="tpserver stockout container">
-    @if (is_object($component))
-        {{-- Form thu hồi --}}
-        <form wire:submit.prevent='stockreturn'>
+    <div class="tpserver stockout container">
+        @if (is_object($component))
             <div class="overflow-y-auto max-h-[72vh]">
                 {{-- Thông tin linh kiện --}}
                 <div class="col-lg-12 p-0 overflow-y-auto max-h-[158px]">
@@ -65,25 +63,21 @@
                     {{-- Thông tin thêm --}}
                     <div class="text-md flex-col">
                         <p class="mb-2"><i class="fas fa-layer-group mr-1 text-gray-500"></i> Trạng thái:
-                            {{ optional($component->status)->name }}
-                        </p>
+                            {{ optional($component->status)->name }}</p>
                         <p class="mb-2"><i class="fas fa-map-marker-alt mr-1 text-gray-500"></i> Vị trí:
-                            {{ optional($component->location)->name }}
-                        </p>
+                            {{ optional($component->location)->name }}</p>
                         <p class="mb-2"><i class="fas fa-signature mr-1 text-gray-500"></i> Hãng:
-                            {{ optional($component->manufacturer)->name }}
-                        </p>
+                            {{ optional($component->manufacturer)->name }}</p>
                         <p class="mb-2"><i class="fas fa-building mr-1 text-gray-500"></i> Nhà cung cấp:
-                            {{ optional($component->vendor)->name }}
-                        </p>
+                            {{ optional($component->vendor)->name }}</p>
                         <p class="mb-2"><i class="fas fa-comment-alt mr-1 text-gray-500"></i> Ghi chú:
-                            {{ $component->note }}
-                        </p>
+                            {{ $component->note }}</p>
                     </div>
                 </div>
                 <hr>
 
-                <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+                <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"
+                    rel="stylesheet">
                 <style>
                     .btn-tab {
                         padding: 0.5rem 1rem !important;
@@ -105,159 +99,89 @@
                     }
                 </style>
 
+            </div>
 
-                <div class="flex gap-3 mb-4 w-full mt-3">
-                    <div
-                        class="px-4 py-2 rounded-sm bg-gray justify-center flex grow {{ $location_id && !$customer_id && !$vendor_id ? 'bg-main' : '' }}">
-                        <i class="bi bi-box-arrow-in-right mr-3"></i> Xuất kho nội bộ
-                    </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-6">
+                <div>
+                    <label class="form-label">Ngày thực hiện</label>
+                    <input type="text" class="form-control"
+                        value="{{ $lastestComponentLog->created_at ? \Carbon\Carbon::parse($lastestComponentLog->created_at)->format('d/m/Y - h:iA l') : '—' }}"
+                        readonly>
+                </div>
 
-                    <div class="px-4 py-2 rounded-sm bg-gray justify-center flex grow {{ $customer_id ? 'bg-main' : '' }}">
-                        <i class="bi bi-cart-check mr-3"></i> Bán cho khách
-                    </div>
-
-                    <div class="px-4 py-2 rounded-sm bg-gray justify-center flex grow {{ $vendor_id ? 'bg-main' : '' }}">
-                        <i class="bi bi-arrow-counterclockwise mr-3"></i> Hoàn trả hàng/sửa chữa
-                    </div>
+                <div>
+                    <label class="form-label">Thời gian xuất kho</label>
+                    <input type="text" class="form-control"
+                        value="{{ $lastestComponentLog->stockout_at ? \Carbon\Carbon::parse($lastestComponentLog->stockout_at)->format('d/m/Y - h:iA l') : '—' }}"
+                        readonly>
+                </div>
+                <div>
+                    <label class="form-label">Hành động</label>
+                    <input type="text" class="form-control" value="{{ $lastestComponentLog->action->note }}"
+                        readonly>
+                </div>
+                <div>
+                    <label class="form-label">Người thực hiện</label>
+                    <input type="text" class="form-control" value="{{ $lastestComponentLog->user->alias }}"
+                        readonly>
                 </div>
 
 
-                {{-- Ngày xuất kho --}}
-                <div class="flex-grow-1" style="min-width: 200px;">
-                    <label for="stockout_at" class="form-label">Ngày xuất kho<span class="text-warning">
-                            *</span></label>
-                    <div class="input-group border-main">
-                        <span class="input-group-text border-0" icon-scale border-0"><i
-                                class="fas fa-calendar-alt"></i></span>
-                        <input wire:model="stockout_at" type="date" class="form-control input-hover border-0" required>
-                    </div>
-                </div>
 
-                {{-- Nội dung 3 select, chỉ 1 cái hiện --}}
-                @if ($stockoutType)
-                    {{-- Vendor --}}
-                    <div class="mb-3 {{ $stockoutType !== 'vendor' ? 'd-none' : '' }}">
-                        <label for="action_id_vendor" class="form-label">Thao tác</label>
-                        <div class="input-group border rounded">
-                            <span class="input-group-text border-0"><i class="fas fa-paw"></i></span>
-                            <select wire:model="action_id" id="action_id" class="form-control input-hover border-0">
-                                @foreach ($actionStockoutVendor as $option)
-                                    <option value="{{ $option->id }}">{{ $option->note }}</option>
-                                @endforeach
-                            </select>
-                        </div>
+            </div>
+            <div class="w-[100%] grid grid-cols-1 md:grid-cols-1 gap-12 pt-2">
+                @if (isset($lastestComponentLog->customer->name))
+                    <div>
+                        <label class="form-label">Khách mua hàng</label>
+                        <input type="text" class="form-control"
+                            value="{{ $lastestComponentLog->customer->name ?? '---' }}" readonly>
                     </div>
-                    <div class="mb-3 {{ $stockoutType !== 'vendor' ? 'd-none' : '' }}">
-                        <label for="action_id_vendor" class="form-label">Nhà cung cấp</label>
-                        <div class="input-group border rounded">
-                            <span class="input-group-text border-0"><i class="fas fa-paw"></i></span>
-                            <select wire:model="vendor_id" id="vendor_id" class="form-control input-hover border-0">
-                                @foreach ($vendorOptions as $option)
-                                    <option value="{{ $option->id }}">
-                                        <strong>{{ $option->name }}</strong>{{ $option->phone ? ' (' . $option->phone . ')' : '' }}.
-                                        Email:
-                                        <strong> {{ $option->email ?? '---' }} </strong>
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
+                @elseif (isset($lastestComponentLog->location->name))
+                    <div>
+                        <label class="form-label">Vị trí</label>
+                        <input type="text" class="form-control"
+                            value="{{ $lastestComponentLog->location->name ?? '---' }}" readonly>
                     </div>
-
-                    {{-- Customer --}}
-                    <div class="mb-3 {{ $stockoutType !== 'customer' ? 'd-none' : '' }}">
-                        <label for="action_id_customer" class="form-label">Thao tác</label>
-                        <div class="input-group border rounded">
-                            <span class="input-group-text border-0"><i class="fas fa-paw"></i></span>
-                            <select wire:model="action_id" id="action_id" class="form-control input-hover border-0">
-                                @foreach ($actionStockoutCustomer as $option)
-                                    <option value="{{ $option->id }}">{{ $option->note }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-                    <div class="mb-3 {{ $stockoutType !== 'customer' ? 'd-none' : '' }}">
-                        <label for="action_id_customer" class="form-label">Khách hàng</label>
-                        <div class="input-group border rounded">
-                            <span class="input-group-text border-0"><i class="fas fa-paw"></i></span>
-                            <select wire:model="customer_id" id="customer_id" class="form-control input-hover border-0">
-                                @foreach ($customerOptions as $option)
-                                    <option value="{{ $option->id }}">
-                                        <strong>{{ $option->name }}</strong>{{ $option->phone ? ' (' . $option->phone . ')' : '' }}.
-                                        Email:
-                                        <strong> {{ $option->email ?? '---' }} </strong>
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-
-                    {{-- Internal --}}
-                    <div class="mb-3 {{ $stockoutType !== 'internal' ? 'd-none' : '' }}">
-                        <label for="action_id_internal" class="form-label">Thao tác</label>
-                        <div class="input-group border rounded">
-                            <span class="input-group-text border-0"><i class="fas fa-paw"></i></span>
-                            <select wire:model="action_id" id="action_id" class="form-control input-hover border-0">
-                                @foreach ($actionStockoutInternal as $option)
-                                    <option value="{{ $option->id }}">{{ $option->note }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-                    <div class="mb-3 {{ $stockoutType !== 'internal' ? 'd-none' : '' }}">
-                        <label for="action_id_internal" class="form-label">Vị trí</label>
-                        <div class="input-group border rounded">
-                            <span class="input-group-text border-0"><i class="fas fa-paw"></i></span>
-                            <select wire:model="location_id" id="location_id" class="form-control input-hover border-0">
-                                @foreach ($locationOptions as $option)
-                                    <option value="{{ $option->id }}">{{ $option->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-                @else
-                    <div class="mb-3">
-                        <label class="form-label">Thao tác</label>
-                        <div class="input-group border rounded">
-                            <span class="input-group-text border-0"><i class="fas fa-paw"></i></span>
-                            <input class="form-control input-hover border-0" type="text" value="Đã xảy ra lỗi" readonly>
-                        </div>
+                @elseif (isset($lastestComponentLog->vendor->name))
+                    <div>
+                        <label class="form-label">Nhà cung cấp</label>
+                        <input type="text" class="form-control"
+                            value="{{ $lastestComponentLog->vendor->name ?? '---' }}" readonly>
                     </div>
                 @endif
+            </div>
 
-                <div class="my-6">
-                    <label for="note" class="form-label pl-3"><strong>Lý do xuất kho <span
-                                class="text-warning">*</span></strong></label>
+            {{-- Khối thu hồi --}}
+            <form wire:submit.prevent='stockreturn'>
+                {{ print_r($debug) }}
+                <div class="my-3">
+                    <label for="note" class="text-danger-subtle form-label pl-3"><strong>Lý do thu hồi (không bắt
+                            buộc)</strong></label>
                     <textarea wire:model.defer="note" name="note" id="note"
-                        class="border-warning form-control @error('note') is-invalid @enderror" rows="4"
-                        placeholder="Nhập lý do xuất kho..."></textarea>
+                        class="border-danger-subtle form-control @error('note') is-invalid @enderror" rows="4"
+                        placeholder="Nhập lý do thu hồi..."></textarea>
                 </div>
-            </div>
 
-            <div class="d-flex justify-content-between mt-3">
-                <button type="submit" class="btn bg-danger-subtle">
-                    <i class="fas fa-dolly-flatbed mr-2"></i> Xác nhận xuất kho
-                </button>
-                <button type="button" onclick="closePopup()" class="btn btn-warning">
-                    <i class="fas fa-times-circle mr-2"></i> Hủy bỏ
-                </button>
+                <div class="d-flex justify-content-between mt-3">
+                    <button type="submit" class="btn bg-danger-subtle">
+                        <i class="fas fa-undo mr-2"></i> Xác nhận thu hồi
+                    </button>
+                    <button type="button" onclick="closePopup()" class="btn btn-warning">
+                        <i class="fas fa-times-circle mr-2"></i> Hủy bỏ
+                    </button>
+                </div>
+            </form>
+        @else
+            <div
+                class="h-[78vh] justify-content-center col-lg-12 bg-yellow-100 text-yellow-800 p-3 rounded flex items-center gap-2">
+                <i class="fas fa-info-circle"></i> Đã xảy ra sự cố với biểu mẫu xuất kho, xin vui lòng liên hệ quản trị
+                viên
+                về vấn đề này.
             </div>
-        </form>
-    @else
-        <div
-            class="h-[78vh] justify-content-center col-lg-12 bg-yellow-100 text-yellow-800 p-3 rounded flex items-center gap-2">
-            <i class="fas fa-info-circle"></i> Đã xảy ra sự cố với biểu mẫu xuất kho, xin vui lòng liên hệ quản trị
-            viên
-            về vấn đề này.
-        </div>
-    @endif
-    @foreach($componentLogs->take(10) as $log)
-        <div>{{ $log->id }} - {{ $log->action }} - {{ $log->created_at }}</div>
-    @endforeach <div class="">
-        debug:stockout_at:{{ $stockout_at }}/stockoutType:{{ $stockoutType }}/action_id:{{ $action_id }}/component_id:{{$componentId}}/cus:{{ $customer_id }}/ven:{{ $vendor_id }}/loc:{{$location_id}}
+        @endif
+        <script>
+            window.addEventListener('closePopup', () => {
+                console.log('closePopup event received');
+            });
+        </script>
     </div>
-    <script>
-        window.addEventListener('closePopup', () => {
-            console.log('closePopup event received');
-        });
-    </script>
-</div>

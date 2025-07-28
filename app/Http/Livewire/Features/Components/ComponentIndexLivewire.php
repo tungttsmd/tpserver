@@ -59,7 +59,7 @@ class ComponentIndexLivewire extends Component
 
         if ($filter === 'current-stock') {
             $query->where('status_id', 1); // "Đang tồn kho"
-        } elseif ($filter === 'stockout') {
+        } elseif ($filter === 'current-stockout') {
             $query->where('status_id', 2); // "Đã xuất kho"
         }
 

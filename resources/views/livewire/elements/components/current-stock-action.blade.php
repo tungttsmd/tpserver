@@ -10,7 +10,7 @@
     </a>
     <a href="#" class="x-button text-success"
         onclick="event.preventDefault(); Livewire.emit('componentId', {{ $component->id }}); Livewire.emit('modal', 'stockout','{{ $component->id }}', 'Lý do xuất kho', 'success','fas fa-plane-departure')">
-        <i class="fas fa-plane-departure">{{ $component->id }}</i>
+        <i class="fas fa-plane-departure"></i>
     </a>
     <a href="#" class="x-button text-info"
         onclick="event.preventDefault(); Livewire.emit('componentId', {{ $component->id }}); Livewire.emit('modal', 'show','{{ $component->id }}', 'Thông tin chi tiết', 'info','fas fa-eye')">

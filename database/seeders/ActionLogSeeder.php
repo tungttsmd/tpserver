@@ -60,6 +60,9 @@ class ActionLogSeeder extends Seeder
             0 => ['name' => 'componentSellShopee', 'note' => 'Bán hàng qua Shopee.'],
             1 => ['name' => 'componentSellOther', 'note' => 'Bán cho khách - lý do khác.'],
         ];
+        $componentStockreturnActions = [
+            0 => ['name'=>'componentStockreturn', 'note' => 'Thu hồi/hoàn trả linh kiện']
+        ];
 
         $data = [];
 
@@ -107,6 +110,16 @@ class ActionLogSeeder extends Seeder
             $data[] = [
                 'action_id' => $id,
                 'target' => 'componentStockoutVendor',
+                'name' => $info['name'],
+                'note' => $info['note'],
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ];
+        }
+        foreach ($componentStockreturnActions as $id => $info) {
+            $data[] = [
+                'action_id' => $id,
+                'target' => 'componentStockreturn',
                 'name' => $info['name'],
                 'note' => $info['note'],
                 'created_at' => Carbon::now(),

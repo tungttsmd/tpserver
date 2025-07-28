@@ -164,9 +164,6 @@ class ComponentStockoutLivewire extends Component
             // Nội dung thông báo
             $message = "Đã xuất kho linh kiện " . $this->component->name . " (" . $this->component->serial_number . ") thành công.";
 
-            // dd([$this->action_id,$locationId, $this->location_id, $vendorId, $this->vendor_id, $customerId, $this->customer_id, $this->stockoutType]);
-            // 'note' => "Người dùng $user->alias ($user->username) đã xuất kho linh kiện",
-
             // Thông báo
             $this->dispatchBrowserEvent('success-alert', [
                 'message' => $message,

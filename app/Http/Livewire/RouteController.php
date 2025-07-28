@@ -43,7 +43,7 @@ class RouteController extends Component
         $this->modalTitle = $title;
         $this->modalIcon = $icon;
         $this->modalColor = $color;
-        $this->dispatchBrowserEvent('show-popup', ['modalType' => $modalType, 'recordId' => $id]);
+        $this->dispatchBrowserEvent('show-popup');
     }
     public function render()
     {

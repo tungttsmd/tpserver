@@ -32,8 +32,7 @@
                     <h1 class="text-main text-3xl font-semibold text-gray-800 mb-2">Không tìm thấy trang</h1>
                     <p class="text-gray-600 mb-6">
                         Trang bạn đang tìm có thể đã bị xoá hoặc không còn tồn tại.<br>Vui lòng kiểm tra lại
-                        đường dẫn
-                        hoặc quay về trang chính.
+                        đường dẫn hoặc quay về trang chính.
                     </p>
                     <a href="/"
                         class="inline-block bg-blue-600 hover:bg-blue-700 text-white bg-main font-semibold px-6 py-3 rounded-xl shadow transition">

@@ -9,7 +9,7 @@ return new class extends Migration {
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('alias')->unique()->index();
+            $table->string('alias')->index();
             $table->string('username')->unique()->index();
             $table->string('password');
             $table->string('avatar_url')->nullable();

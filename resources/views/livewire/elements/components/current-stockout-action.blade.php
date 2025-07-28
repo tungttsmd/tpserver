@@ -11,7 +11,7 @@
     </a>
 
     <a href="#" class="x-button text-danger"
-        onclick="event.preventDefault(); Livewire.emit('modal', 'stockreturn','{{ $component->id }}', 'Lý do thu hồi', 'danger-subtle','fas fa-plane-arrival')">
+        onclick="event.preventDefault(); Livewire.emit('modal', 'stockreturn','{{ $component->id }}', 'Lý do thu hồi', 'danger','fas fa-plane-arrival')">
         <i class="fas fa-plane-arrival"></i>
     </a>
     <a href="#" class="x-button text-info"

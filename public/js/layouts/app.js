@@ -61,10 +61,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
 document.addEventListener("DOMContentLoaded", function () {
     window.addEventListener("show-popup", (event) => {
-        const modalType = event.detail.modalType;
-        const recordId = event.detail.recordId;
-        console.log("Loại modal:", modalType);
-        console.log("ID record:", recordId);
         document.getElementById("popup-overlay").style.display = "flex";
     });
 
