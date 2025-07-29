@@ -14,16 +14,15 @@ use Carbon\Carbon;
 
 class ComponentStockreturnLivewire extends Component
 {
-    public $componentId, $component, $qrcode, $stockoutType, $stockout_at, $stockreturn_at, $action_id, $customer_id, $vendor_id, $location_id;
+    public $componentId, $component, $qrcode, $stockoutType, $stockout_at, $stockreturn_at, $action_id, $customer_id, $vendor_id, $location_id, $note;
     public $actionStockoutVendor, $actionStockoutInternal, $actionStockoutCustomer;
     public $vendorOptions, $customerOptions, $locationOptions;
+    protected $listeners = ['componentId' => 'setComponentId'];
     public $lastestComponentLog;
     protected $componentLogs;
     public $debug;
     public function render()
     {
-
-
         $this->mountInit();
         $this->getStockoutType();
         if ($this->locationOptions->isNotEmpty() && !$this->location_id) {
@@ -35,10 +34,16 @@ class ComponentStockreturnLivewire extends Component
         if ($this->customerOptions->isNotEmpty() && !$this->customer_id) {
             $this->customer_id = $this->customerOptions->first()->id;
         }
+
         $this->lastestComponentLog = ComponentLog::with(['user', 'action', 'location', 'vendor', 'customer', 'component'])
             ->where('component_id', $this->componentId) // hoặc $id nếu trong Controller
             ->latest('created_at')
             ->first();
+
+        if (!$this->stockreturn_at) {
+            $this->stockreturn_at = now()->format('Y-m-d');
+        }
+
         $this->debug = [
             'component_id'    => $this->lastestComponentLog->component_id,
             'action_id'       => 39, // Thu hồi
@@ -47,7 +52,7 @@ class ComponentStockreturnLivewire extends Component
             'vendor_id'       => $this->lastestComponentLog->vendor_id,
             'note'            => $this->note ?? null,
             'stockout_at'     => optional($this->lastestComponentLog->stockout_at)->format('Y-m-d H:i:s') ?? now()->format('Y-m-d H:i:s'),
-            'stockreturn_at'  => optional($this->stockreturn_at)->format('Y-m-d H:i:s') ?? now()->format('Y-m-d H:i:s'),
+            'stockreturn_at'  => Carbon::parse($this->stockreturn_at)->toDateString() ?? now()->format('Y-m-d'),
         ];
         $data = array_merge([
             'component' => $this->component,
@@ -154,7 +159,7 @@ class ComponentStockreturnLivewire extends Component
                 'vendor_id' => $this->lastestComponentLog->vendor_id,
                 'note' => $this->note,
                 'stockout_at' => Carbon::parse($this->lastestComponentLog->stockout_at ?? now()), // fallback nếu null
-                'stockreturn_at' => Carbon::parse($this->stockreturn_at ?? now()), // fallback nếu null
+                'stockreturn_at' => Carbon::parse($this->lastestComponentLog->stockreturn_at ?? now()), // fallback nếu null
             ]);
 
             // Cập nhật trạng thái
@@ -193,5 +198,15 @@ class ComponentStockreturnLivewire extends Component
         $this->reset(['note']);
         $this->mountInit();
         $this->emit('routeRefreshCall');
+    }
+    public function rules()
+    {
+        return [
+            'note' => 'nullable|string',
+        ];
+    }
+    public function setComponentId($componentId)
+    {
+        $this->componentId = $componentId;
     }
 }

@@ -151,6 +151,17 @@
                 @endif
             </div>
 
+            {{-- Ngày thu hồi --}}
+            <div class="flex-grow-1 pt-3" style="min-width: 200px;">
+                <label for="stockreturn_at" class="form-label">Ngày thu hồi<span class="text-warning">
+                        *</span></label>
+                <div class="input-group border-main">
+                    <span class="input-group-text border-0" icon-scale border-0"><i
+                            class="fas fa-calendar-alt"></i></span>
+                    <input wire:model.lazy="stockreturn_at" type="date" class="form-control input-hover border-0"
+                        required>
+                </div>
+            </div>
             {{-- Khối thu hồi --}}
             <form wire:submit.prevent='stockreturn'>
                 {{ print_r($debug) }}
