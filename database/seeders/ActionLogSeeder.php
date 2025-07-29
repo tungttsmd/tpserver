@@ -28,7 +28,7 @@ class ActionLogSeeder extends Seeder
         ];
 
         $componentActions = [
-            0 => ['name' => 'componentAddOrReceive', 'note' => 'Thêm mới hoặc nhập kho linh kiện.'],
+            0 => ['name' => 'componentAddOrReceive', 'note' => 'Thêm mới/nhập kho linh kiện.'],
             1 => ['name' => 'componentUpdateSerial', 'note' => 'Cập nhật số serial của linh kiện.'],
             2 => ['name' => 'componentDelete', 'note' => 'Xóa linh kiện do lỗi dữ liệu.'],
             3 => ['name' => 'componentIssue', 'note' => 'Xuất kho linh kiện.'],

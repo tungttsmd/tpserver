@@ -194,112 +194,45 @@ footer.tpserver.footer.main-footer {
     padding: 2px 20px !important;
     box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
 }
-
-/* global style */
-/* MAIN */
-.bg-main-subtle {
-    background-color: #553686 !important;
-}
+/* MAIN - tím cực nhạt */
 .bg-main-subtle-light {
-    background-color: #e2d9ef !important;
+    background-color: #faf7fd !important;
 }
 .text-main-subtle {
-    color: #553686 !important;
-}
-.text-main-subtle-light {
-    color: #e2d9ef !important;
-}
-.border-main-subtle {
-    border: 1px solid #553686 !important;
-}
-.border-main-subtle-light {
-    border: 1px solid #e2d9ef !important;
+    color: #7e57c2 !important; /* tím sáng */
 }
 
-/* SUCCESS */
-.bg-success-subtle {
-    background-color: #0f5132 !important;
-}
+/* SUCCESS - xanh lá cực nhạt */
 .bg-success-subtle-light {
-    background-color: #d1e7dd !important;
+    background-color: #f3fbf6 !important;
 }
 .text-success-subtle {
-    color: #0f5132 !important;
-}
-.text-success-subtle-light {
-    color: #d1e7dd !important;
-}
-.border-success-subtle {
-    border: 1px solid #0f5132 !important;
-}
-.border-success-subtle-light {
-    border: 1px solid #badbcc !important;
+    color: #198754 !important; /* xanh lá sáng */
 }
 
-/* DANGER */
-.bg-danger-subtle {
-    background-color: #842029 !important;
-}
+/* DANGER - đỏ cực nhạt */
 .bg-danger-subtle-light {
-    background-color: #f8d7da !important;
+    background-color: #fef6f7 !important;
 }
 .text-danger-subtle {
-    color: #842029 !important;
-}
-.text-danger-subtle-light {
-    color: #f8d7da !important;
-}
-.border-danger-subtle {
-    border: 1px solid #842029 !important;
-}
-.border-danger-subtle-light {
-    border: 1px solid #f8d7da !important;
+    color: #dc3545 !important; /* đỏ tươi sáng */
 }
 
-/* WARNING */
-.bg-warning-subtle {
-    background-color: #664d03 !important;
-}
+/* WARNING - vàng cực nhạt */
 .bg-warning-subtle-light {
-    background-color: #fff3cd !important;
+    background-color: #fffdf4 !important;
 }
 .text-warning-subtle {
-    color: #664d03 !important;
-}
-.text-warning-subtle-light {
-    color: #fff3cd !important;
-}
-.border-warning-subtle {
-    border: 1px solid #664d03 !important;
-}
-.border-warning-subtle-light {
-    border: 1px solid #ffecb5 !important;
+    color: #ffc107 !important; /* vàng sáng */
 }
 
-/* INFO */
-.bg-info-subtle {
-    background-color: #055160 !important;
-}
+/* INFO - xanh dương cực nhạt */
 .bg-info-subtle-light {
-    background-color: #cff4fc !important;
+    background-color: #f5fcfe !important;
 }
 .text-info-subtle {
-    color: #055160 !important;
+    color: #3c8dbc !important; /* nhẹ hơn #0dcaf0 */
 }
-.text-info-subtle-light {
-    color: #cff4fc !important;
-}
-.border-info-subtle {
-    border: 1px solid #055160 !important;
-}
-.border-info-subtle-light {
-    border: 1px solid #b6effb !important;
-}
-
-
-/* Hết bs5*/
-
-
 
 .hv-bg-main {
     background-color: #553686 !important;

@@ -154,6 +154,7 @@ class ComponentStockoutLivewire extends Component
                 'vendor_id' => $vendorId,
                 'note' => $this->note,
                 'stockout_at' => Carbon::parse($this->stockout_at ?? now()), // fallback nếu null
+                'stockreturn_at' => null, // fallback nếu null
             ]);
 
             // Cập nhật trạng thái

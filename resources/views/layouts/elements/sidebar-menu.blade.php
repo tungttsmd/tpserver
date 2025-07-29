@@ -169,7 +169,7 @@
                         <a href="#" class="nav-link"
                             onclick="event.preventDefault(); Livewire.emit('route', 'logs', 'stockout', 'stockout-log')">
                             <i class="fas fa-clock nav-icon"></i>
-                            <p>Lịch sử xuất kho</p>
+                            <p>Nhập & xuất kho</p>
                         </a>
                     </li>
                     <li class="nav-item">

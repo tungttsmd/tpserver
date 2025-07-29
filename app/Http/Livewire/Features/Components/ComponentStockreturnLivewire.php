@@ -24,6 +24,7 @@ class ComponentStockreturnLivewire extends Component
     public function render()
     {
         $this->mountInit();
+
         $this->getStockoutType();
         if ($this->locationOptions->isNotEmpty() && !$this->location_id) {
             $this->location_id = $this->locationOptions->first()->id;
@@ -39,10 +40,6 @@ class ComponentStockreturnLivewire extends Component
             ->where('component_id', $this->componentId) // hoặc $id nếu trong Controller
             ->latest('created_at')
             ->first();
-
-        if (!$this->stockreturn_at) {
-            $this->stockreturn_at = now()->format('Y-m-d');
-        }
 
         $this->debug = [
             'component_id'    => $this->lastestComponentLog->component_id,
@@ -74,6 +71,8 @@ class ComponentStockreturnLivewire extends Component
     }
     public function mount()
     {
+        $this->stockreturn_at = now()->format('Y-m-d');
+
         $this->mountInit();
     }
     public function mountInit()
@@ -91,8 +90,9 @@ class ComponentStockreturnLivewire extends Component
         if (!$this->stockout_at) {
             $this->stockout_at = Carbon::now()->toDateString(); // == format('Y-m-d') Ngày xuất kho mặc định là hôm nay
         } else {
-            $this->stockout_at = Carbon::parse($this->stockout_at ?? now())->toDateString();;
+            $this->stockout_at = Carbon::parse($this->stockout_at ?? now())->toDateString();
         }
+
 
         $this->component = ModelsComponent::find($this->componentId);
 
@@ -159,7 +159,7 @@ class ComponentStockreturnLivewire extends Component
                 'vendor_id' => $this->lastestComponentLog->vendor_id,
                 'note' => $this->note,
                 'stockout_at' => Carbon::parse($this->lastestComponentLog->stockout_at ?? now()), // fallback nếu null
-                'stockreturn_at' => Carbon::parse($this->lastestComponentLog->stockreturn_at ?? now()), // fallback nếu null
+                'stockreturn_at' => Carbon::parse($this->stockreturn_at) ?? null // fallback nếu null
             ]);
 
             // Cập nhật trạng thái

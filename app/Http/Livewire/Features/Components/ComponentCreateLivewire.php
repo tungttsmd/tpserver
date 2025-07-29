@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Features\Components;
 use App\Http\Livewire\RouteController;
 use App\Models\Category;
 use App\Models\Component as HardwareComponent;
+use App\Models\ComponentLog;
 use App\Models\Condition;
 use App\Models\Location;
 use App\Models\Manufacturer;
@@ -128,6 +129,18 @@ class ComponentCreateLivewire extends Component
             'qrcode' => $qrcode ?? null,
             'barcode' => $barcode ?? null,
         ];
+
+        ComponentLog::create([
+            'component_id' => $component->id,
+            'user_id' => auth()->user()->id,
+            'action_id' => 15, // Dữ liệu nhập kho, thêm mơi
+            'location_id' => $this->location_id ?? null,
+            'customer_id' => null,
+            'vendor_id' => $this->vendor_id ?? null,
+            'note' => 'Nhập kho linh kiện mới',
+            'stockout_at' => null, // fallback nếu null
+            'stockreturn_at' => null, // fallback nếu null
+        ]);
 
         $this->dispatchBrowserEvent('success-alert', [
             'message' => 'Thêm mới thành công!',
