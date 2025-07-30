@@ -8,7 +8,7 @@
     @php
         $refresh = $controller . $action . $filter;
     @endphp
-    
+
     <div class="flex-col flex justify-between grow h-[100vh]">
         @if ($controller === 'components')
             @if ($action === 'scan')
@@ -22,6 +22,36 @@
         @elseif ($controller === 'logs')
             @if ($action === 'stockout')
                 <livewire:features.logs.component-stockout-livewire :filter="$filter" wire:key="{{ $refresh }}" />
+            @endif
+        @elseif ($controller === 'customers')
+            @if ($action === 'index')
+                <livewire:features.customers.customer-index-livewire :filter="$filter" wire:key="{{ $refresh }}" />
+            @elseif ($action === 'create')
+                {{-- <livewire:features.customers.customer-create-livewire :filter="$filter" wire:key="{{ $refresh }}" /> --}}
+            @endif
+        @elseif ($controller === 'vendors')
+            @if ($action === 'index')
+                <livewire:features.vendors.vendor-index-livewire :filter="$filter" wire:key="{{ $refresh }}" />
+            @elseif ($action === 'create')
+                {{-- <livewire:features.vendors.vendor-create-livewire :filter="$filter" wire:key="{{ $refresh }}" /> --}}
+            @endif
+        @elseif ($controller === 'locations')
+            @if ($action === 'index')
+                <livewire:features.locations.location-index-livewire :filter="$filter" wire:key="{{ $refresh }}" />
+            @elseif ($action === 'create')
+                {{-- <livewire:features.locations.location-create-livewire :filter="$filter" wire:key="{{ $refresh }}" /> --}}
+            @endif
+        @elseif ($controller === 'users')
+            @if ($action === 'index')
+                <livewire:features.users.user-index-livewire :filter="$filter" wire:key="{{ $refresh }}" />
+            @elseif ($action === 'create')
+                {{-- <livewire:features.users.user-create-livewire :filter="$filter" wire:key="{{ $refresh }}" /> --}}
+            @endif
+        @elseif ($controller === 'roles')
+            @if ($action === 'index')
+                <livewire:features.roles.role-index-livewire :filter="$filter" wire:key="{{ $refresh }}" />
+            @elseif ($action === 'create')
+                {{-- <livewire:features.users.user-create-livewire :filter="$filter" wire:key="{{ $refresh }}" /> --}}
             @endif
         @else
             <div class="bg-white-100 flex items-center justify-center h-screen p-6 grow rounded">
@@ -46,7 +76,8 @@
                 Copyright &copy; 2025
                 <a href="https://www.facebook.com/servertp/" class="text-blue-500 underline">TPSERVER
                     VIETNAM</a>. All rights reserved.
-                <span>Controller: {{ $controller }}; Action: {{ $action }}; Filter: {{ $filter }}</span>
+                <span>Controller: {{ $controller }}; Action: {{ $action }}; Filter:
+                    {{ $filter }}</span>
             </small>
         </footer>
         {{-- Nội dung được bọc trong Livewire LayoutController --}}
