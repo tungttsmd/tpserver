@@ -6,7 +6,12 @@
             @include('livewire.elements.components.alert')
 
             {{-- Bảng dữ liệu --}}
-            @include('livewire.elements.components.table')
+            <x-table
+                :data="$data['components']"
+                :columns="$data['columns']"
+                :relationships="$data['relationships']"
+                :sort="$sort"
+                :dir="$dir"/>
 
             {{-- Phân trang --}}
             <div class="m-6">
