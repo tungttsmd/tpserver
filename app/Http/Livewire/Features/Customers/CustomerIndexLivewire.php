@@ -13,6 +13,7 @@ class CustomerIndexLivewire extends Component
     use WithPagination;
 
     public $dir, $sort;
+    public $customerId;
     public function render()
     {
         $customers = Customer::paginate(20);
@@ -34,5 +35,9 @@ class CustomerIndexLivewire extends Component
             $this->sort = $sort_column;
             $this->dir = 'asc';
         }
+    }
+    public function setCustomerId($customerId)
+    {
+        $this->customerId = $customerId;
     }
 }

@@ -4,7 +4,7 @@
     // $columns: schema table columns customers, components...
     'controller' => $controller ?? null,
     'action' => $action ?? 'index',
-    'tableActionSet' => 'table.actions.button-set.'. $controller . '.'.$action, // table.actions.button-set.customers.index example
+    'tableActionSet' => 'table.actions.button-set.' . $controller . '.' . $action, // table.actions.button-set.customers.index example
     'data' => $data ?? [],
     'columns' => $columns ?? [],
     'relationships' => [],
@@ -27,9 +27,17 @@
                 <tbody>
                     @foreach ($data as $value)
                         <tr>
-                            <td>hello {{ $tableActionSet }}</td>
-                            <x-{{ $tableActionSet }} :record-id="$value->id" :route="session('route')['filter'] ?? null" />
-                                {{-- Lỗi tại anh ở đây laravel có hỗ trợ khưa này đâu --}}
+                            <td>
+                                @switch($tableActionSet)
+                                    @case('table.actions.button-set.customers.index')
+                                        <x-table.actions.button-set.customers.index :record-id="$value->id" :route="session('route')['filter'] ?? null" />
+                                    @break
+
+                                    @default
+                                        <p>Component không tồn tại.</p>
+                                @endswitch
+                            </td>
+                            {{-- Lỗi tại anh ở đây laravel có hỗ trợ khưa này đâu --}}
                             @foreach ($columns as $field)
                                 <x-table-data :relationships="$relationships" :value="$value" :field="$field" />
                             @endforeach

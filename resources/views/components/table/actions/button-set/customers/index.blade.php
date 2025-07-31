@@ -1,6 +1,3 @@
 @props(['recordId' => $recordId])
-<td>
-    hello 2 3
-    <x-table-action-button :record-id="$recordId" setIdFunction='' title='Thông tin khách hàng' color='info-subtle'
-        icon='fas fa-eyes' />
-<td>
+<x-table-action-button pseudo-action="show" :record-id="$recordId" setIdFunction='setCustomerId' title='Thông tin khách hàng'
+    color='info-subtle' icon='fas fa-eye' />

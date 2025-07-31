@@ -233,6 +233,12 @@ footer.tpserver.footer.main-footer {
 .text-info-subtle {
     color: #3c8dbc !important; /* nhẹ hơn #0dcaf0 */
 }
+.text-info-dark {
+    color: #1e5d8f !important; /* nhẹ hơn #0dcaf0 */
+}
+.text-info-light {
+    color: #7ab8d6  !important; /* nhẹ hơn #0dcaf0 */
+}
 
 .hv-bg-main {
     background-color: #553686 !important;

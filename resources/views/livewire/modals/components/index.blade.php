@@ -28,6 +28,7 @@
                                 <livewire:features.components.component-stockreturn-livewire :component-id="$recordId" />
                             @endif
                         @elseif ($controller === 'customers')
+
                             @if ($modalType === 'edit')
                                 <livewire:features.customers.customer-edit-livewire :customer-id="$recordId" />
                             @elseif ($modalType === 'show')
@@ -38,7 +39,9 @@
                                 <p>Không tìm thấy modal</p>
                             </div>
                         @endif
-
+                        <div class="flex flex-row">
+                            <p>{{$controller}} || {{$action}} || {{$filter}}</p>
+                        </div>
                         <link rel="stylesheet" href="{{ asset('css/components/modal.css') }}">
                     </div>
                 </div>

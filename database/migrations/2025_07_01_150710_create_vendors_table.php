@@ -19,6 +19,7 @@ return new class extends Migration {
             $table->string('phone')->nullable()->index();
             $table->string('email')->nullable()->index();
             $table->string('address')->nullable()->index();
+            $table->string('logo_url')->nullable();
             $table->string('note')->nullable();
 
             $table->timestamps(); // Thêm index thủ công cho $table->timestamps();
