@@ -6,16 +6,11 @@
             @include('livewire.elements.components.alert')
 
             {{-- Bảng dữ liệu --}}
-            <x-table
-                :data="$data['components']"
-                :columns="$data['columns']"
-                :relationships="$data['relationships']"
-                :sort="$sort"
-                :dir="$dir"/>
+            <x-partials.table :list="$data['components']->toArray()['data']" :columns="$data['columns']" />
 
             {{-- Phân trang --}}
             <div class="m-6">
-                {{ $data['components']->links('livewire.elements.components.paginator') }}
+                {{ $data['components']->links('components.atoms.table.pagination') }}
             </div>
             {{-- Component style --}}
             <link rel="stylesheet" href="{{ asset('css/components/index.css') }}">
