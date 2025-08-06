@@ -7,21 +7,43 @@ use Illuminate\Support\Facades\Schema;
 use Livewire\Component;
 use Livewire\WithPagination;
 
+
 class LocationIndexLivewire extends Component
 {
     use WithPagination;
+
     public $dir, $sort;
+    public $locationId, $perPage = 20, $search;
     public function render()
     {
-        $locations = Location::paginate(20);
+
         $columns = Schema::getColumnListing('locations');
+        $query = Location::query();
+
+        // Tìm kiếm realtime theo serial_number hoặc note cơ bản
+        if ($this->search) {
+            $query->where(function ($q) {
+                $q->where('name', 'like', '%' . $this->search . '%');
+            });
+        }
+
+        // Thực hiện sắp xếp nếu có cột và hướng sắp xếp
+        if ($this->sort && $this->dir) {
+            $query->orderBy($this->sort, $this->dir);
+        }
+
+        // Đóng gói dữ liệu
         $data = [
             'data' => [
-                'locations' => $locations,
+                'locations' => $query->paginate($this->perPage),
+                'sort' => $this->sort,
+                'dir' => $this->dir,
                 'columns' => $columns,
                 'relationships' => [],
             ]
         ];
+
+        // Render view
         return view('livewire.features.locations.index', $data);
     }
     public function sortBy($sort_column)
@@ -32,5 +54,14 @@ class LocationIndexLivewire extends Component
             $this->sort = $sort_column;
             $this->dir = 'asc';
         }
+    }
+    public function resetFilters()
+    {
+        $this->reset(['search', 'perPage', 'sort', 'dir']);
+        $this->resetPage();  // reset phân trang về trang 1
+    }
+    public function setLocationId($locationId)
+    {
+        $this->locationId = $locationId;
     }
 }

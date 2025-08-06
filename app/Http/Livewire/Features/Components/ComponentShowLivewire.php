@@ -16,12 +16,13 @@ class ComponentShowLivewire extends Component
     public $filter = 'manual';
     public $createSuccess = null;
     public $componentId, $component, $qrcode = null;
+    protected $listeners = ['record' => 'record'];
 
     public function render()
     {
         $this->scan();
         $suggestions = $this->smartMatching($this->component, $this->component->serial_number);
-        return view('livewire.features.components.show', ['suggestions' => $suggestions]);
+        return view('livewire.features.components.show', ['suggestions' => $suggestions, 'hello' => $this->componentId]);
     }
     public function mount()
     {
@@ -101,5 +102,9 @@ class ComponentShowLivewire extends Component
         }
 
         return $suggestions;
+    }
+    public function record($id)
+    {
+        $this->componentId = $id;
     }
 }

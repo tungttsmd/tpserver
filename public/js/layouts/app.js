@@ -60,7 +60,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 document.addEventListener("DOMContentLoaded", function () {
-    window.addEventListener("show-popup", (event) => {
+    window.addEventListener("modal-show", (event) => {
         document.getElementById("popup-overlay").style.display = "flex";
     });
 

@@ -6,7 +6,8 @@
             @include('livewire.elements.components.alert')
 
             {{-- Bảng dữ liệu --}}
-            <x-partials.table :list="$data['components']->toArray()['data']" :columns="$data['columns']" />
+            <x-partials.table actions="components" :list="$data['components']->toArray()['data']" :columns="$data['columns']" :sort="$sort"
+                :dir="$dir" />
 
             {{-- Phân trang --}}
             <div class="m-6">

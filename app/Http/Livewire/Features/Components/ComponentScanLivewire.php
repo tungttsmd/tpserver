@@ -114,4 +114,5 @@ class ComponentScanLivewire extends Component
 
         return $suggestions;
     }
+    
 }

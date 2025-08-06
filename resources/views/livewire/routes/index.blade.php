@@ -87,7 +87,4 @@
 
     </div>
 
-    {{-- Modals --}}
-    @include('livewire.modals.components.index')
-
 </div>

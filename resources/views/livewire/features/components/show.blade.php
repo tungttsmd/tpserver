@@ -1,5 +1,6 @@
     <div class="row col-12 overflow-y-auto h-[64vh]"> {{-- ✅ Wrap 2 khối vào row mới --}}
         {{-- Cột Thông tin linh kiện --}}
+        {{ var_dump($hello) }}
         @if (is_object($component))
             {{-- Thông tin linh kiện --}}
             <div class="col-lg-12">
@@ -9,7 +10,7 @@
                         <div class="flex-1 space-y-3 text-[16px]">
                             <p class="font-semibold text-[20px]">
                                 <i class="fas fa-barcode mr-1"></i>
-                                <span>{{ $component->serial_number ?? 'N/A' }}</span>
+                                <span>{{ data_get($this->component, 'serial_number') ?? 'N/A' }}</span>
                             </p>
                             <p class="font-semibold text-[18px]" style="color: #4b6cb7">
                                 <i class="fas fa-tags mr-1"></i>

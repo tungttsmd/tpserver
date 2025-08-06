@@ -17,7 +17,7 @@ class ComponentStockreturnLivewire extends Component
     public $componentId, $component, $qrcode, $stockoutType, $stockout_at, $stockreturn_at, $action_id, $customer_id, $vendor_id, $location_id, $note;
     public $actionStockoutVendor, $actionStockoutInternal, $actionStockoutCustomer;
     public $vendorOptions, $customerOptions, $locationOptions;
-    protected $listeners = ['componentId' => 'setComponentId'];
+    protected $listeners = ['routeRefreshCall' => '$refresh', 'componentId' => 'setComponentId'];
     public $lastestComponentLog;
     protected $componentLogs;
     public $debug;
@@ -205,8 +205,8 @@ class ComponentStockreturnLivewire extends Component
             'note' => 'nullable|string',
         ];
     }
-    public function setComponentId($componentId)
+    public function record($id)
     {
-        $this->componentId = $componentId;
+        $this->componentId = $id;
     }
 }

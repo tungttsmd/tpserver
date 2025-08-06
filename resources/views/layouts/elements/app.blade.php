@@ -19,6 +19,17 @@
     {{-- Custom & Livewire --}}
     <link rel="stylesheet" href="{{ asset('css/layouts/app.css') }}">
     @livewireStyles
+
+    <script defer>
+        function routeLive(...args) {
+            Livewire.emit('route', ...args);
+        }
+
+        function modalLive(...args) {
+            Livewire.emit('modal', ...args);
+        }
+    </script>
+
 </head>
 
 <body class="hold-transition sidebar-mini">
@@ -29,7 +40,7 @@
             class="relative flex flex-col h-full tp-server layouts sidebar main-sidebar sidebar-dark-primary bg-dark-main elevation-4">
 
             @include('layouts.elements.sidebar-user')
-            @include('layouts.elements.sidebar-menu')
+            @include('layouts.sidebar-live')
             @include('layouts.elements.sidebar-cover')
 
         </aside>
@@ -42,7 +53,6 @@
             <div class="bg-white flex flex-col flex-1 ">
                 <main class="relatvie flex-1 p-0 overflow-y-auto">
                     <livewire:route-controller />
-                    <livewire:modal-controller />
                 </main>
             </div>
 

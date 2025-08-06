@@ -40,7 +40,7 @@
                             </div>
                         @endif
                         <div class="flex flex-row">
-                            <p>{{$controller}} || {{$action}} || {{$filter}}</p>
+                            <p>{{$controller}} || {{$action}} || {{$filter}} || {{$recordId}}</p>
                         </div>
                         <link rel="stylesheet" href="{{ asset('css/components/modal.css') }}">
                     </div>

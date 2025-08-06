@@ -1,19 +1,12 @@
         <div class="p-4 w-full">
             {{-- Bộ lọc --}}
-            {{-- @include('livewire.elements.components.filter') --}}
+            @include('livewire.elements.customers.filter')
 
             {{-- Thông báo --}}
-            {{-- @include('livewire.elements.components.alert') --}}
+            @include('livewire.elements.customers.alert')
 
             {{-- Bảng dữ liệu --}}
-            <x-table.table
-                :controller="session('route')['controller']"
-                :action="session('route')['action']"
-                :data="$data['customers']"
-                :columns="$data['columns']"
-                :relationships="[]"
-                :sort="$sort"
-                :dir="$dir"/>
+            <x-partials.table :list="$data['customers']->toArray()['data']" :columns="$data['columns']" :sort="$sort" :dir="$dir" />
 
             {{-- Phân trang --}}
             <div class="m-6">

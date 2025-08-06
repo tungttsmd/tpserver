@@ -22,7 +22,7 @@ class ComponentStockoutLivewire extends Component
     protected $actions, $customers = [], $vendors = [], $locations = [];
     public $actionsStockoutCustomer, $actionsStockoutVendor, $actionsStockoutInternal;
     public $vendorOptions, $customerOptions, $locationOptions;
-    protected $listeners = ['componentId' => 'setComponentId', 'actionId' => 'setActionId'];
+    protected $listeners = ['routeRefreshCall' => '$refresh', 'componentId' => 'setComponentId', 'actionId' => 'setActionId'];
     public $actionSuggestion = [];
 
     public function render()
@@ -212,8 +212,8 @@ class ComponentStockoutLivewire extends Component
             $this->action_id = $this->actionsStockoutInternal->first()->id;
         }
     }
-    public function setComponentId($componentId)
+    public function record($id)
     {
-        $this->componentId = $componentId;
+        $this->componentId = $id;
     }
 }

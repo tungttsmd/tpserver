@@ -129,7 +129,6 @@ class ComponentIndexLivewire extends Component
         $this->reset(['search', 'category', 'condition', 'status', 'perPage', 'sort', 'dir']);
         $this->resetPage();  // reset phân trang về trang 1
     }
-
     public function sortBy($sort_column)
     {
         if ($this->sort === $sort_column) {

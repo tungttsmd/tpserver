@@ -19,10 +19,15 @@ class ComponentEditLivewire extends Component
     public $name;
     public $warranty_start, $warranty_end, $note, $manufacturer_id, $vendor_id, $stockin_at, $category_id, $condition_id, $location_id;
     public $toggleWarranty = false;
-    public function mount($componentId)
+    protected $listeners = ['record' => 'record'];
+
+    public function mount()
     {
-        $this->componentId = $componentId;
-        $component = ModelsComponent::findOrFail($componentId);
+        $this->mountInit();
+    }
+    public function mountInit()
+    {
+        $component = ModelsComponent::findOrFail($this->componentId);
 
         // Gán vào từng property để bind với form
         $this->component = $component ?? null;
@@ -43,6 +48,7 @@ class ComponentEditLivewire extends Component
     }
     public function render()
     {
+        $this->mountInit();
         $data = array_merge($this->getRelationData(), ['component' => $this->component]);
         return view('livewire.features.components.edit', $data);
     }
@@ -64,18 +70,18 @@ class ComponentEditLivewire extends Component
         } catch (ValidationException $e) {
             // Lấy lỗi validation dưới dạng array (key => [message,...])
             $errors = $e->validator->errors()->toArray();
-    
+
             // Có thể convert thành chuỗi gộp message để dễ show alert
             $messages = collect($errors)->flatten()->implode(' ');
-    
+
             $this->dispatchBrowserEvent('danger-alert', [
                 'message' => 'Dữ liệu không hợp lệ, vui lòng kiểm tra lại!',
                 'errors' => $errors,
                 'messages' => $messages,
             ]);
-    
+
             return; // dừng hàm update
-        } 
+        }
 
         // Kiểm tra ngày bảo hành hợp lệ
         if ($this->warranty_start && strtotime($this->warranty_start) < strtotime('1970-01-01')) {
@@ -163,5 +169,9 @@ class ComponentEditLivewire extends Component
             'warranty_start' => 'nullable|date|after_or_equal:1970-01-01',
             'warranty_end' => 'nullable|date|after_or_equal:warranty_start',
         ];
+    }
+    public function record($id)
+    {
+        $this->componentId = $id;
     }
 }

@@ -7,6 +7,8 @@ use Livewire\Component;
 
 class CustomerShowLivewire extends Component
 {
+    protected $listeners = ['routeRefreshCall' => '$refresh', 'setCustomerId' => 'setCustomerId'];
+
     public $dir, $sort, $customerId;
     public function render()
     {
