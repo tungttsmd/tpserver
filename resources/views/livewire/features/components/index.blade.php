@@ -1,13 +1,10 @@
         <div class="p-4 w-full">
             {{-- Bộ lọc --}}
-            @include('livewire.elements.components.filter')
-
-            {{-- Thông báo --}}
-            @include('livewire.elements.components.alert')
+            <x-partials.filters.components :categories="$categories" :conditions="$conditions" />
 
             {{-- Bảng dữ liệu --}}
-            <x-partials.table actions="components" :list="$data['components']->toArray()['data']" :columns="$data['columns']" :sort="$sort"
-                :dir="$dir" />
+            <x-partials.tables.default actions="components" :filter="$filter" :list="$data['components']->toArray()['data']" :columns="$data['columns']"
+                :sort="$sort" :dir="$dir" />
 
             {{-- Phân trang --}}
             <div class="m-6">

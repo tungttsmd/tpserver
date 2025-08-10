@@ -22,7 +22,7 @@ class ComponentStockoutLivewire extends Component
     protected $actions, $customers = [], $vendors = [], $locations = [];
     public $actionsStockoutCustomer, $actionsStockoutVendor, $actionsStockoutInternal;
     public $vendorOptions, $customerOptions, $locationOptions;
-    protected $listeners = ['routeRefreshCall' => '$refresh', 'componentId' => 'setComponentId', 'actionId' => 'setActionId'];
+    protected $listeners = ['record' => 'record', 'routeRefreshCall' => '$refresh', 'componentId' => 'setComponentId', 'actionId' => 'setActionId'];
     public $actionSuggestion = [];
 
     public function render()

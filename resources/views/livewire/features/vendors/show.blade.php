@@ -1,5 +1,5 @@
 @props([
-    'data' => $customer,
+    'data' => $vendor,
     'suggestions' => [],
     'qrcode' => null,
     'filter' => null,

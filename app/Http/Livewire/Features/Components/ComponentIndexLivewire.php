@@ -26,7 +26,10 @@ class ComponentIndexLivewire extends Component
     public function render()
     {
         $data = $this->index(session('route.filter') ?? null);
-        return view('livewire.features.components.index', ['data' => $data]);
+        return view('livewire.features.components.index', [
+            'data' => $data,
+            'filter' => session('route.filter') ?? null
+        ]);
     }
     public function mount()
     {

@@ -17,7 +17,7 @@ class ComponentStockreturnLivewire extends Component
     public $componentId, $component, $qrcode, $stockoutType, $stockout_at, $stockreturn_at, $action_id, $customer_id, $vendor_id, $location_id, $note;
     public $actionStockoutVendor, $actionStockoutInternal, $actionStockoutCustomer;
     public $vendorOptions, $customerOptions, $locationOptions;
-    protected $listeners = ['routeRefreshCall' => '$refresh', 'componentId' => 'setComponentId'];
+    protected $listeners = ['record' => 'record', 'routeRefreshCall' => '$refresh', 'componentId' => 'setComponentId'];
     public $lastestComponentLog;
     protected $componentLogs;
     public $debug;

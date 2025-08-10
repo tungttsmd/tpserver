@@ -17,7 +17,7 @@ class ComponentLog extends Model
     }
     public function action()
     {
-        return $this->belongsTo(\App\Models\ActionLog::class);
+        return $this->belongsTo(ActionLog::class, 'action_id');
     }
 
     public function user()

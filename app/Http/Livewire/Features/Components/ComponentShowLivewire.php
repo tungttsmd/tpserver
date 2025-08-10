@@ -21,20 +21,10 @@ class ComponentShowLivewire extends Component
     public function render()
     {
         $this->scan();
-        $suggestions = $this->smartMatching($this->component, $this->component->serial_number);
-        return view('livewire.features.components.show', ['suggestions' => $suggestions, 'hello' => $this->componentId]);
+        $suggestions = $this->smartMatching($this->component, $this->component->serial_number ?? 0);
+        return view('livewire.features.components.show', ['suggestions' => $suggestions]);
     }
-    public function mount()
-    {
-        $this->component = HardwareComponent::with([
-            'category',
-            'vendor',
-            'condition',
-            'location',
-            'manufacturer',
-            'status'
-        ])->where('id', 1)->first();
-    }
+    public function mount() {}
     public function realtime()
     {
         if ($this->filter === 'realtime') {
@@ -62,7 +52,7 @@ class ComponentShowLivewire extends Component
             'manufacturer',
             'status'
         ])->where('id', $id)->first();
-        $this->qrcode = "https://api.qrserver.com/v1/create-qr-code/?data={$this->component->serial_number}&size=240x240";
+        $this->qrcode = "https://api.qrserver.com/v1/create-qr-code/?data={" . ($this->component->serial_number ?? 0) . "}&size=240x240";
     }
     public function smartMatching($component, $serial)
     {

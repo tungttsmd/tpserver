@@ -42,7 +42,8 @@ class VendorIndexLivewire extends Component
                 'dir' => $this->dir,
                 'columns' => $columns,
                 'relationships' => [],
-            ]
+            ],
+            'filter' => session('route.filter')
         ];
 
         // Render view

@@ -36,17 +36,18 @@ class CustomerIndexLivewire extends Component
 
         // Đóng gói dữ liệu
         $data = [
-            'data' => [
-                'customers' => $query->paginate($this->perPage),
-                'sort' => $this->sort,
-                'dir' => $this->dir,
-                'columns' => $columns,
-                'relationships' => [],
-            ]
+            'customers' => $query->paginate($this->perPage),
+            'sort' => $this->sort,
+            'dir' => $this->dir,
+            'columns' => $columns,
+            'relationships' => [],
         ];
 
         // Render view
-        return view('livewire.features.customers.index', $data);
+        return view('livewire.features.customers.index', [
+            'data' => $data,
+            'filter' => session('route.filter') ?? null
+        ]);
     }
     public function sortBy($sort_column)
     {

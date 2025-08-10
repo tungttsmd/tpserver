@@ -60,7 +60,7 @@
 
                 <li class="nav-item">
                     <a href="#" class="nav-link"
-                        onclick="event.preventDefault(); Livewire.emit('route', 'customers', 'index')">
+                        onclick="event.preventDefault(); Livewire.emit('route', 'customers', 'index','customers')">
                         <i class="fas fa-address-card nav-icon"></i>
                         <p>Danh sách khách hàng</p>
                     </a>
@@ -87,7 +87,7 @@
 
                 <li class="nav-item">
                     <a href="#" class="nav-link"
-                        onclick="event.preventDefault(); Livewire.emit('route', 'vendors', 'index')">
+                        onclick="event.preventDefault(); Livewire.emit('route', 'vendors', 'index','vendors')">
                         <i class="fas fa-address-card nav-icon"></i>
                         <p>Danh sách đối tác</p>
                     </a>
@@ -114,7 +114,7 @@
 
                 <li class="nav-item">
                     <a href="#" class="nav-link"
-                        onclick="event.preventDefault(); Livewire.emit('route', 'locations', 'index')">
+                        onclick="event.preventDefault(); Livewire.emit('route', 'locations', 'index','locations')">
                         <i class="fas fa-address-card nav-icon"></i>
                         <p>Danh sách vị trí</p>
                     </a>
@@ -257,7 +257,7 @@
                 </li>
                 <li class="nav-item">
                     <a href="#" class="nav-link"
-                        onclick="event.preventDefault(); Livewire.emit('route', 'logs', 'stockout', 'stockout-log')">
+                        onclick="event.preventDefault(); Livewire.emit('route', 'logs', 'stockout', 'component-logs')">
                         <i class="fas fa-business-time"></i>
                         <p>Nhập & xuất kho</p>
                     </a>

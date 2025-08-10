@@ -1,6 +1,5 @@
     <div class="row col-12 overflow-y-auto h-[64vh]"> {{-- ✅ Wrap 2 khối vào row mới --}}
         {{-- Cột Thông tin linh kiện --}}
-        {{ var_dump($hello) }}
         @if (is_object($component))
             {{-- Thông tin linh kiện --}}
             <div class="col-lg-12">
