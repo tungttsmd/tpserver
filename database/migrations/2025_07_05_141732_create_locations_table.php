@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('locations', function (Blueprint $table) {
             $table->id();
             $table->string('name')->unique()->index();
+            $table->string('note');
 
             $table->timestamps(); // Thêm index thủ công cho $table->timestamps();
             $table->index('created_at');

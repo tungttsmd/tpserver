@@ -11,10 +11,6 @@
 ])
 
 <div class="filament-tables max-h-[64vh] overflow-auto">
-@php
-    var_dump(session('route'));
-@endphp
-
     <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
         <thead class="bg-gray-50 dark:bg-gray-800 sticky top-0 z-16">
             <tr>
@@ -46,4 +42,5 @@
             @endif
         </tbody>
     </table>
+
 </div>

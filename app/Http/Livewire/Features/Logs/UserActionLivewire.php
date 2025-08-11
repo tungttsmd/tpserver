@@ -1,0 +1,40 @@
+<?php
+
+namespace App\Http\Livewire\Features\Logs;
+
+use App\Models\UserLog;
+use Illuminate\Support\Facades\Schema;
+use Livewire\Component;
+use Livewire\WithPagination;
+
+class UserActionLivewire extends Component
+{
+    use WithPagination;
+    public $sort = 'updated_at';
+    public $dir = 'desc';
+
+    public function render()
+    {
+        $userActionLogs = UserLog::with(['action', 'user'])
+            ->orderBy($this->sort, $this->dir)
+            ->paginate(20);
+
+        return view('livewire.features.logs.user-action', [
+            'userActionLogs' => $userActionLogs,
+            'columns' => Schema::getColumnListing('user_logs'),
+            'filter'=>session('route.filter'),
+            'sort' => $this->sort,
+            'dir' => $this->dir
+        ]);
+    }
+
+    public function sortBy($field)
+    {
+        if ($this->sort === $field) {
+            $this->dir = $this->dir === 'asc' ? 'desc' : 'asc';
+        } else {
+            $this->sort = $field;
+            $this->dir = 'asc';
+        }
+    }
+}

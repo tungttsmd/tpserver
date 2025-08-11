@@ -250,7 +250,7 @@
             <ul class="nav nav-treeview">
                 <li class="nav-item">
                     <a href="#" class="nav-link"
-                        onclick="event.preventDefault(); Livewire.emit('route', 'logs', 'user-actions', 'user-action-log')">
+                        onclick="event.preventDefault(); Livewire.emit('route', 'logs', 'user-action', 'user-action-log')">
                         <i class="fas fa-user-clock nav-icon"></i>
                         <p>Nhật ký hoạt động</p>
                     </a>

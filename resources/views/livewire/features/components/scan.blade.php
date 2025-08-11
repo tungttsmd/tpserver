@@ -1,192 +1,194 @@
-<div class="row p-4 w-full">
+<div class="p-6 w-full space-y-6">
+
     {{-- Cột Form --}}
-    <div class="col-12 p-0">
+    <div class="w-full">
+
         {{-- Thông báo --}}
         @include('livewire.elements.components.alert')
 
-        {{-- Form Row --}}
-        <div class="row mb-3 align-items-center">
+        {{-- Nhóm nút chọn chế độ quét và nút thêm mới --}}
+        <div class="flex flex-wrap items-center gap-4 mb-4">
+
             {{-- Nhóm nút --}}
-            <div class="col-auto">
-                <div class="btn-group btn-group-sm p-2" role="group" aria-label="Chọn chế độ quét">
-                    <button type="button" class="d-inline-flex align-items-center btn btn-success rounded text-md"
-                        onclick="Livewire.emit('route', 'components','create')">
-                        <i class="fas fa-plus"></i> Thêm mới
-                    </button>
-                    <div class="ml-4 rounded-lg  overflow-hidden border g-0 d-inline-flex   ">
-                        <a href="#"
-                            class="btn rounded-0 {{ $filter === 'manual' ? 'bg-main text-white border-1 ' : 'bg-light text-dark ' }}"
-                            onclick="Livewire.emit('filter', 'manual')">
-                            <i class="fas fa-expand"></i> Máy quét
-                        </a>
-                        <a href="#"
-                            class="btn rounded-0 {{ $filter === 'realtime' ? 'bg-main text-white border-1 ' : 'bg-light text-dark ' }}"
-                            onclick="Livewire.emit('filter', 'realtime')">
-                            <i class="fas fa-barcode"></i> Nhập tay
-                        </a>
-                    </div>
+            <div class="flex space-x-4 items-center">
+                <button type="button"
+                    class="inline-flex items-center gap-2 rounded bg-green-600 px-4 py-2 text-white text-md font-semibold hover:bg-green-700 transition"
+                    onclick="Livewire.emit('route', 'components','create')">
+                    <i class="fas fa-plus"></i> Thêm mới
+                </button>
+
+                <div class="inline-flex rounded-lg border border-gray-300 overflow-hidden shadow-sm">
+                    <a href="#"
+                        class="inline-flex items-center gap-1 px-4 py-2 text-sm font-medium transition
+                        {{ $filter === 'manual' ? 'bg-primary text-white' : 'bg-gray-100 text-gray-700 hover:bg-primary-50' }}"
+                        onclick="Livewire.emit('filter', 'manual')">
+                        <i class="fas fa-expand"></i> Máy quét
+                    </a>
+                    <a href="#"
+                        class="inline-flex items-center gap-1 px-4 py-2 text-sm font-medium transition
+                        {{ $filter === 'realtime' ? 'bg-primary text-white' : 'bg-gray-100 text-gray-700 hover:bg-primary-50' }}"
+                        onclick="Livewire.emit('filter', 'realtime')">
+                        <i class="fas fa-barcode"></i> Nhập tay
+                    </a>
                 </div>
             </div>
 
-            {{-- Ô input --}}
-            <div class="col" id="scanInputBox">
+            {{-- Input tìm kiếm / quét --}}
+            <div class="flex-grow min-w-[220px]" id="scanInputBox">
                 @if ($filter === 'realtime')
-                    <div class="input-group">
-                        <span class="input-group-text"><i class="fas fa-search"></i></span>
-                        <input type="text" wire:model="serialNumber" class="form-control"
+                    <div class="relative">
+                        <span
+                            class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400 pointer-events-none"><i
+                                class="fas fa-search"></i></span>
+                        <input type="text" wire:model="serialNumber"
+                            class="block w-full rounded border border-gray-300 bg-white py-2 pl-10 pr-3 text-gray-900 placeholder-gray-400 focus:border-primary-600 focus:ring-1 focus:ring-primary-600 focus:outline-none sm:text-sm"
                             placeholder="Nhập serial để tra cứu" autocomplete="off" />
                     </div>
                 @elseif ($filter === 'manual')
-                    <form id="formTriggerLivewire" wire:submit.prevent="trigger">
-                        <div class="input-group">
-                            <span class="input-group-text"><i class="fas fa-barcode"></i></span>
-                            <input id="scanInputFocus" type="text" wire:model.defer="serialNumber"
-                                class="form-control" placeholder="Sử dụng máy quét để tra cứu" onfocus="this.select()"
-                                style="background-color: #e9ecef">
-                            <button type="submit" class="btn btn-primary" hidden>
-                                <i class="fas fa-search"></i>
-                            </button>
-                        </div>
+                    <form id="formTriggerLivewire" wire:submit.prevent="trigger" class="relative">
+                        <span
+                            class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400 pointer-events-none"><i
+                                class="fas fa-barcode"></i></span>
+                        <input id="scanInputFocus" type="text" wire:model.defer="serialNumber"
+                            class="block w-full rounded border border-gray-300 bg-gray-100 py-2 pl-10 pr-3 text-gray-900 placeholder-gray-500 focus:border-primary-600 focus:ring-1 focus:ring-primary-600 focus:outline-none sm:text-sm"
+                            placeholder="Sử dụng máy quét để tra cứu" onfocus="this.select()" />
+                        <button type="submit" class="hidden">
+                            <i class="fas fa-search"></i>
+                        </button>
                     </form>
                 @endif
             </div>
         </div>
 
+
     </div>
 
-    {{-- Cột Thông tin linh kiện --}}
-    <div class="row col-12"> {{-- ✅ Wrap 2 khối vào row mới --}}
-        @if (is_object($component))
-            {{-- Thông tin linh kiện --}}
-            <div class="col-12 col-lg-6">
-                <div class="mt-0 text-gray-600 bg-gray-50 p-3 rounded space-y-1">
-                    <div class="d-flex flex-column flex-md-row justify-between gap-4 mb-2">
-                        {{-- Bên trái --}}
-                        <div class="flex-1 space-y-3 text-[16px]">
-                            <p class="font-semibold text-[20px]">
-                                <i class="fas fa-barcode mr-1"></i>
-                                <span>{{ $component->serial_number ?? 'N/A' }}</span>
-                            </p>
-                            <p class="font-semibold text-[18px]" style="color: #4b6cb7">
-                                <i class="fas fa-tags mr-1"></i>
-                                <span>{{ strtoupper($component->name) }}</span>
-                            </p>
-                            <p>
-                                <i class="fas fa-cube mr-1 text-green-600"></i>
-                                Loại: <span class="text-gray-700">{{ optional($component->category)->name }}</span>
-                            </p>
-                            <p>
+    {{-- Thông tin linh kiện + Gợi ý --}}
+    <div class="flex flex-col lg:flex-row gap-6">
 
-                                @php
-                                    $start = \Carbon\Carbon::parse($component->warranty_start);
-                                    $end = \Carbon\Carbon::parse($component->warranty_end);
-                                    $months = $start->diffInMonths($end);
-                                    $color = match (true) {
-                                        $months <= 0 => 'red',
-                                        $months > 48 => 'purple', // tím
-                                        $months > 36 => 'indigo', // chàm
-                                        $months > 24 => 'blue', // lam
-                                        $months > 12 => 'green', // lục
-                                        $months > 6 => 'yellow', // vàng
-                                        $months > 3 => 'orange', // cam
-                                        default => 'gray', // fallback
-                                    };
-                                @endphp
-                                <i class="fas fa-shield-alt mr-1 text-{{ $color }}-600"></i>
+        {{-- Thông tin linh kiện --}}
+        <div class="flex-1 bg-gray-50 rounded-md p-4 shadow-md min-h-[480px]">
+            @if (is_object($component))
+                <div class="space-y-4">
+                    <div class="flex flex-col md:flex-row justify-between gap-6 items-start md:items-center">
 
-                                <strong class="text-{{ $color }}-700">
-                                    Bảo hành: {{ $months }} tháng ({{ $start->format('d/m/Y') }} -
-                                    {{ $end->format('d/m/Y') }})
-                                </strong>
+                        <div class="flex-1 space-y-2">
+                            <p class="text-xl font-semibold flex items-center gap-2 text-gray-800">
+                                <i class="fas fa-barcode"></i> {{ $component->serial_number ?? 'N/A' }}
+                            </p>
+
+                            <p class="text-lg font-semibold text-primary-600 flex items-center gap-2 uppercase">
+                                <i class="fas fa-tags"></i> {{ strtoupper($component->name) }}
+                            </p>
+
+                            <p class="text-gray-700 flex items-center gap-2">
+                                <i class="fas fa-cube text-green-600"></i> Loại:
+                                {{ optional($component->category)->name }}
+                            </p>
+
+                            @php
+                                $start = \Carbon\Carbon::parse($component->warranty_start);
+                                $end = \Carbon\Carbon::parse($component->warranty_end);
+                                $months = $start->diffInMonths($end);
+                                $color = match (true) {
+                                    $months <= 0 => 'red',
+                                    $months > 48 => 'purple',
+                                    $months > 36 => 'indigo',
+                                    $months > 24 => 'blue',
+                                    $months > 12 => 'green',
+                                    $months > 6 => 'yellow',
+                                    $months > 3 => 'orange',
+                                    default => 'gray',
+                                };
+                            @endphp
+
+                            <p class="flex items-center gap-2 text-{{ $color }}-600 font-semibold">
+                                <i class="fas fa-shield-alt"></i>
+                                Bảo hành: {{ $months }} tháng ({{ $start->format('d/m/Y') }} -
+                                {{ $end->format('d/m/Y') }})
                             </p>
                         </div>
 
-                        {{-- QR Code --}}
-                        <div class="w-md-40 d-flex flex-column align-items-center">
-                            <div class="relative w-32 h-32">
-                                {{-- Ảnh mặc định --}}
-                                <img src="{{ asset('img/qrcode-default.jpg') }}" alt="Default QR"
-                                    class="absolute inset-0 w-full h-full object-contain rounded shadow p-2" />
+                        <div class="w-40 h-40 flex items-center justify-center rounded-md bg-white shadow-sm relative">
+                            {{-- Ảnh mặc định --}}
+                            <img src="{{ asset('img/qrcode-default.jpg') }}" alt="Default QR"
+                                class="absolute inset-0 w-full h-full object-contain rounded p-2" />
 
-                                {{-- Ảnh qrcode thật --}}
-                                <img src="{{ $qrcode }}" alt="QR Code"
-                                    class="relative w-full h-full object-contain rounded shadow p-2"
-                                    onload="this.previousElementSibling.style.display='none'" />
-                            </div>
+                            {{-- Ảnh QR thật --}}
+                            <img src="{{ $qrcode }}" alt="QR Code"
+                                class="relative w-full h-full object-contain rounded p-2"
+                                onload="this.previousElementSibling.style.display='none'" />
                         </div>
                     </div>
 
-                    <hr class="my-3" />
+                    <hr class="border-gray-300" />
 
-                    {{-- Thông tin thêm --}}
-                    <div class="text-md flex-col">
-                        <p class="mb-2"><i class="fas fa-layer-group mr-1 text-gray-500"></i> Trạng thái:
+                    {{-- Thông tin chi tiết --}}
+                    <div class="space-y-2 text-gray-700">
+                        <p><i class="fas fa-layer-group mr-2 text-gray-400"></i> Trạng thái:
                             {{ optional($component->status)->name }}</p>
-                        <p class="mb-2"><i class="fas fa-map-marker-alt mr-1 text-gray-500"></i> Vị trí:
+                        <p><i class="fas fa-map-marker-alt mr-2 text-gray-400"></i> Vị trí:
                             {{ optional($component->location)->name }}</p>
-                        <p class="mb-2"><i class="fas fa-signature mr-1 text-gray-500"></i> Hãng:
+                        <p><i class="fas fa-signature mr-2 text-gray-400"></i> Hãng:
                             {{ optional($component->manufacturer)->name }}</p>
-                        <p class="mb-2"><i class="fas fa-building mr-1 text-gray-500"></i> Nhà cung cấp:
+                        <p><i class="fas fa-building mr-2 text-gray-400"></i> Nhà cung cấp:
                             {{ optional($component->vendor)->name }}</p>
-                        <p class="mb-2"><i class="fas fa-comment-alt mr-1 text-gray-500"></i> Ghi chú:
-                            {{ $component->note }}</p>
+                        <p><i class="fas fa-comment-alt mr-2 text-gray-400"></i> Ghi chú: {{ $component->note }}</p>
                     </div>
                 </div>
-            </div>
-        @else
-            @if ($serialNumber)
-                <div
-                    class="h-[78vh] justify-content-center col-lg-6 bg-yellow-100 text-yellow-800 p-3 rounded flex items-center gap-2">
-                    <i class="fas fa-info-circle"></i> Không tìm thấy linh kiện phù hợp với serial đã nhập.
-                </div>
+            @else
+                @if ($serialNumber)
+                    <div
+                        class="flex items-center justify-center min-h-[300px] bg-yellow-100 text-yellow-800 rounded-md p-4 text-center text-lg font-medium gap-2">
+                        <i class="fas fa-info-circle text-yellow-600"></i>
+                        Không tìm thấy linh kiện phù hợp với serial đã nhập.
+                    </div>
+                @endif
             @endif
-        @endif
+        </div>
 
-
-        {{-- Nội dung gợi ý tìm kiếm --}}
-        {{-- Gợi ý tương tự --}}
-        <div class="col-lg-6">
+        {{-- Gợi ý linh kiện tương tự --}}
+        <div class="col-6">
             @if ($suggestions)
-                @if (count($suggestions))
-                    <h4 class="text-md font-semibold text-gray-500 mb-2">
-                        <i class="fas fa-list mr-1 text-gray-500"></i> Các linh kiện tương tự:
+                @if ($suggestions->count())
+                    <h4 class="text-lg font-semibold text-gray-700 mb-4 flex items-center gap-2">
+                        <i class="fas fa-boxes text-gray-400 w-5 h-5"></i>
+                        Các linh kiện tương tự:
                     </h4>
 
-                    <div class="overflow-y-auto h-[68vh]">
-                        <ul class="space-y-2">
+                    <div class="overflow-y-auto max-h-[68vh] border border-gray-200 rounded-lg bg-white shadow-sm">
+                        <ul role="list" class="divide-y divide-gray-100">
                             @foreach ($suggestions as $item)
-                                <li class="mt-2 d-flex flex-col gap-2 p-2 bg-gray-100 rounded shadow-sm">
-                                    <div class="d-inline-flex justify-content-between">
-                                        <p class="mr-2 text-sm flex items-center text-gray-500 italic"><i
-                                                class="fas fa-barcode mr-2 text-gray-500"></i>
-                                            <span
-                                                class="font-medium text-gray-500"><strong>{{ $item->serial_number }}</strong></span>
+                                <li class="px-4 py-3 flex flex-col gap-2 hover:bg-gray-50 transition">
+                                    <div class="flex justify-between items-center">
+                                        <p class="text-sm text-gray-500 italic flex items-center gap-2">
+                                            <i class="fas fa-barcode text-gray-400 w-4 h-4"></i>
+                                            <strong>{{ $item->serial_number }}</strong>
                                         </p>
-                                        <p class="text-sm text-blue-700" style="color: #4b6cb7">
-                                            <strong>{{ strtoupper($item->name) }}</strong><i
-                                                class="fas fa-tags ml-2 text-blue-500" style="color: #4b6cb7"></i>
+
+                                        <p
+                                            class="text-sm font-semibold text-primary-700 flex items-center gap-1 uppercase">
+                                            {{ $item->name }}
+                                            <i class="fas fa-tags text-primary-500 w-4 h-4"></i>
                                         </p>
                                     </div>
-                                    <div class="d-flex justify-content-between flex-column flex-sm-row gap-2">
 
-                                        <div class="d-inline-flex flex">
-
-                                            <p class="mr-2 text-sm flex items-center text-green-500 italic"><i
-                                                    class="fas fa-cube mr-1 text-green-500"></i>
-                                                Loại: {{ optional($item->category)->name }}
-                                            </p>
-                                            <p class="mr-2 text-sm flex items-center text-blue-500 italic"><i
-                                                    class="fas fa-layer-group mr-1 text-blue-500"></i>
-                                                Trạng thái: {{ optional($item->status)->name }}
-                                            </p>
-                                            <p class="mr-2 text-sm flex items-center text-orange-500 italic"><i
-                                                    class="fas fa-file-import mr-1 text-orange-500"></i>
-                                                Nhập kho: {{ $item->stockin_at ?? 'N/A' }}
-                                            </p>
-                                        </div>
-
+                                    <div class="flex flex-wrap gap-4 text-sm italic">
+                                        <p class="flex items-center gap-1 text-green-600">
+                                            <i class="fas fa-cube w-4 h-4"></i>
+                                            Loại: {{ optional($item->category)->name ?? '-' }}
+                                        </p>
+                                        <p class="flex items-center gap-1 text-blue-600">
+                                            <i class="fas fa-layer-group w-4 h-4"></i>
+                                            Trạng thái: {{ optional($item->status)->name ?? '-' }}
+                                        </p>
+                                        <p class="flex items-center gap-1 text-orange-500">
+                                            <i class="fas fa-file-import w-4 h-4"></i>
+                                            Nhập kho: {{ $item->stockin_at ?? 'N/A' }}
+                                        </p>
                                     </div>
-                                    <div class="d-flex justify-between align-items-center">
+
+                                    <div class="flex justify-between items-center mt-1">
                                         @php
                                             $start = \Carbon\Carbon::parse($item->warranty_start);
                                             $end = \Carbon\Carbon::parse($item->warranty_end);
@@ -202,37 +204,47 @@
                                                 default => 'gray',
                                             };
                                         @endphp
-                                        <strong class="text-{{ $color }}-700">
-                                            <i class="fas fa-shield-alt mr-1 text-{{ $color }}-600"></i>
+
+                                        <span
+                                            class="text-{{ $color }}-700 font-semibold flex items-center gap-1">
+                                            <i class="fas fa-shield-alt text-{{ $color }}-600 w-5 h-5"></i>
                                             Bảo hành: {{ $months }} tháng ({{ $start->format('d/m/Y') }} -
                                             {{ $end->format('d/m/Y') }})
-                                        </strong>
+                                        </span>
 
                                         @if ($filter === 'manual')
-                                            <a href="#" class="text-main bright-hover scale-hover"
+                                            <button type="button"
+                                                class="text-primary-600 hover:text-primary-800 flex items-center gap-1"
                                                 onclick="triggerManualScan('{{ $item->serial_number }}')">
-                                                <i class="fas fa-eye m-0"></i> Xem
-                                            </a>
+                                                <i class="fas fa-eye w-5 h-5"></i>
+                                                Xem
+                                            </button>
                                         @else
-                                            <a href="#" class="text-main bright-hover scale-hover"
+                                            <button type="button"
+                                                class="text-primary-600 hover:text-primary-800 flex items-center gap-1"
                                                 onclick="triggerRealtimeScan('{{ $item->serial_number }}')">
-                                                <i class="fas fa-eye m-0"></i> Xem
-                                            </a>
+                                                <i class="fas fa-eye w-5 h-5"></i>
+                                                Xem
+                                            </button>
                                         @endif
                                     </div>
-
                                 </li>
                             @endforeach
                         </ul>
                     </div>
-                    <div class="mt-2">
+
+                    <div class="mt-4">
                         {{ $suggestions->links('livewire.elements.components.arrow-paginator') }}
                     </div>
                 @else
-                    <p class="text-gray-500 italic text-md ml-4">Không có linh kiện tương tự.</p>
+                    <p class="text-gray-400 italic text-center py-6">Không có linh kiện tương tự.</p>
                 @endif
             @endif
         </div>
 
+
+
+
     </div>
+
 </div>

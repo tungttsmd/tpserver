@@ -11,5 +11,12 @@ class UserLog extends Model
 {
     use HasFactory, HasRoles, HasPermissions;
     protected $fillable = ['action_id', 'user_id', 'note'];
-    public $timestamps = false;
+    public function action()
+    {
+        return $this->belongsTo(ActionLog::class, 'action_id');
+    }
+    public function user()
+    {
+        return $this->belongsTo(\App\Models\User::class);
+    }
 }

@@ -22,24 +22,27 @@
         @elseif ($controller === 'logs')
             @if ($action === 'stockout')
                 <livewire:features.logs.component-stockout-livewire :filter="$filter" wire:key="{{ $refresh }}" />
+            @elseif ($action === 'user-action')
+                <livewire:features.logs.user-action-livewire :filter="$filter" wire:key="{{ $refresh }}" />
             @endif
         @elseif ($controller === 'customers')
             @if ($action === 'index')
                 <livewire:features.customers.customer-index-livewire :filter="$filter" wire:key="{{ $refresh }}" />
             @elseif ($action === 'create')
-                {{-- <livewire:features.customers.customer-create-livewire :filter="$filter" wire:key="{{ $refresh }}" /> --}}
+                <livewire:features.customers.customer-create-livewire :filter="$filter" wire:key="{{ $refresh }}" />
             @endif
         @elseif ($controller === 'vendors')
             @if ($action === 'index')
                 <livewire:features.vendors.vendor-index-livewire :filter="$filter" wire:key="{{ $refresh }}" />
             @elseif ($action === 'create')
-                {{-- <livewire:features.vendors.vendor-create-livewire :filter="$filter" wire:key="{{ $refresh }}" /> --}}
+                <livewire:features.vendors.vendor-create-livewire :filter="$filter" wire:key="{{ $refresh }}" />
             @endif
         @elseif ($controller === 'locations')
             @if ($action === 'index')
                 <livewire:features.locations.location-index-livewire :filter="$filter" wire:key="{{ $refresh }}" />
             @elseif ($action === 'create')
-                {{-- <livewire:features.locations.location-create-livewire :filter="$filter" wire:key="{{ $refresh }}" /> --}}
+                <livewire:features.locations.location-create-livewire :filter="$filter"
+                    wire:key="{{ $refresh }}" />
             @endif
         @elseif ($controller === 'users')
             @if ($action === 'index')
