@@ -33,6 +33,7 @@ class LocationSeeder extends Seeder
 
             $locations[] = [
                 'name' => $name,
+                'note' => 'Vị trí mới',
                 'created_at' => $date_created,
                 'updated_at' => $date_updated,
             ];

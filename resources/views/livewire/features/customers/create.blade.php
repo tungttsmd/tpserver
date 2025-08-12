@@ -11,13 +11,10 @@
     {{-- Cột phải: Avatar + Thông tin xem trước --}}
     <div class="md:w-1/2 flex flex-col gap-12 p-4">
         {{-- Avatar --}}
-        <div class="flex items-center justify-center border-2 border-dashed border-gray-300 rounded-2xl p-4 min-h-[150px]">
-            <img
-                id="avatarPreview"
-                src="{{ $avatar_url ?: 'https://via.placeholder.com/150' }}"
-                alt="Avatar"
-                class="mr-12 max-w-[70%] max-h-[70%] object-contain rounded-full"
-            />
+        <div
+            class="flex items-center justify-center border-2 border-dashed border-gray-300 rounded-2xl p-4 min-h-[150px]">
+            <img id="avatarPreview" src="{{ $avatar_url ?: 'https://via.placeholder.com/150' }}" alt="Avatar"
+                class="mr-12 max-w-[70%] max-h-[70%] object-contain rounded-full" />
             @unless ($avatar_url)
                 <p class="text-sm text-gray-500 mr-16">Ảnh đại diện sẽ hiển thị tại đây</p>
             @endunless
@@ -40,39 +37,48 @@
 
     {{-- Cột trái: Form nhập --}}
     <div class="md:w-1/2 border-l pl-8">
-        <form id="customerForm" class="space-y-6">
+        <form wire:submit.prevent='createCustomer' id="customerForm" class="space-y-6">
             @php
-                $inputClass = "w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-transparent";
+                $inputClass =
+                    'w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-transparent';
             @endphp
 
             <div>
-                <label for="name" class="block text-sm font-medium text-gray-700">Tên <span class="text-red-500">*</span></label>
-                <input id="name" name="name" type="text" required class="{{ $inputClass }}" value="{{ $name }}">
+                <label for="name" class="block text-sm font-medium text-gray-700">Tên <span
+                        class="text-red-500">*</span></label>
+                <input wire:model.defer='name' id="name" name="name" type="text" required
+                    class="{{ $inputClass }}" value="{{ $name }}">
             </div>
 
             <div>
-                <label for="phone" class="block text-sm font-medium text-gray-700">Điện thoại <span class="text-red-500">*</span></label>
-                <input id="phone" name="phone" type="tel" required class="{{ $inputClass }}" value="{{ $phone }}">
+                <label for="phone" class="block text-sm font-medium text-gray-700">Điện thoại <span
+                        class="text-red-500">*</span></label>
+                <input wire:model.defer='phone' id="phone" name="phone" type="tel" required
+                    class="{{ $inputClass }}" value="{{ $phone }}">
             </div>
 
             <div>
-                <label for="email" class="block text-sm font-medium text-gray-700">Email <span class="text-red-500">*</span></label>
-                <input id="email" name="email" type="email" required class="{{ $inputClass }}" value="{{ $email }}">
+                <label for="email" class="block text-sm font-medium text-gray-700">Email <span
+                        class="text-red-500">*</span></label>
+                <input wire:model.defer='email' id="email" name="email" type="email" required
+                    class="{{ $inputClass }}" value="{{ $email }}">
             </div>
 
             <div>
                 <label for="address" class="block text-sm font-medium text-gray-700">Địa chỉ</label>
-                <input id="address" name="address" type="text" class="{{ $inputClass }}" value="{{ $address }}">
+                <input wire:model.defer='address' id="address" name="address" type="text"
+                    class="{{ $inputClass }}" value="{{ $address }}">
             </div>
 
             <div>
                 <label for="avatar_url" class="block text-sm font-medium text-gray-700">Ảnh đại diện (URL)</label>
-                <input id="avatar_url" name="avatar_url" type="url" class="{{ $inputClass }}" placeholder="Dán link ảnh để xem trước" value="{{ $avatar_url }}">
+                <input wire:model.defer='logo_url' id="logo_url" name="logo_url" type="text"
+                    class="{{ $inputClass }}" placeholder="Dán link ảnh để xem trước" value="{{ $logo_url }}">
             </div>
 
             <div>
                 <label for="note" class="block text-sm font-medium text-gray-700">Ghi chú</label>
-                <textarea id="note" name="note" rows="3" class="{{ $inputClass }}">{{ $note }}</textarea>
+                <textarea wire:model.defer='note' id="note" name="note" rows="3" class="{{ $inputClass }}">{{ $note }}</textarea>
             </div>
 
             <button type="submit"

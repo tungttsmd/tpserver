@@ -16,15 +16,16 @@
 
     <!-- Cột trái: Form nhập -->
     <div class="col-md-6 border-end">
-        <form id="locationForm">
+        <form wire:submit.prevent="createLocation" id="locationForm">
             <div class="mb-3">
                 <label class="form-label">Tên vị trí<span class="text-red-500">*</span></label>
-                <input type="text" name="name" class="form-control border rounded p-2" required>
+                <input wire:model.defer="name" type="text" name="name" class="form-control border rounded p-2"
+                    required>
             </div>
 
             <div class="mb-3">
                 <label class="form-label">Ghi chú</label>
-                <textarea name="note" class="form-control border rounded p-2" rows="3"></textarea>
+                <textarea wire:model.defer="note" name="note" class="form-control border rounded p-2" rows="3"></textarea>
             </div>
 
             <button type="submit" class="btn btn-success px-4 py-2 rounded text-white bg-green-600 hover:bg-green-700">
