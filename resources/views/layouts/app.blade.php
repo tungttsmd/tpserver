@@ -27,7 +27,7 @@
         {{-- Sidebar cố định --}}
         <aside
             class="relative flex flex-col h-full tp-server layouts sidebar main-sidebar sidebar-dark-primary bg-dark-main elevation-4">
-
+            <x-partials.flashes.alert />
             @include('layouts.elements.sidebar-user')
             @include('layouts.elements.sidebar-menu')
             @include('layouts.elements.sidebar-cover')

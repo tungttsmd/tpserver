@@ -7,7 +7,7 @@ use Livewire\Component;
 
 class CustomerShowLivewire extends Component
 {
-    protected $listeners = ['routeRefreshCall' => '$refresh', 'setCustomerId' => 'setCustomerId'];
+    protected $listeners = ['record'=>'record','routeRefreshCall' => '$refresh', 'setCustomerId' => 'setCustomerId'];
 
     public $dir, $sort, $customerId;
     public function render()
@@ -24,7 +24,7 @@ class CustomerShowLivewire extends Component
     {
         return [];
     }
-    public function setCustomerId($customerId){
+    public function record($customerId){
         $this->customerId = $customerId;
     }
 }

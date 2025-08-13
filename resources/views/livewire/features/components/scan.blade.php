@@ -107,6 +107,24 @@
                                 Bảo hành: {{ $months }} tháng ({{ $start->format('d/m/Y') }} -
                                 {{ $end->format('d/m/Y') }})
                             </p>
+                            @php
+                                $start = \Carbon\Carbon::parse($component->stockin_at);
+                                $now = \Carbon\Carbon::now();
+                                $months = $start->diffInMonths($now);
+                                $color = match (true) {
+                                    $months > 12 => 'orange',
+                                    $months > 6 => 'yellow',
+                                    $months > 3 => 'cyan',
+                                    $months > 2 => 'blue',
+                                    $months > 1 => 'limes',
+                                    $months <= 1 => 'green',
+                                    default => 'gray',
+                                };
+                            @endphp
+                            <p class="flex items-center gap-2 text-{{ $color }}-600 font-semibold">
+                                <i class="fas fa-truck-moving"></i>
+                                Nhập kho: {{ $months }} tháng trước ({{ $start->format('d/m/Y') }})
+                            </p>
                         </div>
 
                         <div class="w-40 h-40 flex items-center justify-center rounded-md bg-white shadow-sm relative">

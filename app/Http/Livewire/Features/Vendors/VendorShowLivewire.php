@@ -7,7 +7,7 @@ use Livewire\Component;
 
 class VendorShowLivewire extends Component
 {
-    protected $listeners = ['routeRefreshCall' => '$refresh', 'setVendorId' => 'setVendorId'];
+    protected $listeners = ['record' => 'record', 'routeRefreshCall' => '$refresh', 'setVendorId' => 'setVendorId'];
 
     public $dir, $sort, $vendorId;
     public function render()
@@ -24,7 +24,8 @@ class VendorShowLivewire extends Component
     {
         return [];
     }
-    public function setLocationId($vendorId){
+    public function record($vendorId)
+    {
         $this->vendorId = $vendorId;
     }
 }

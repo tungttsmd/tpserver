@@ -12,7 +12,7 @@ class CustomerIndexLivewire extends Component
 {
     use WithPagination;
 
-    public $dir, $sort;
+    public $dir = "desc", $sort = "updated_at";
     public $customerId, $perPage = 20, $search;
     public function render()
     {

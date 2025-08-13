@@ -12,7 +12,7 @@ class VendorIndexLivewire extends Component
 {
     use WithPagination;
 
-    public $dir, $sort;
+    public $dir ="desc", $sort="updated_at";
     public $vendorId, $perPage = 20, $search;
     public function render()
     {

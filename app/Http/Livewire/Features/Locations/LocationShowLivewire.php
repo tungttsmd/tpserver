@@ -7,7 +7,7 @@ use Livewire\Component;
 
 class LocationShowLivewire extends Component
 {
-    protected $listeners = ['routeRefreshCall' => '$refresh', 'setLocationId' => 'setLocationId'];
+    protected $listeners = ['record' => 'record', 'routeRefreshCall' => '$refresh', 'setLocationId' => 'setLocationId'];
 
     public $dir, $sort, $locationId;
     public function render()
@@ -24,7 +24,8 @@ class LocationShowLivewire extends Component
     {
         return [];
     }
-    public function setLocationId($locationId){
+    public function record($locationId)
+    {
         $this->locationId = $locationId;
     }
 }

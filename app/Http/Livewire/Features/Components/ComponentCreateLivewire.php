@@ -2,7 +2,6 @@
 
 namespace App\Http\Livewire\Features\Components;
 
-use App\Http\Livewire\RouteController;
 use App\Models\Category;
 use App\Models\Component as HardwareComponent;
 use App\Models\ComponentLog;

@@ -12,7 +12,7 @@ class LocationIndexLivewire extends Component
 {
     use WithPagination;
 
-    public $dir, $sort;
+    public $dir = "desc", $sort = "updated_at";
     public $locationId, $perPage = 20, $search;
     public function render()
     {

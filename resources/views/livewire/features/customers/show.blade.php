@@ -33,9 +33,8 @@
                             class="absolute inset-0 w-full h-full object-contain rounded shadow p-2" />
 
                         {{-- Ảnh qrcode thật --}}
-                        <img src="{{ $data->avatar_url }}" alt="QR Code"
-                            class="relative w-full h-full object-contain rounded shadow p-2"
-                            onload="this.previousElementSibling.style.display='none'" />
+                        <img src="{{ $data->avatar_url ??'https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg' }}" alt="QR Code"
+                            class="relative w-full h-full object-contain rounded shadow p-2" />
                     </div>
                 </div>
             </div>

@@ -20,7 +20,8 @@ class ComponentIndexLivewire extends Component
 
     public $categories, $conditions, $statuses, $locations, $vendors, $manufacturers;
     public $category, $condition, $status, $location, $vendor, $manufacturer;
-    public $columns, $table, $relationships, $search, $sort, $dir = 'asc', $perPage = 20;
+    public $columns, $table, $relationships, $search,  $perPage = 20;
+    public $dir = "desc", $sort = "updated_at";
     public $components;
     protected $listeners = ['routeRefreshCall' => '$refresh']; // alias refresh nội bộ của livewire
     public function render()

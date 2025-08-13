@@ -2,9 +2,13 @@
 
     <!-- Reset + Search -->
     <div class="flex flex-col md:flex-row gap-4 flex-grow min-w-0 w-full">
+        <a href="#" class="nav-link" onclick="event.preventDefault(); Livewire.emit('route', 'vendors', 'create')">
+            <i class="fas fa-plus nav-icon"></i>
+            <span>Thêm mới</span>
+        </a>
+        <x-atoms.control.search title="Tìm kiếm" icon="search" placeholder="Name, phone hoặc email..." wire="search" />
         <x-atoms.control.button title="Làm mới" icon="refresh" wire="resetFilters" />
-        <x-atoms.control.search title="Tìm kiếm" icon="search" placeholder="Name, phone hoặc email..."
-            wire="search" />
+
     </div>
 
     <!-- Dropdowns -->

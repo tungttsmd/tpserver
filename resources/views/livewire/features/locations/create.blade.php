@@ -27,10 +27,10 @@
                 <label class="form-label">Ghi chú</label>
                 <textarea wire:model.defer="note" name="note" class="form-control border rounded p-2" rows="3"></textarea>
             </div>
-
-            <button type="submit" class="btn btn-success px-4 py-2 rounded text-white bg-green-600 hover:bg-green-700">
-                <i class="fas fa-save mr-2"></i> Lưu vị trí
-            </button>
+                <button type="submit"
+                    class="btn btn-success px-4 py-2 rounded text-white bg-green-600 hover:bg-green-700">
+                    <i class="fas fa-save mr-2"></i> Lưu vị trí
+                </button>
         </form>
     </div>
 </div>

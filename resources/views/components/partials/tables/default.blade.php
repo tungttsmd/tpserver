@@ -1,8 +1,8 @@
 @props([
     'columns' => ['columns 1', 'columns 2'],
     'list' => [
-        ['columns 1' => 'x-partials.table 1', 'columns 2' => 'x-partials.table 2'],
-        ['columns 1' => 'x-partials.table 1', 'columns 2' => 'x-partials.table 2'],
+        ['--' => '--', 'columns 2' => '--'],
+        ['--' => '--', 'columns 2' => '--'],
     ],
     'sort' => null,
     'dir' => null,
@@ -25,12 +25,12 @@
         </thead>
         <tbody class="bg-white divide-y divide-gray-200 dark:divide-gray-700">
             @if (collect($list)->isEmpty())
-                <tr class="border-b w-full">
+                <tr class="border-b w-full even:bg-gray-50 hover:bg-gray-100">
                     <x-atoms.table.th header="Không tìm thấy dữ liệu" :sort="$sort" :dir="$dir" />
                 </tr>
             @else
                 @foreach (collect($list) as $record)
-                    <tr>
+                    <tr class="even:bg-gray-50 hover:bg-gray-100">
                         @if ($filter)
                             <x-partials.actions :filter="$filter" header="Hành động" :record-id="data_get($record, 'id')" />
                         @endif

@@ -8,7 +8,6 @@
     @php
         $refresh = $controller . $action . $filter;
     @endphp
-
     <div class="flex-col flex justify-between grow h-[100vh]">
         @if ($controller === 'components')
             @if ($action === 'scan')
@@ -25,11 +24,19 @@
             @elseif ($action === 'user-action')
                 <livewire:features.logs.user-action-livewire :filter="$filter" wire:key="{{ $refresh }}" />
             @endif
+        @elseif ($controller === 'stats')
+            @if ($action === 'index')
+                <livewire:features.stats.stat-index-livewire  wire:key="{{ $refresh }}" />
+            @elseif ($action === 'stock-variation')
+                <livewire:features.stats.stat-stock-variation-livewire 
+                    wire:key="{{ $refresh }}" />
+            @endif
         @elseif ($controller === 'customers')
             @if ($action === 'index')
                 <livewire:features.customers.customer-index-livewire :filter="$filter" wire:key="{{ $refresh }}" />
             @elseif ($action === 'create')
-                <livewire:features.customers.customer-create-livewire :filter="$filter" wire:key="{{ $refresh }}" />
+                <livewire:features.customers.customer-create-livewire :filter="$filter"
+                    wire:key="{{ $refresh }}" />
             @endif
         @elseif ($controller === 'vendors')
             @if ($action === 'index')
@@ -39,7 +46,8 @@
             @endif
         @elseif ($controller === 'locations')
             @if ($action === 'index')
-                <livewire:features.locations.location-index-livewire :filter="$filter" wire:key="{{ $refresh }}" />
+                <livewire:features.locations.location-index-livewire :filter="$filter"
+                    wire:key="{{ $refresh }}" />
             @elseif ($action === 'create')
                 <livewire:features.locations.location-create-livewire :filter="$filter"
                     wire:key="{{ $refresh }}" />

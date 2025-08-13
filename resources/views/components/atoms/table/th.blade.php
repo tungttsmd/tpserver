@@ -1,5 +1,5 @@
 @props([
-    'header' => 'x-atoms.table.td :value',
+    'header' => '--',
     'sort' => null,
     'dir' => null,
     'class' => '',

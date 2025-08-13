@@ -13,7 +13,7 @@
                 <div class="flex-1 space-y-3 text-[16px]">
                     <p class="font-semibold text-info-dark text-[20px]">
                         <i class="fas fa-barcode mr-1"></i>
-                        <span>Khách hàng: {{ $data->name ?? 'N/A' }}</span>
+                        <span>Đối tác: {{ $data->name ?? 'N/A' }}</span>
                     </p>
                     <p class="font-semibold text-info-subtle text-[18px]">
                         <i class="fas fa-phone mr-1"></i>
@@ -33,9 +33,9 @@
                             class="absolute inset-0 w-full h-full object-contain rounded shadow p-2" />
 
                         {{-- Ảnh qrcode thật --}}
-                        <img src="{{ $data->avatar_url }}" alt="QR Code"
+                        <img src="{{ $data->logo_url ?? 'https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg' }}" alt="QR Code"
                             class="relative w-full h-full object-contain rounded shadow p-2"
-                            onload="this.previousElementSibling.style.display='none'" />
+                            />
                     </div>
                 </div>
             </div>
@@ -45,7 +45,7 @@
             {{-- Thông tin thêm --}}
             <div class="text-md flex-col">
                 <p class="mb-2"><i class="fas fa-map-marker-alt mr-1 text-gray-500"></i><strong>Địa chỉ:</strong>
-                    {{ $data->address }}</p>
+                    {{ $data->address ?? '' }}</p>
                 <p class="mb-2"><i class="fas fa-layer-group mr-1 text-gray-500"></i><strong>Ghi chú:</strong>
                     {{ $data->note }}</p>
             </div>

@@ -132,7 +132,15 @@
             </a>
             <ul class="nav nav-treeview">
                 <li class="nav-item">
-                    <a href="{{ route('static.index') }}" class="nav-link">
+                    <a href="#" onclick="event.preventDefault();Livewire.emit('route', 'stats','stock-variation')"
+                        class="nav-link">
+                        <i class="fas fa-chart-bar nav-icon"></i>
+                        <p>Biến động tồn kho</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" onclick="event.preventDefault();Livewire.emit('route', 'stats','index')"
+                        class="nav-link">
                         <i class="fas fa-chart-bar nav-icon"></i>
                         <p>Thống kê linh kiện</p>
                     </a>
