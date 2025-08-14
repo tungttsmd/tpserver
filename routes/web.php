@@ -1,5 +1,6 @@
 <?php
 
+use App\Exports\UserLogsExport;
 use App\Exports\VendorsExport;
 use App\Http\Controllers\DatabaseController;
 use Illuminate\Support\Facades\Route;
@@ -34,6 +35,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/vendors/download', function () {
         return Excel::download(new VendorsExport, 'vendors.xlsx');
     })->name('vendors.download');
+    Route::get('/user-logs/download', function () {
+        return Excel::download(new UserLogsExport, 'user-logs.xlsx');
+    })->name('user-logs.download');
 
     // 1. Đăng xuất
     Route::get('logout', [AuthController::class, 'logout'])->name('auth.logout');

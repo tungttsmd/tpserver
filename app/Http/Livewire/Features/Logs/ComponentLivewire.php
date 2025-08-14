@@ -2,11 +2,11 @@
 
 namespace App\Http\Livewire\Features\Logs;
 
-use App\Models\ComponentLog;
+use App\Models\LogComponent;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-class ComponentStockoutLivewire extends Component
+class ComponentLivewire extends Component
 {
     use WithPagination;
     public $sort = 'updated_at';
@@ -14,7 +14,7 @@ class ComponentStockoutLivewire extends Component
 
     public function render()
     {
-        $componentLogs = ComponentLog::with(['component', 'action', 'user', 'vendor', 'customer', 'location'])
+        $componentLogs = LogComponent::with(['component', 'action', 'user', 'vendor', 'customer', 'location'])
             ->orderBy($this->sort, $this->dir)
             ->paginate(20);
 

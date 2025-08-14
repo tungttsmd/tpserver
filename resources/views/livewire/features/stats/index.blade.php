@@ -1,165 +1,182 @@
-<div class="">
-    <div class="space-y-6">
-        <div>
-            <label class="font-medium text-gray-700">Chọn trạng thái:</label>
-            <select id="statusFilter" class="border rounded px-2 py-1">
-                <option value="all">Tất cả</option>
-                <option value="ton_kho">Đang tồn kho</option>
-                <option value="da_xuat_kho">Đã xuất kho</option>
-                <option value="con_bao_hanh">Còn bảo hành</option>
-                <option value="het_bao_hanh">Hết bảo hành</option>
-            </select>
-        </div>
-        <div class="flex flex-wrap gap-4 items-center mb-4">
-            <div>
-                <label class="font-medium text-gray-700">Chọn năm:</label>
-                <select id="yearFilter" class="border rounded px-2 py-1">
-                    <option value="all">Tất cả</option>
-                    @foreach ($components->pluck('year')->unique() as $year)
-                        <option value="{{ $year }}">{{ $year }}</option>
-                    @endforeach
-                </select>
-            </div>
+<div class="p-4">
+    {{-- Filter năm/tháng --}}
+    <div class="flex flex-wrap gap-4 mb-4 items-center">
+        <span>Năm:</span>
+        <select id="yearFilter" class="border rounded px-2 py-1">
+            <!-- option sẽ được tạo JS -->
+        </select>
 
-            <div>
-                <label class="font-medium text-gray-700">Chọn phân loại:</label>
-                <select id="categoryFilter" class="border rounded px-2 py-1">
-                    <option value="all">Tất cả</option>
-                    @foreach ($categories as $id => $name)
-                        <option value="{{ $id }}">{{ $name }}</option>
-                    @endforeach
-                </select>
-            </div>
-        </div>
-        {{-- Tiêu đề --}}
-        <h1 class="text-2xl font-bold text-gray-800">Thống kê linh kiện</h1>
+        <span>Tháng:</span>
+        <select id="monthFilter" class="border rounded px-2 py-1">
+            <option value="0">Tất cả</option>
+            @for ($m = 1; $m <= 12; $m++)
+                <option value="{{ $m }}">Tháng {{ $m }}</option>
+            @endfor
+        </select>
 
-        {{-- Chart --}}
-        <div class="bg-white p-4 rounded-lg shadow">
-            <canvas id="componentsChart" class="w-full h-[20vh]"></canvas>
-        </div>
-
-        {{-- Bảng thống kê --}}
-        <div class="bg-white rounded-lg shadow overflow-x-auto">
-            <table class="min-w-full divide-y divide-gray-200 text-sm">
-                <thead class="bg-gray-50">
-                    <tr>
-                        <th class="px-4 py-2 text-left font-medium text-gray-700">Phân loại</th>
-                        <th class="px-4 py-2 text-left font-medium text-gray-700">Năm</th>
-                        <th class="px-4 py-2 text-left font-medium text-gray-700">Tháng</th>
-                        <th class="px-4 py-2 text-left font-medium text-gray-700">Tổng</th>
-                        <th class="px-4 py-2 text-left font-medium text-gray-700">Tồn kho</th>
-                        <th class="px-4 py-2 text-left font-medium text-gray-700">Đã xuất kho</th>
-                        <th class="px-4 py-2 text-left font-medium text-gray-700">Còn bảo hành</th>
-                        <th class="px-4 py-2 text-left font-medium text-gray-700">Hết bảo hành</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-gray-200">
-                    @foreach ($components as $row)
-                        <tr class="hover:bg-gray-50">
-                            <td class="px-4 py-2">{{ $categories[$row['category_id']] ?? 'Không rõ' }}</td>
-                            <td class="px-4 py-2">{{ $row['year'] }}</td>
-                            <td class="px-4 py-2">{{ $row['month'] }}</td>
-                            <td class="px-4 py-2">{{ $row['total'] }}</td>
-                            <td class="px-4 py-2">{{ $row['ton_kho'] }}</td>
-                            <td class="px-4 py-2">{{ $row['da_xuat_kho'] }}</td>
-                            <td class="px-4 py-2">{{ $row['con_bao_hanh'] }}</td>
-                            <td class="px-4 py-2">{{ $row['het_bao_hanh'] }}</td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
-
+        {{-- Select bảo hành --}}
+        <span>Bảo hành:</span>
+        <select id="warrantyFilter" class="border rounded px-2 py-1">
+            <option value="all" selected>Tất cả</option>
+            <option value="yes">Còn bảo hành</option>
+            <option value="no">Hết bảo hành</option>
+        </select>
     </div>
-
-
-    {{-- Chart.js --}}
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const components = @json($components);
-            const categories = @json($categories);
-            const ctx = document.getElementById('componentsChart').getContext('2d');
-            let chart;
-
-            const today = new Date(); // dùng ngày hiện tại để so sánh bảo hành
-
-            function updateChart() {
-                const selectedYear = document.getElementById('yearFilter').value;
-                const selectedCategory = document.getElementById('categoryFilter').value;
-                const selectedStatus = document.getElementById('statusFilter').value;
-
-                let filteredComponents = components.filter(i =>
-                    (selectedYear === 'all' || i.year == selectedYear) &&
-                    (selectedCategory === 'all' || i.category_id == selectedCategory)
-                );
-
-                // Lọc trạng thái
-                filteredComponents = filteredComponents.filter(i => {
-                    if (selectedStatus === 'ton_kho') return i.ton_kho > 0;
-                    if (selectedStatus === 'da_xuat_kho') return i.da_xuat_kho > 0;
-                    if (selectedStatus === 'con_bao_hanh') return i.con_bao_hanh > 0 && new Date(i
-                        .bao_hanh_den) >= today;
-                    if (selectedStatus === 'het_bao_hanh') return i.het_bao_hanh > 0 || new Date(i
-                        .bao_hanh_den) < today;
-                    return true; // all
-                });
-
-                const labels = [...new Set(filteredComponents.map(i => categories[i.category_id] ?? 'Không rõ'))];
-                const tonKhoData = [];
-                const xuatKhoData = [];
-                const conBaoHanhData = [];
-
-                labels.forEach(category => {
-                    const items = filteredComponents.filter(i => (categories[i.category_id] ??
-                        'Không rõ') === category);
-                    tonKhoData.push(items.reduce((sum, item) => sum + item.ton_kho, 0));
-                    xuatKhoData.push(items.reduce((sum, item) => sum + item.da_xuat_kho, 0));
-                    conBaoHanhData.push(items.reduce((sum, item) => sum + item.con_bao_hanh, 0));
-                });
-
-                if (chart) chart.destroy();
-
-                chart = new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels,
-                        datasets: [{
-                                label: 'Tồn kho',
-                                data: tonKhoData,
-                                backgroundColor: 'rgba(54, 162, 235, 0.7)'
-                            },
-                            {
-                                label: 'Đã xuất kho',
-                                data: xuatKhoData,
-                                backgroundColor: 'rgba(255, 99, 132, 0.7)'
-                            },
-                            {
-                                label: 'Còn bảo hành',
-                                data: conBaoHanhData,
-                                backgroundColor: 'rgba(75, 192, 192, 0.7)'
-                            },
-                        ]
-                    },
-                    options: {
-                        responsive: true,
-                        plugins: {
-                            legend: {
-                                position: 'bottom'
-                            }
-                        }
-                    }
-                });
-            }
-
-            // Bắt sự kiện change
-            document.getElementById('yearFilter').addEventListener('change', updateChart);
-            document.getElementById('categoryFilter').addEventListener('change', updateChart);
-            document.getElementById('statusFilter').addEventListener('change', updateChart);
-
-            // Khởi tạo chart lần đầu
-            updateChart();
-        });
-    </script>
+    {{-- Chart --}}
+    <canvas id="componentChart" class="max-w-[100%] max-h-[86vh] "></canvas>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+
+<script>
+    const components = @json($components);
+    const categories = @json($categories);
+
+    const categoryIds = [...new Set(components.map(c => c.category_id))];
+    const categoryNames = categoryIds.map(id => categories[id] || '--');
+
+    const ctx = document.getElementById('componentChart').getContext('2d');
+    Chart.register(ChartDataLabels);
+
+    let selectedYear = 0;
+    let selectedMonth = 0;
+    let filterWarrantyYes = true;
+    let filterWarrantyNo = true;
+
+    // Tạo danh sách năm
+    const years = [...new Set(components.map(c => c.year))].sort((a, b) => b - a);
+    const yearFilter = document.getElementById('yearFilter');
+    years.forEach(y => {
+        const opt = document.createElement('option');
+        opt.value = y;
+        opt.textContent = y;
+        yearFilter.appendChild(opt);
+    });
+    yearFilter.value = years[0];
+    selectedYear = Number(yearFilter.value);
+
+    const monthFilter = document.getElementById('monthFilter');
+
+    let selectedWarranty = 'all'; // mặc định full
+
+    const warrantyFilter = document.getElementById('warrantyFilter');
+    warrantyFilter.addEventListener('change', e => {
+        selectedWarranty = e.target.value;
+        updateChart();
+    });
+
+    function filterData() {
+        return components.filter(c => {
+            if (selectedYear && c.year != selectedYear) return false;
+            if (selectedMonth && c.month != selectedMonth) return false;
+
+            if (selectedWarranty === 'yes' && c.con_bao_hanh == 0) return false;
+            if (selectedWarranty === 'no' && c.con_bao_hanh > 0) return false;
+
+            return true;
+        });
+    }
+
+    function updateChart() {
+        const filtered = filterData();
+
+        const stockData = categoryIds.map(id => {
+            return filtered
+                .filter(c => c.category_id == id)
+                .reduce((acc, curr) => acc + Number(curr.ton_kho), 0);
+        });
+
+        const exportedData = categoryIds.map(id => {
+            return filtered
+                .filter(c => c.category_id == id)
+                .reduce((acc, curr) => acc + Number(curr.da_xuat_kho), 0);
+        });
+
+        const maxVal = Math.max(...stockData, ...exportedData, 1);
+        const suggestedMax = Math.ceil(maxVal * 1.2);
+
+        if (chart) {
+            chart.data.datasets[0].data = stockData;
+            chart.data.datasets[1].data = exportedData;
+            chart.options.scales.x.max = suggestedMax;
+            chart.update();
+        }
+    }
+
+    const chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: categoryNames,
+            datasets: [{
+                    label: 'Tồn kho',
+                    data: [],
+                    backgroundColor: '#60A5FA',
+                    borderRadius: 2,
+                    minBarLength: 6
+                },
+                {
+                    label: 'Đã xuất kho',
+                    data: [],
+                    backgroundColor: '#FBBF24',
+                    borderRadius: 2,
+                    minBarLength: 6
+                }
+            ]
+        },
+        options: {
+            indexAxis: 'y',
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                },
+                datalabels: {
+                    anchor: 'end',
+                    align: 'end',
+                    color: '#000',
+                    font: {
+                        weight: 'bold'
+                    }
+                },
+                title: {
+                    display: true,
+                    position: 'bottom',
+                    text: 'Biểu đồ thanh: thống kê linh kiện theo phân loại',
+                    font: {
+                        size: 18,
+                        weight: 'bold'
+                    },
+                    padding: {
+                        top: 10,
+                        bottom: 20
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true
+                },
+                x: {
+                    beginAtZero: true,
+                    ticks: {
+                        precision: 0
+                    }
+                }
+            }
+        },
+        plugins: [ChartDataLabels]
+    });
+
+    // Event chọn năm/tháng
+    yearFilter.addEventListener('change', e => {
+        selectedYear = Number(e.target.value);
+        updateChart();
+    });
+    monthFilter.addEventListener('change', e => {
+        selectedMonth = Number(e.target.value);
+        updateChart();
+    });
+
+    updateChart();
+</script>

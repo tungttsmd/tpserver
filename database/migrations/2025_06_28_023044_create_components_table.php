@@ -12,12 +12,11 @@ return new class extends Migration {
             $table->string('serial_number')->unique()->index();
             $table->string('name')->unique()->index()->nullable()->index();
             $table->unsignedBigInteger('category_id')->nullable()->index();
-            $table->unsignedBigInteger('vendor_id')->nullable()->index();
             $table->unsignedBigInteger('condition_id')->nullable()->index();
-            $table->unsignedBigInteger('location_id')->nullable()->index();
             $table->unsignedBigInteger('manufacturer_id')->nullable()->index();
             $table->unsignedBigInteger('status_id')->nullable()->index();
 
+            $table->text('stockin_source')->nullable();
             // Tại sao không để trường này trong component log? Bởi nó luôn luôn bắt buộc khi thêm một component
             // Không cho phép sửa đổi trường này nếu không đủ thẩm quyền, đảm bảo tính toàn vẹn của dữ liệu 
             $table->timestamp('stockin_at')->index(); // Ngày nhập kho dành cho nghiệp vụ nhập (nếu có)
@@ -31,7 +30,7 @@ return new class extends Migration {
             $table->index('updated_at');
 
             //WHERE category = ? AND vendor = ? AND condition = ? AND location = ? for fastest query
-            $table->index(['category_id', 'vendor_id', 'condition_id', 'location_id', 'manufacturer_id'], 'index_category_vendor_condition_location_manufacturer');
+            $table->index(['category_id', 'condition_id', 'manufacturer_id'], 'index_category_condition_manufacturer');
         });
     }
 

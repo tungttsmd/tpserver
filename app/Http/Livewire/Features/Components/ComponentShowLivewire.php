@@ -9,7 +9,7 @@ use Livewire\WithPagination;
 class ComponentShowLivewire extends Component
 {
     use WithPagination;
-    public $date_created, $serial_number, $category_id, $vendor_id, $location_id, $condition_id, $manufacturer_id, $status_id, $name, $date_issued, $warranty_start, $warranty_end, $note;
+    public $date_created, $serial_number, $category_id, $condition_id, $manufacturer_id, $status_id, $name, $stockin_source, $stockin_at, $warranty_start, $warranty_end, $note;
     public $view_form_content = '';
     public $serialNumber = null;
     public $previous_view = null;
@@ -46,9 +46,7 @@ class ComponentShowLivewire extends Component
         // 1. Lấy chính xác 100%
         $this->component = HardwareComponent::with([
             'category',
-            'vendor',
             'condition',
-            'location',
             'manufacturer',
             'status'
         ])->where('id', $id)->first();

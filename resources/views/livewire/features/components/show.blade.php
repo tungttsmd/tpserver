@@ -83,12 +83,10 @@
                     <div class="text-md flex-col">
                         <p class="mb-2"><i class="fas fa-layer-group mr-1 text-gray-500"></i> Trạng thái:
                             {{ optional($component->status)->name }}</p>
-                        <p class="mb-2"><i class="fas fa-map-marker-alt mr-1 text-gray-500"></i> Vị trí:
-                            {{ optional($component->location)->name }}</p>
-                        <p class="mb-2"><i class="fas fa-signature mr-1 text-gray-500"></i> Hãng:
+                        <p class="mb-2"><i class="fas fa-signature mr-1 text-gray-500"></i> Hãng sản xuất:
                             {{ optional($component->manufacturer)->name }}</p>
-                        <p class="mb-2"><i class="fas fa-building mr-1 text-gray-500"></i> Nhà cung cấp:
-                            {{ optional($component->vendor)->name }}</p>
+                        <p class="mb-2"><i class="fas fa-building mr-1 text-gray-500"></i> Nguồn nhập:
+                            {{ $component->stockin_source }}</p>
                         <p class="mb-2"><i class="fas fa-comment-alt mr-1 text-gray-500"></i> Ghi chú:
                             {{ $component->note }}</p>
                     </div>

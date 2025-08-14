@@ -2,8 +2,6 @@
     'createSuccess' => null,
     'categories' => collect(),
     'conditions' => collect(),
-    'locations' => collect(),
-    'vendors' => collect(),
     'manufacturers' => collect(),
     'toggleWarranty' => false,
 ])
@@ -11,8 +9,6 @@
 @php
     $categoryOptions = $categories->pluck('name', 'id')->toArray();
     $conditionOptions = $conditions->pluck('name', 'id')->toArray();
-    $locationOptions = $locations->pluck('name', 'id')->toArray();
-    $vendorOptions = $vendors->pluck('name', 'id')->toArray();
     $manufacturerOptions = $manufacturers->pluck('name', 'id')->toArray();
 
     $fields = [
@@ -23,28 +19,13 @@
             'icon' => 'fas fa-microchip',
             'options' => $conditionOptions,
         ],
-        [
-            'livewire' => 'location_id',
-            'name' => 'location',
-            'label' => 'Vị trí',
-            'icon' => 'fas fa-map-marker-alt',
-            'options' => $locationOptions,
-        ],
     ];
-
     $categoryField = [
         'livewire' => 'category_id',
         'name' => 'category',
         'label' => 'Phân loại',
         'icon' => 'fas fa-cogs',
         'options' => $categoryOptions,
-    ];
-    $vendorField = [
-        'livewire' => 'vendor_id',
-        'name' => 'vendor',
-        'label' => 'Nhà cung cấp',
-        'icon' => 'fas fa-store',
-        'options' => $vendorOptions,
     ];
     $manufacturerField = [
         'livewire' => 'manufacturer_id',
@@ -160,6 +141,25 @@
                     </div>
                 </div>
             </div>
+            {{-- Phân loại --}}
+            <div>
+                <label for="{{ $categoryField['name'] }}"
+                    class="block text-sm font-medium text-gray-700">{{ $categoryField['label'] }} <span
+                        class="text-warning">*</span></label>
+                <div
+                    class="mt-1 relative rounded-md shadow-sm flex items-center border border-gray-300 focus-within:border-primary-600 focus-within:ring-1 focus-within:ring-primary-600">
+                    <span class="pl-3 pr-2 text-gray-400 pointer-events-none"><i
+                            class="{{ $categoryField['icon'] }}"></i></span>
+                    <select wire:model.defer="{{ $categoryField['livewire'] }}" id="{{ $categoryField['name'] }}"
+                        class="block w-full border-0 py-2 pl-1 pr-3 text-gray-900 focus:ring-0 sm:text-sm" required>
+                        <option value="">-- Chọn {{ strtolower($categoryField['label']) }} --</option>
+                        @foreach ($categoryField['options'] as $key => $option)
+                            <option value="{{ $key }}">{{ $option }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+
 
             {{-- Bảo hành --}}
             <div class="pt-2 pb-2 pl-3 pr-3 mt-4 rounded border border-green-600 bg-green-50">
@@ -186,7 +186,8 @@
                             </div>
                         </div>
                         <div class="flex-1 min-w-[12rem]">
-                            <label for="warranty_end" class="block text-sm font-medium text-green-800">Ngày kết thúc bảo
+                            <label for="warranty_end" class="block text-sm font-medium text-green-800">Ngày kết thúc
+                                bảo
                                 hành</label>
                             <div
                                 class="mt-1 relative rounded-md shadow-sm flex items-center border border-green-600 focus-within:border-green-700 focus-within:ring-1 focus-within:ring-green-700">
@@ -200,24 +201,18 @@
                     </div>
                 @endif
             </div>
-
-            {{-- Phân loại --}}
-            <div>
-                <label for="{{ $categoryField['name'] }}"
-                    class="block text-sm font-medium text-gray-700">{{ $categoryField['label'] }}</label>
+            {{-- Nguồn nhập --}}
+            <div class="mt-3">
+                <label for="stockin-source" class="block text-sm font-medium text-gray-700">Nguồn nhập</label>
                 <div
                     class="mt-1 relative rounded-md shadow-sm flex items-center border border-gray-300 focus-within:border-primary-600 focus-within:ring-1 focus-within:ring-primary-600">
-                    <span class="pl-3 pr-2 text-gray-400 pointer-events-none"><i
-                            class="{{ $categoryField['icon'] }}"></i></span>
-                    <select wire:model.defer="{{ $categoryField['livewire'] }}" id="{{ $categoryField['name'] }}"
-                        class="block w-full border-0 py-2 pl-1 pr-3 text-gray-900 focus:ring-0 sm:text-sm">
-                        <option value="">-- Chọn {{ strtolower($categoryField['label']) }} --</option>
-                        @foreach ($categoryField['options'] as $key => $option)
-                            <option value="{{ $key }}">{{ $option }}</option>
-                        @endforeach
-                    </select>
+                    <span class="pl-3 pr-2 text-gray-400 pointer-events-none"><i class="fas fa-barcode"></i></span>
+                    <input wire:model.defer="stockin_source" type="text" id="stockin-source"
+                        class="block w-full border-0 py-2 pl-1 pr-3 text-gray-900 placeholder-gray-400 focus:ring-0 sm:text-sm"
+                        placeholder="Nguồn nhập" />
                 </div>
             </div>
+
 
             {{-- Các field condition, location --}}
             @foreach ($fields as $field)
@@ -239,7 +234,7 @@
                 </div>
             @endforeach
 
-            {{-- Hãng sản xuất & Nhà cung cấp --}}
+            {{-- Hãng sản xuất --}}
             <div class="flex flex-wrap gap-4">
                 <div class="flex-1 min-w-[12rem]">
                     <label for="{{ $manufacturerField['name'] }}"
@@ -259,22 +254,6 @@
                     </div>
                 </div>
 
-                <div class="flex-1 min-w-[12rem]">
-                    <label for="{{ $vendorField['name'] }}"
-                        class="block text-sm font-medium text-gray-700">{{ $vendorField['label'] }}</label>
-                    <div
-                        class="mt-1 relative rounded-md shadow-sm flex items-center border border-gray-300 focus-within:border-primary-600 focus-within:ring-1 focus-within:ring-primary-600">
-                        <span class="pl-3 pr-2 text-gray-400 pointer-events-none"><i
-                                class="{{ $vendorField['icon'] }}"></i></span>
-                        <select wire:model.defer="{{ $vendorField['livewire'] }}" id="{{ $vendorField['name'] }}"
-                            class="block w-full border-0 py-2 pl-1 pr-3 text-gray-900 focus:ring-0 sm:text-sm">
-                            <option value="">-- Chọn {{ strtolower($vendorField['label']) }} --</option>
-                            @foreach ($vendorField['options'] as $key => $option)
-                                <option value="{{ $key }}">{{ $option }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
             </div>
 
             {{-- Mô tả --}}

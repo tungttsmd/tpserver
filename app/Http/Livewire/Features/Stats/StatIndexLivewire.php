@@ -18,25 +18,27 @@ class StatIndexLivewire extends Component
     }
     public function components()
     {
-        $today = now()->toDateString();
-
         return DB::table('components')
             ->select(
                 'category_id',
+                DB::raw("warranty_start"),
+                DB::raw("warranty_end"),
                 DB::raw("YEAR(stockin_at) as year"),
                 DB::raw("MONTH(stockin_at) as month"),
                 DB::raw("COUNT(*) as total"),
                 DB::raw("SUM(CASE WHEN status_id = 1 THEN 1 ELSE 0 END) as ton_kho"),
                 DB::raw("SUM(CASE WHEN status_id = 2 THEN 1 ELSE 0 END) as da_xuat_kho"),
-                DB::raw("SUM(CASE WHEN warranty_end >= '{$today}' THEN 1 ELSE 0 END) as con_bao_hanh"),
-                DB::raw("SUM(CASE WHEN warranty_end < '{$today}' OR warranty_end IS NULL THEN 1 ELSE 0 END) as het_bao_hanh")
+                DB::raw("SUM(CASE WHEN DATE(warranty_end) < CURDATE() OR warranty_end IS NULL THEN 1 ELSE 0 END) as het_bao_hanh"),
+                DB::raw("SUM(CASE WHEN DATE(warranty_end) >= CURDATE() THEN 1 ELSE 0 END) as con_bao_hanh"),
             )
-            ->groupBy('category_id', 'year', 'month')
-            ->orderBy('year', 'desc')
-            ->orderBy('month', 'desc')
+            ->groupBy('category_id', 'year', 'month','warranty_end','warranty_start')
+            ->orderBy('warranty_end', 'asc')
             ->get()
             ->map(function ($item) {
                 return [
+                    'now'=>now()->toDateString(),
+                    'warranty_end'=>$item->warranty_end,
+                    'warranty_start'=>$item->warranty_start,
                     'category_id'    => $item->category_id,
                     'year'           => $item->year,
                     'month'          => $item->month,

@@ -12,7 +12,7 @@ return new class extends Migration {
      */
     public function up()
     {
-        Schema::create('component_logs', function (Blueprint $table) {
+        Schema::create('log_components', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('component_id')->index(); // Mã linh kiện thao tác nghiệp vụ
 
@@ -41,6 +41,6 @@ return new class extends Migration {
      */
     public function down()
     {
-        Schema::dropIfExists('component_logs');
+        Schema::dropIfExists('log_components');
     }
 };

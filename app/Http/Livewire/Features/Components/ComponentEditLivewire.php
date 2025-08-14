@@ -5,9 +5,7 @@ namespace App\Http\Livewire\Features\Components;
 use App\Models\Category;
 use App\Models\Component as ModelsComponent;
 use App\Models\Condition;
-use App\Models\Location;
 use App\Models\Manufacturer;
-use App\Models\Vendor;
 use Carbon\Carbon;
 use Illuminate\Validation\ValidationException;
 use Livewire\Component;
@@ -17,7 +15,7 @@ class ComponentEditLivewire extends Component
     public $component;
     public $componentId = null;
     public $name;
-    public $warranty_start, $warranty_end, $note, $manufacturer_id, $vendor_id, $stockin_at, $category_id, $condition_id, $location_id;
+    public $warranty_start, $warranty_end, $note, $manufacturer_id, $stockin_source, $stockin_at, $category_id, $condition_id;
     public $toggleWarranty = false;
     protected $listeners = ['record' => 'record'];
 
@@ -34,8 +32,7 @@ class ComponentEditLivewire extends Component
         $this->name = $component->name ?? null;
         $this->category_id = $component->category_id ?? null;
         $this->condition_id = $component->condition_id ?? null;
-        $this->location_id = $component->location_id ?? null;
-        $this->vendor_id = $component->vendor_id ?? null;
+        $this->stockin_source = $component->stockin_source ?? null;
         $this->manufacturer_id = $component->manufacturer_id ?? null;
         $this->note = $component->note ?? null;
 
@@ -58,8 +55,6 @@ class ComponentEditLivewire extends Component
         return [
             'categories' => Category::select('id', 'name')->get(),
             'conditions' => Condition::select('id', 'name')->get(),
-            'locations' => Location::select('id', 'name')->get(),
-            'vendors' => Vendor::select('id', 'name')->get(),
             'manufacturers' => Manufacturer::select('id', 'name')->get(),
         ];
     }
@@ -140,10 +135,9 @@ class ComponentEditLivewire extends Component
         $component->name = $this->name;
         $component->category_id = (int) $this->category_id;
         $component->condition_id = (int) $this->condition_id;
-        $component->location_id = (int) $this->location_id;
-        $component->vendor_id = (int) $this->vendor_id;
         $component->manufacturer_id = (int) $this->manufacturer_id;
         $component->note = $this->note;
+        $component->stockin_source = $this->stockin_source;
 
         // Kiểm tra dirty
         if ($component->isDirty()) {
@@ -160,9 +154,8 @@ class ComponentEditLivewire extends Component
             'stockin_at' => 'date|after_or_equal:1970-01-01',
 
             'category_id' => 'nullable|integer|exists:categories,id',
-            'vendor_id' => 'nullable|integer|exists:vendors,id',
+            'stockin_source' => 'nullable|string|max:255',
             'condition_id' => 'nullable|integer|exists:conditions,id',
-            'location_id' => 'nullable|integer|exists:locations,id',
             'manufacturer_id' => 'nullable|integer|exists:manufacturers,id',
 
             'note' => 'nullable|string|max:10000',

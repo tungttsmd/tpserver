@@ -2,7 +2,7 @@
 
 namespace App\Http\Livewire\Features\Logs;
 
-use App\Models\UserLog;
+use App\Models\LogUserAction;
 use Illuminate\Support\Facades\Schema;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -15,13 +15,13 @@ class UserActionLivewire extends Component
 
     public function render()
     {
-        $userActionLogs = UserLog::with(['action', 'user'])
+        $logUserActions = LogUserAction::with(['action', 'user'])
             ->orderBy($this->sort, $this->dir)
             ->paginate(20);
 
         return view('livewire.features.logs.user-action', [
-            'userActionLogs' => $userActionLogs,
-            'columns' => Schema::getColumnListing('user_logs'),
+            'logUserActions' => $logUserActions,
+            'columns' => Schema::getColumnListing('log_user_actions'),
             'filter'=>session('route.filter'),
             'sort' => $this->sort,
             'dir' => $this->dir

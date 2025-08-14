@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Spatie\Permission\Traits\HasPermissions;
 use Spatie\Permission\Traits\HasRoles;
 
-class ComponentLog extends Model
+class LogComponent extends Model
 {
     use HasFactory, HasRoles, HasPermissions;
     protected $fillable = ['component_id', 'action_id', 'user_id', 'customer_id', 'vendor_id', 'location_id', 'stockout_at', 'stockreturn_at', 'note'];
@@ -17,7 +17,7 @@ class ComponentLog extends Model
     }
     public function action()
     {
-        return $this->belongsTo(ActionLog::class, 'action_id');
+        return $this->belongsTo(Action::class, 'action_id');
     }
 
     public function user()

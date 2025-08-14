@@ -9,7 +9,7 @@ use Livewire\WithPagination;
 class ComponentScanLivewire extends Component
 {
     use WithPagination;
-    public $date_created, $serial_number, $category_id, $vendor_id, $location_id, $condition_id, $manufacturer_id, $status_id, $name, $date_issued, $warranty_start, $warranty_end, $note;
+    public $date_created, $serial_number, $category_id, $condition_id, $manufacturer_id, $status_id, $name, $date_issued, $warranty_start, $warranty_end, $note;
     public $view_form_content = '';
     public $serialNumber = null;
     public $previous_view = null;
@@ -58,9 +58,7 @@ class ComponentScanLivewire extends Component
             // 1. Lấy chính xác 100%
             $component = HardwareComponent::with([
                 'category',
-                'vendor',
                 'condition',
-                'location',
                 'manufacturer',
                 'status'
             ])->where('serial_number', $serial)->first();
@@ -114,5 +112,4 @@ class ComponentScanLivewire extends Component
 
         return $suggestions;
     }
-    
 }

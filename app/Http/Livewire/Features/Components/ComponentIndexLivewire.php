@@ -2,14 +2,11 @@
 
 namespace App\Http\Livewire\Features\Components;
 
-use App\Http\Livewire\RouteController;
 use App\Models\Category;
 use App\Models\Component as HardwareComponent;
 use App\Models\Condition;
-use App\Models\Location;
 use App\Models\Manufacturer;
 use App\Models\Status;
-use App\Models\Vendor;
 use Illuminate\Support\Facades\Schema;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -18,8 +15,8 @@ class ComponentIndexLivewire extends Component
 {
     use WithPagination;
 
-    public $categories, $conditions, $statuses, $locations, $vendors, $manufacturers;
-    public $category, $condition, $status, $location, $vendor, $manufacturer;
+    public $categories, $conditions, $statuses, $manufacturers;
+    public $category, $condition, $status, $manufacturer;
     public $columns, $table, $relationships, $search,  $perPage = 20;
     public $dir = "desc", $sort = "updated_at";
     public $components;
@@ -38,25 +35,19 @@ class ComponentIndexLivewire extends Component
         $this->category = '';
         $this->condition = '';
         $this->status = '';
-        $this->location = '';
-        $this->vendor = '';
         $this->manufacturer = '';
 
         // Lấy toàn bộ danh sách Category, Condition, Status từ database
         $this->categories = Category::all();
         $this->conditions = Condition::all();
         $this->statuses = Status::all();
-        $this->locations = Location::all();
-        $this->vendors = Vendor::all();
         $this->manufacturers = Manufacturer::all();
     }
     public function index($filter)
     {
         $query = HardwareComponent::with([
             'category',
-            'vendor',
             'condition',
-            'location',
             'manufacturer',
             'status'
         ]);
@@ -98,18 +89,8 @@ class ComponentIndexLivewire extends Component
         }
 
         // Lọc theo condition_id
-        if ($this->location) {
-            $query->where('location_id', $this->location);
-        }
-
-        // Lọc theo condition_id
         if ($this->condition) {
             $query->where('condition_id', $this->condition);
-        }
-
-        // Lọc theo vendor_id
-        if ($this->vendor) {
-            $query->where('vendor_id', $this->vendor);
         }
 
         // Lọc theo manufacturer_id

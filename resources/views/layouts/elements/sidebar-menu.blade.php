@@ -223,14 +223,14 @@
             <ul class="nav nav-treeview">
                 <li class="nav-item">
                     <a href="#" class="nav-link"
-                        onclick="event.preventDefault(); Livewire.emit('route', 'logs', 'user-action', 'user-action-log')">
+                        onclick="event.preventDefault(); Livewire.emit('route', 'logs', 'user-action', 'user-action')">
                         <i class="fas fa-user-clock nav-icon"></i>
                         <p>Nhật ký hoạt động</p>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a href="#" class="nav-link"
-                        onclick="event.preventDefault(); Livewire.emit('route', 'logs', 'stockout', 'component-logs')">
+                        onclick="event.preventDefault(); Livewire.emit('route', 'logs', 'component', 'component')">
                         <i class="fas fa-business-time"></i>
                         <p>Nhập & xuất kho</p>
                     </a>

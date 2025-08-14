@@ -145,12 +145,10 @@
                     <div class="space-y-2 text-gray-700">
                         <p><i class="fas fa-layer-group mr-2 text-gray-400"></i> Trạng thái:
                             {{ optional($component->status)->name }}</p>
-                        <p><i class="fas fa-map-marker-alt mr-2 text-gray-400"></i> Vị trí:
-                            {{ optional($component->location)->name }}</p>
                         <p><i class="fas fa-signature mr-2 text-gray-400"></i> Hãng:
                             {{ optional($component->manufacturer)->name }}</p>
-                        <p><i class="fas fa-building mr-2 text-gray-400"></i> Nhà cung cấp:
-                            {{ optional($component->vendor)->name }}</p>
+                        <p><i class="fas fa-building mr-2 text-gray-400"></i> Nguồn nhập:
+                            {{ $component->stockin_source }}</p>
                         <p><i class="fas fa-comment-alt mr-2 text-gray-400"></i> Ghi chú: {{ $component->note }}</p>
                     </div>
                 </div>

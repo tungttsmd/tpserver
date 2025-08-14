@@ -6,7 +6,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Faker\Factory as Faker;
 
-class UserLogSeeder extends Seeder
+class LogUserActionSeeder extends Seeder
 {
     public function run()
     {
@@ -43,6 +43,6 @@ class UserLogSeeder extends Seeder
             ];
         }
 
-        DB::table('user_logs')->insert($data);
+        DB::table('log_user_actions')->insert($data);
     }
 }

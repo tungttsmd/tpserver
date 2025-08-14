@@ -3,7 +3,7 @@
         <span class="font-medium">Lọc theo năm:</span>
         <div id="yearFilterButtons" class="flex gap-2 flex-wrap">
             <div id="yearFilterButtons">
-                @foreach ($componentLogs->pluck('year')->unique()->sortDesc() as $year)
+                @foreach ($logComponents->pluck('year')->unique()->sortDesc() as $year)
                     <button type="button"
                         class="inline-flex items-center px-3 py-1 text-sm font-medium rounded-md border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-indigo-500 transition"
                         onclick="selectYear({{ $year }})">
@@ -12,11 +12,11 @@
                 @endforeach
             </div>
 
-            
+
         </div>
         <script>
             document.addEventListener('DOMContentLoaded', function() {
-                const newestYear = {{ $componentLogs->max('year') }};
+                const newestYear = {{ $logComponents->max('year') }};
                 selectYear(newestYear);
             });
         </script>
@@ -42,10 +42,10 @@
         const ctx = document.getElementById('componentChart');
         let chart;
 
-        const rawData = @json($componentLogs);
+        const rawData = @json($logComponents);
         const years = [...new Set(rawData.map(item => item.year))].sort((a, b) => b - a);
         const yearFilterContainer = document.getElementById('yearFilterButtons');
-        let selectedYear = {{ $componentLogs->max('year') ?? 'null' }};
+        let selectedYear = {{ $logComponents->max('year') ?? 'null' }};
         let selectedMonthRange = [1, 12];
         const monthSelect = document.getElementById('monthSelect');
 
@@ -90,13 +90,6 @@
             if (chartType === 'bar') updateChart();
         });
 
-
-        document.getElementById('barChartBtn').addEventListener('click', () => {
-            chartType = 'bar';
-            slider.parentElement.style.display = 'block';
-            updateChart();
-        });
-
         function filterData() {
             return rawData.filter(item => {
                 const month = Number(item.month);
@@ -129,15 +122,16 @@
             const filtered = filterData();
 
             const datasets = [{
-                    label: 'Xuất kho',
-                    key: 'xuat_kho',
+                    label: 'Nhập kho',
+                    key: 'nhap_kho',
                     color: 'rgba(96,165,250,0.7)'
                 },
                 {
-                    label: 'Nhập kho',
-                    key: 'nhap_kho',
+                    label: 'Xuất kho',
+                    key: 'xuat_kho',
                     color: 'rgba(74,222,128,0.7)'
                 },
+
                 {
                     label: 'Thu hồi',
                     key: 'thu_hoi',
@@ -166,8 +160,8 @@
                         datasets: datasets.map(ds => ({
                             label: ds.label,
                             data: chartData.map(i => ({
-                                y: i.date,
-                                x: i[ds.key]
+                                x: i.date,
+                                y: i[ds.key]
                             })),
                             backgroundColor: ds.color,
                             hoverBackgroundColor: ds.color.replace('0.7', '0.4'),
@@ -177,9 +171,9 @@
                     },
                     options: {
                         responsive: true,
-                        indexAxis: 'y',
+                        indexAxis: 'x',
                         scales: {
-                            y: {
+                            x: {
                                 type: 'time',
                                 time: {
                                     parser: 'yyyy-MM-dd',
@@ -190,7 +184,7 @@
                                     callback: v => `Tháng ${new Date(v).getMonth()+1}`
                                 }
                             },
-                            x: {
+                            y: {
                                 beginAtZero: true,
                                 max: MAX_VALUE,
                                 title: {
@@ -203,7 +197,7 @@
                             datalabels: {
                                 anchor: 'end',
                                 align: 'end',
-                                formatter: val => Math.round(val.x),
+                                formatter: val => Math.round(val.y),
                                 color: '#000',
                                 font: {
                                     weight: 'bold',
@@ -243,8 +237,8 @@
                 chart.data.datasets.forEach(ds => {
                     const config = datasets.find(c => c.label === ds.label);
                     ds.data = chartData.map(i => ({
-                        y: i.date,
-                        x: i[config.key]
+                        x: i.date,
+                        y: i[config.key]
                     }));
                 });
                 chart.update();

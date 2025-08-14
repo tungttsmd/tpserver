@@ -8,8 +8,9 @@ use Livewire\Component;
 use App\Models\Vendor;
 use App\Models\Location;
 use App\Models\Customer;
-use App\Models\ActionLog;
+use App\Models\Action;
 use App\Models\ComponentLog;
+use App\Models\LogComponent;
 use Carbon\Carbon;
 
 class ComponentStockreturnLivewire extends Component
@@ -36,7 +37,7 @@ class ComponentStockreturnLivewire extends Component
             $this->customer_id = $this->customerOptions->first()->id;
         }
 
-        $this->lastestComponentLog = ComponentLog::with(['user', 'action', 'location', 'vendor', 'customer', 'component'])
+        $this->lastestComponentLog = LogComponent::with(['user', 'action', 'location', 'vendor', 'customer', 'component'])
             ->where('component_id', $this->componentId) // hoặc $id nếu trong Controller
             ->latest('created_at')
             ->first();
@@ -77,7 +78,7 @@ class ComponentStockreturnLivewire extends Component
     }
     public function mountInit()
     {
-        $this->componentLogs = ComponentLog::where('component_id', $this->componentId);
+        $this->componentLogs = LogComponent::where('component_id', $this->componentId);
 
         if (!$this->stockoutType) {
             $this->stockoutType = 'internal';
@@ -97,9 +98,9 @@ class ComponentStockreturnLivewire extends Component
         $this->component = ModelsComponent::find($this->componentId);
 
 
-        $this->actionStockoutCustomer = ActionLog::where('target', 'componentStockoutCustomer')->get();
-        $this->actionStockoutVendor = ActionLog::where('target', 'componentStockoutVendor')->get();
-        $this->actionStockoutInternal = ActionLog::where('target', 'componentStockoutInternal')->get();
+        $this->actionStockoutCustomer = Action::where('target', 'componentStockoutCustomer')->get();
+        $this->actionStockoutVendor = Action::where('target', 'componentStockoutVendor')->get();
+        $this->actionStockoutInternal = Action::where('target', 'componentStockoutInternal')->get();
         $this->vendorOptions = Vendor::select('id', 'name', 'phone', 'email')->orderBy('id', 'asc')->get();
         $this->customerOptions = Customer::select('id', 'name', 'phone', 'email')->orderBy('id', 'asc')->get();
         $this->locationOptions = Location::select('id', 'name')->orderBy('id', 'asc')->get();
@@ -123,7 +124,7 @@ class ComponentStockreturnLivewire extends Component
     }
     public function stockreturn()
     {
-        $this->lastestComponentLog = ComponentLog::with(['user', 'action', 'location', 'vendor', 'customer', 'component'])
+        $this->lastestComponentLog = LogComponent::with(['user', 'action', 'location', 'vendor', 'customer', 'component'])
             ->where('component_id', $this->componentId) // hoặc $id nếu trong Controller
             ->latest('created_at')
             ->first();
@@ -150,7 +151,7 @@ class ComponentStockreturnLivewire extends Component
 
         try {
             // Tạo log xuất kho
-            ComponentLog::create([
+            LogComponent::create([
                 'component_id' => $this->lastestComponentLog->component_id,
                 'user_id' => $user->id,
                 'action_id' => 39, // Mã action thu hồi duy nhất

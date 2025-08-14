@@ -6,7 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class ActionLogSeeder extends Seeder
+class ActionSeeder extends Seeder
 {
     public function run()
     {
@@ -127,6 +127,6 @@ class ActionLogSeeder extends Seeder
             ];
         }
 
-        DB::table(table: 'action_logs')->insert($data);
+        DB::table(table: 'actions')->insert($data);
     }
 }

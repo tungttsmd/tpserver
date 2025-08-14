@@ -19,8 +19,8 @@
                     wire:key="{{ $refresh }}" />
             @endif
         @elseif ($controller === 'logs')
-            @if ($action === 'stockout')
-                <livewire:features.logs.component-stockout-livewire :filter="$filter" wire:key="{{ $refresh }}" />
+            @if ($action === 'component')
+                <livewire:features.logs.component-livewire :filter="$filter" wire:key="{{ $refresh }}" />
             @elseif ($action === 'user-action')
                 <livewire:features.logs.user-action-livewire :filter="$filter" wire:key="{{ $refresh }}" />
             @endif

@@ -2,9 +2,9 @@
 
 namespace App\Http\Livewire\Features\Components;
 
-use App\Models\ActionLog;
+use App\Models\Action;
 use App\Models\Component as ModelsComponent;
-use App\Models\ComponentLog;
+use App\Models\LogComponent;
 use App\Models\Customer;
 use App\Models\Location;
 use App\Models\Vendor;
@@ -70,9 +70,9 @@ class ComponentStockoutLivewire extends Component
             $this->stockout_at = Carbon::now()->toDateString(); // == format('Y-m-d')
         }
         // Load danh sách hành động theo từng loại
-        $this->actionsStockoutCustomer = ActionLog::where('target', 'componentStockoutCustomer')->get();
-        $this->actionsStockoutVendor = ActionLog::where('target', 'componentStockoutVendor')->get();
-        $this->actionsStockoutInternal = ActionLog::where('target', 'componentStockoutInternal')->get();
+        $this->actionsStockoutCustomer = Action::where('target', 'componentStockoutCustomer')->get();
+        $this->actionsStockoutVendor = Action::where('target', 'componentStockoutVendor')->get();
+        $this->actionsStockoutInternal = Action::where('target', 'componentStockoutInternal')->get();
 
         $this->vendorOptions = Vendor::select('id', 'name', 'phone', 'email')->orderBy('id', 'asc')->get();
         $this->customerOptions = Customer::select('id', 'name', 'phone', 'email')->orderBy('id', 'asc')->get();
@@ -81,9 +81,7 @@ class ComponentStockoutLivewire extends Component
         // Load thông tin linh kiện
         $this->component = ModelsComponent::with([
             'category',
-            'vendor',
             'condition',
-            'location',
             'manufacturer',
             'status',
         ])->find($this->componentId);
@@ -145,7 +143,7 @@ class ComponentStockoutLivewire extends Component
 
         try {
             // Tạo log xuất kho
-            ComponentLog::create([
+            LogComponent::create([
                 'component_id' => $this->componentId,
                 'user_id' => $user->id,
                 'action_id' => $this->action_id,

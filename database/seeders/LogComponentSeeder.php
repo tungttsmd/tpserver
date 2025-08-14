@@ -6,7 +6,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Faker\Factory as Faker;
 
-class ComponentLogSeeder extends Seeder
+class LogComponentSeeder extends Seeder
 {
     public function run()
     {
@@ -150,6 +150,6 @@ class ComponentLogSeeder extends Seeder
             ];
         }
 
-        DB::table('component_logs')->insert($data);
+        DB::table('log_components')->insert($data);
     }
 }

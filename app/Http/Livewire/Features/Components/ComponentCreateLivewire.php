@@ -7,6 +7,7 @@ use App\Models\Component as HardwareComponent;
 use App\Models\ComponentLog;
 use App\Models\Condition;
 use App\Models\Location;
+use App\Models\LogComponent;
 use App\Models\Manufacturer;
 use App\Models\Vendor;
 use Carbon\Carbon;
@@ -17,7 +18,7 @@ class ComponentCreateLivewire extends Component
 {
     protected $listeners = ['routeRefreshCall' => '$refresh', 'createSubmit' => 'createSubmit', 'toggleWarranty' => 'toggleWarranty'];
 
-    public $stockin_at, $serial_number, $category_id, $vendor_id, $location_id, $condition_id, $manufacturer_id, $status_id, $name, $date_issued, $warranty_start, $warranty_end, $note;
+    public $stockin_at, $serial_number, $category_id, $stockin_source, $condition_id, $manufacturer_id, $status_id, $name, $warranty_start, $warranty_end, $note;
     public $serialNumber = null;
     public $createSuccess = null;
     public $toggleWarranty = null;
@@ -51,8 +52,6 @@ class ComponentCreateLivewire extends Component
         return [
             'categories' => Category::select('id', 'name')->get(),
             'conditions' => Condition::select('id', 'name')->get(),
-            'locations' => Location::select('id', 'name')->get(),
-            'vendors' => Vendor::select('id', 'name')->get(),
             'manufacturers' => Manufacturer::select('id', 'name')->get(),
         ];
     }
@@ -101,8 +100,7 @@ class ComponentCreateLivewire extends Component
             'stockin_at' => $this->stockin_at,
             'category_id' => $this->category_id ?? null,
             'condition_id' => $this->condition_id ?? null,
-            'location_id' => $this->location_id ?? null,
-            'vendor_id' => $this->vendor_id ?? null,
+            'stockin_source' => $this->stockin_source ?? null,
             'manufacturer_id' => $this->manufacturer_id ?? null,
             'status_id' => 1, // Mặc định thêm mới là Đang tồn kho
             'note' => $this->note ?? null,
@@ -111,7 +109,7 @@ class ComponentCreateLivewire extends Component
         ];
 
         $component = HardwareComponent::create($insert);
-        $component->load(['category', 'condition', 'location', 'vendor', 'manufacturer']);
+        $component->load(['category', 'condition', 'manufacturer']);
 
         $this->createSuccess = [
             'serial_number' => $component->serial_number,
@@ -119,8 +117,7 @@ class ComponentCreateLivewire extends Component
             'stockin_at' => $component->stockin_at,
             'category' => $component->category->name ?? null,
             'condition' => $component->condition->name ?? null,
-            'location' => $component->location->name ?? null,
-            'vendor' => $component->vendor->name ?? null,
+            'stockin_source' => $component->stockin_source ?? null,
             'manufacturer' => $component->manufacturer->name ?? null,
             'note' => $component->note ?? null,
             'warranty_start' => $component->warranty_start ?? null,
@@ -129,13 +126,12 @@ class ComponentCreateLivewire extends Component
             'barcode' => $barcode ?? null,
         ];
 
-        ComponentLog::create([
+        LogComponent::create([
             'component_id' => $component->id,
             'user_id' => auth()->user()->id,
             'action_id' => 15, // Dữ liệu nhập kho, thêm mơi
-            'location_id' => $this->location_id ?? null,
             'customer_id' => null,
-            'vendor_id' => $this->vendor_id ?? null,
+            'stockin_source' => $this->stockin_source ?? null,
             'note' => 'Nhập kho linh kiện mới',
             'stockout_at' => null, // fallback nếu null
             'stockreturn_at' => null, // fallback nếu null
@@ -152,13 +148,10 @@ class ComponentCreateLivewire extends Component
         return [
             'serial_number' => 'required|string|max:255|unique:components,serial_number',
             'name' => 'required|string|max:255|unique:components,name',
+            'category_id' => 'required|exists:categories,id',
             'stockin_at' => 'date|after_or_equal:1970-01-01',
-
-
-            'category_id' => 'nullable|exists:categories,id',
-            'vendor_id' => 'nullable|exists:vendors,id',
+            'stockin_source' => 'nullable|string|max:255',
             'condition_id' => 'nullable|exists:conditions,id',
-            'location_id' => 'nullable|exists:locations,id',
             'manufacturer_id' => 'nullable|exists:manufacturers,id',
 
             'note' => 'nullable|string|max:10000',

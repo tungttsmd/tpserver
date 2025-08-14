@@ -2,8 +2,6 @@
     @php
         $categoryOptions = [];
         $conditionOptions = [];
-        $locationOptions = [];
-        $vendorOptions = [];
         $manufacturerOptions = [];
 
         foreach ($categories as $category) {
@@ -11,12 +9,6 @@
         }
         foreach ($conditions as $condition) {
             $conditionOptions[$condition->id] = $condition->name;
-        }
-        foreach ($locations as $location) {
-            $locationOptions[$location->id] = $location->name;
-        }
-        foreach ($vendors as $vendor) {
-            $vendorOptions[$vendor->id] = $vendor->name;
         }
         foreach ($manufacturers as $manufacturer) {
             $manufacturerOptions[$manufacturer->id] = $manufacturer->name;
@@ -35,7 +27,7 @@
         </div>
 
         {{-- Tên linh kiện & ngày nhập kho --}}
-        <div class="d-flex gap-3 flex-wrap">
+        <div class="d-flex gap-3 flex-wrap mb-3">
             <div class="flex-grow-1">
                 <label for="name" class="form-label">Tên linh kiện<span class="text-warning"> *</span></label>
                 <div class="input-group border-main">
@@ -53,6 +45,17 @@
                         class="form-control input-hover border-0" required>
                 </div>
             </div>
+        </div>
+
+        {{-- Nguồn nhập --}}
+        <div class="mb-3">
+            <label for="stockin-source" class="form-label">Nguồn nhập</label>
+            <div class="input-group border rounded">
+                <span class="input-group-text border-0"><i class="fas fa-barcode"></i></span>
+                <input wire:model.defer="stockin_source" type="text" id="stockin-source"
+                    class="form-control input-hover border-0" placeholder="Nguồn nhập">
+            </div>
+            <p class="mt-2 fw-bold" id="code-output-stockin-source"></p>
         </div>
 
         {{-- Bảo hành --}}
@@ -90,8 +93,7 @@
             <label for="category_id" class="form-label">Phân loại</label>
             <div class="input-group border rounded">
                 <span class="input-group-text border-0"><i class="fas fa-cogs"></i></span>
-                <select wire:model.defer="category_id" id="category_id" class="form-control input-hover border-0"
-                    required>
+                <select wire:model.defer="category_id" id="category_id" class="form-control input-hover border-0">
                     <option value="">-- Chọn phân loại --</option>
                     @foreach ($categoryOptions as $key => $option)
                         <option value="{{ $key }}">{{ $option }}</option>
@@ -101,7 +103,15 @@
         </div>
 
         {{-- Các field chọn còn lại --}}
-        @foreach ([['livewire' => 'condition_id', 'label' => 'Tình trạng', 'icon' => 'fas fa-microchip', 'options' => $conditionOptions], ['livewire' => 'location_id', 'label' => 'Vị trí', 'icon' => 'fas fa-map-marker-alt', 'options' => $locationOptions], ['livewire' => 'manufacturer_id', 'label' => 'Hãng sản xuất', 'icon' => 'fas fa-industry', 'options' => $manufacturerOptions], ['livewire' => 'vendor_id', 'label' => 'Nhà cung cấp', 'icon' => 'fas fa-store', 'options' => $vendorOptions]] as $field)
+        @foreach ([
+        [
+            'livewire' => 'condition_id',
+            'label' => 'Tình trạng',
+            'icon' => 'fas fa-microchip',
+            'options' => $conditionOptions,
+        ],
+        ['livewire' => 'manufacturer_id', 'label' => 'Hãng sản xuất', 'icon' => 'fas fa-industry', 'options' => $manufacturerOptions],
+    ] as $field)
             <div class="mb-3">
                 <label for="{{ $field['livewire'] }}" class="form-label">{{ $field['label'] }}</label>
                 <div class="input-group border rounded">
@@ -116,6 +126,8 @@
                 </div>
             </div>
         @endforeach
+
+
 
         {{-- Mô tả --}}
         <div class="mb-3">

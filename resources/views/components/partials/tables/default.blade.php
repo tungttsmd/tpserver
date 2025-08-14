@@ -1,9 +1,6 @@
 @props([
     'columns' => ['columns 1', 'columns 2'],
-    'list' => [
-        ['--' => '--', 'columns 2' => '--'],
-        ['--' => '--', 'columns 2' => '--'],
-    ],
+    'list' => [['--' => '--', 'columns 2' => '--'], ['--' => '--', 'columns 2' => '--']],
     'sort' => null,
     'dir' => null,
     'actions' => null,

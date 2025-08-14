@@ -2,9 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Manufacturer;
 use Illuminate\Database\Seeder;
-use PhpOffice\PhpSpreadsheet\Calculation\Category;
 
 class DatabaseSeeder extends Seeder
 {
@@ -19,10 +17,10 @@ class DatabaseSeeder extends Seeder
             PermissionSeeder::class,
             UserSeeder::class,
             ComponentSeeder::class,
-            ActionLogSeeder::class,
-            ComponentLogSeeder::class,
+            ActionSeeder::class,
+            LogComponentSeeder::class,
             CategorySeeder::class,
-            UserLogSeeder::class,
+            LogUserActionSeeder::class,
             VendorSeeder::class,
             ProfileRoleColorSeeder::class,
             CustomerSeeder::class,
