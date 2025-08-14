@@ -204,45 +204,10 @@
             </a>
             <ul class="nav nav-treeview">
                 <li class="nav-item">
-                    <a href="{{ route('components.download', ['type' => 'xlsx']) }}" class="nav-link">
-                        <i class="far fa-file-excel nav-icon"></i>
-                        <p>Tải xuống .xlsx</p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ route('components.download', ['type' => 'xls']) }}" class="nav-link">
-                        <i class="fas fa-file-excel nav-icon"></i>
-                        <p>Tải xuống .xls</p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ route('components.download', ['type' => 'html']) }}" class="nav-link">
-                        <i class="far fa-file-code nav-icon"></i>
-                        <p>Tải xuống .html</p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ route('components.download', ['type' => 'csv']) }}" class="nav-link">
-                        <i class="fas fa-file-csv nav-icon"></i>
-                        <p>Tải xuống .csv</p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ route('components.download', ['type' => 'pdf']) }}" class="nav-link">
-                        <i class="far fa-file-pdf nav-icon"></i>
-                        <p>Tải xuống .pdf</p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ route('components.download', ['type' => 'ods']) }}" class="nav-link">
-                        <i class="fas fa-file-alt nav-icon"></i>
-                        <p>Tải xuống .ods</p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ route('logs.download') }}" class="nav-link">
+                    <a href="#" class="nav-link"
+                        onclick="event.preventDefault(); Livewire.emit('route', 'exports', 'index')">
                         <i class="fas fa-clipboard-list nav-icon"></i>
-                        <p>Tải xuống nhật ký</p>
+                        <p>Tải xuống dữ liệu</p>
                     </a>
                 </li>
             </ul>

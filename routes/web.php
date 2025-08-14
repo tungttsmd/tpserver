@@ -1,5 +1,6 @@
 <?php
 
+use App\Exports\VendorsExport;
 use App\Http\Controllers\DatabaseController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
@@ -12,6 +13,7 @@ use App\Http\Controllers\ComponentRecallLogController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\StaticController;
 use App\Http\Controllers\UserController;
+use Maatwebsite\Excel\Facades\Excel;
 
 // // // Mật khẩu bạn muốn mã hóa
 // $password = 'admin';  // Thay thế bằng mật khẩu thực tế
@@ -27,6 +29,11 @@ Route::post('login', [AuthController::class, 'loginpost'])->name('auth.loginpost
 
 
 Route::middleware('auth')->group(function () {
+
+    // Livewire: tải xuống
+    Route::get('/vendors/download', function () {
+        return Excel::download(new VendorsExport, 'vendors.xlsx');
+    })->name('vendors.download');
 
     // 1. Đăng xuất
     Route::get('logout', [AuthController::class, 'logout'])->name('auth.logout');

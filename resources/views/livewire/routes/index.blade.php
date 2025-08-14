@@ -26,10 +26,13 @@
             @endif
         @elseif ($controller === 'stats')
             @if ($action === 'index')
-                <livewire:features.stats.stat-index-livewire  wire:key="{{ $refresh }}" />
+                <livewire:features.stats.stat-index-livewire wire:key="{{ $refresh }}" />
             @elseif ($action === 'stock-variation')
-                <livewire:features.stats.stat-stock-variation-livewire 
-                    wire:key="{{ $refresh }}" />
+                <livewire:features.stats.stat-stock-variation-livewire wire:key="{{ $refresh }}" />
+            @endif
+        @elseif ($controller === 'exports')
+            @if ($action === 'index')
+                <livewire:features.exports.export-livewire wire:key="{{ $refresh }}" />
             @endif
         @elseif ($controller === 'customers')
             @if ($action === 'index')
