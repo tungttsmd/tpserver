@@ -6,272 +6,263 @@
     'toggleWarranty' => false,
 ])
 
-@php
-    $categoryOptions = $categories->pluck('name', 'id')->toArray();
-    $conditionOptions = $conditions->pluck('name', 'id')->toArray();
-    $manufacturerOptions = $manufacturers->pluck('name', 'id')->toArray();
+<div class="container-fluid p-3 p-md-4">
+    <div class="row justify-content-center">
+        <!-- Form chính -->
+        <div class="col-12 col-lg-8 col-xl-7">
+            <div class="card shadow-sm">
+                <div class="card-body p-3 p-md-4">
+                    <!-- Thông báo lỗi -->
+                    @if ($errors->any())
+                        <div class="alert alert-danger mb-3">
+                            <ul class="mb-0 small">
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
 
-    $fields = [
-        [
-            'livewire' => 'condition_id',
-            'name' => 'condition',
-            'label' => 'Tình trạng',
-            'icon' => 'fas fa-microchip',
-            'options' => $conditionOptions,
-        ],
-    ];
-    $categoryField = [
-        'livewire' => 'category_id',
-        'name' => 'category',
-        'label' => 'Phân loại',
-        'icon' => 'fas fa-cogs',
-        'options' => $categoryOptions,
-    ];
-    $manufacturerField = [
-        'livewire' => 'manufacturer_id',
-        'name' => 'manufacturer',
-        'label' => 'Hãng sản xuất',
-        'icon' => 'fas fa-industry',
-        'options' => $manufacturerOptions,
-    ];
-@endphp
+                    <!-- Thông báo thành công -->
+                    @if ($createSuccess)
+                        <div class="alert alert-success mb-3">
+                            <i class="fas fa-check-circle me-2"></i>Thêm mới thành công!
+                        </div>
+                    @endif
 
-<div class="flex flex-col md:flex-row gap-6 p-6 w-full">
-
-    {{-- CỘT PHẢI: QR CODE + THÔNG TIN --}}
-    <div class="w-full md:w-1/2 flex flex-col gap-12 p-4">
-
-        {{-- QR Code --}}
-        <div
-            class="flex-1 flex flex-column gap-6 items-center justify-center border-2 border-dashed border-gray-300 rounded-2xl p-3 transition-opacity duration-300 {{ $createSuccess ? 'opacity-100' : 'opacity-60' }}">
-            <img src="{{ $createSuccess['qrcode'] ?? asset('img/qrcode-default.jpg') }}" alt="QR Code"
-                class="mr-12 max-w-[256px] max-h-[256px] object-contain m-0" />
-            @unless ($createSuccess)
-                <p class="text-sm text-gray-500 mr-16">QR code &amp; Barcode sẽ hiển thị tại đây</p>
-            @endunless
-            {{-- @if ($createSuccess)
-                <div class="flex flex-col items-center mr-8 text-gray-700 font-semibold">
-                    <p>Serial number</p>
-                    <img src="{{ $createSuccess['barcode'] }}" alt="Barcode" />
-                </div>
-            @endif --}}
-        </div>
-
-        {{-- Thông tin --}}
-        <div class="flex-1 overflow-y-auto max-h-60">
-            @if ($createSuccess)
-                <div class="bg-green-100 text-green-800 text-sm font-medium p-3 mb-3 rounded flex items-center">
-                    <i class="fas fa-check-circle mr-2"></i> Thêm mới thành công!
-                </div>
-                <div class="border rounded-xl p-4 bg-white overflow-y-auto max-h-60 mb-6">
-                    <h5 class="text-green-600 font-semibold mb-3 flex items-center">
-                        <i class="fas fa-info-circle mr-2"></i>Thông tin linh kiện
-                    </h5>
-                    <ul class="text-sm divide-y divide-gray-200">
-                        @foreach ($createSuccess as $key => $value)
-                            @continue(in_array($key, ['qrcode', 'barcode']))
-                            <li class="py-2">
-                                <span class="font-semibold capitalize">{{ str_replace('_', ' ', $key) }}:</span>
-                                <span class="ml-1">{{ $value ?? '-' }}</span>
-                            </li>
-                        @endforeach
-                    </ul>
-                </div>
-            @else
-                <p class="text-center text-sm text-gray-500 mb-4">
-                    <i class="fas fa-info-circle mr-1"></i> Thông tin sẽ hiển thị sau khi thêm mới
-                </p>
-            @endif
-        </div>
-    </div>
-
-    {{-- FORM BÊN TRÁI --}}
-    <div class="w-full md:w-1/2 border-r border-gray-300 pr-6">
-
-        {{-- Lỗi validation --}}
-        @if ($errors->any())
-            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-3">
-                <ul class="list-disc pl-5 space-y-1">
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
-
-        <form wire:submit.prevent="createSubmit" class="space-y-6">
-
-            {{-- Serial number --}}
-            <div>
-                <label for="serial-number-generate" class="block text-sm font-medium text-gray-700">Serial number <span
-                        class="text-warning">*</span></label>
-                <div
-                    class="mt-1 relative rounded-md shadow-sm flex items-center border border-gray-300 focus-within:border-primary-600 focus-within:ring-1 focus-within:ring-primary-600">
-                    <span class="pl-3 pr-2 text-gray-400 pointer-events-none"><i class="fas fa-barcode"></i></span>
-                    <input wire:model.defer="serial_number" type="text" id="serial-number-generate"
-                        class="block w-full border-0 py-2 pl-1 pr-3 text-gray-900 placeholder-gray-400 focus:ring-0 sm:text-sm"
-                        placeholder="Nhập số serial chính xác (ví dụ: SN123456789)" autofocus required />
-                </div>
-            </div>
-
-            {{-- Tên linh kiện + Ngày nhập kho --}}
-            <div class="flex flex-wrap gap-4">
-                <div class="flex-1 min-w-[12rem]">
-                    <label for="name" class="block text-sm font-medium text-gray-700">Tên linh kiện <span
-                            class="text-warning">*</span></label>
-                    <div
-                        class="mt-1 relative rounded-md shadow-sm flex items-center border border-gray-300 focus-within:border-primary-600 focus-within:ring-1 focus-within:ring-primary-600">
-                        <span class="pl-3 pr-2 text-gray-400 pointer-events-none"><i class="fas fa-tags"></i></span>
-                        <input wire:model.defer="name" type="text" id="name"
-                            class="block w-full border-0 py-2 pl-1 pr-3 text-gray-900 placeholder-gray-400 focus:ring-0 sm:text-sm h-[40px]"
-                            placeholder="Nhập tên linh kiện" required />
-                    </div>
-                </div>
-
-                <div class="flex-1 min-w-[12rem]">
-                    <label for="stockin_at" class="block text-sm font-medium text-gray-700">Ngày nhập kho <span
-                            class="text-warning">*</span></label>
-                    <div
-                        class="mt-1 relative rounded-md shadow-sm flex items-center border border-gray-300 focus-within:border-primary-600 focus-within:ring-1 focus-within:ring-primary-600">
-                        <span class="pl-3 pr-2 text-gray-400 pointer-events-none"><i
-                                class="fas fa-calendar-alt"></i></span>
-                        <input wire:model.defer="stockin_at" type="date" id="stockin_at"
-                            class="block w-full border-0 py-2 pl-1 pr-3 text-gray-900 placeholder-gray-400 focus:ring-0 sm:text-sm h-[40px]"
-                            required />
-                    </div>
-                </div>
-            </div>
-            {{-- Phân loại --}}
-            <div>
-                <label for="{{ $categoryField['name'] }}"
-                    class="block text-sm font-medium text-gray-700">{{ $categoryField['label'] }} <span
-                        class="text-warning">*</span></label>
-                <div
-                    class="mt-1 relative rounded-md shadow-sm flex items-center border border-gray-300 focus-within:border-primary-600 focus-within:ring-1 focus-within:ring-primary-600">
-                    <span class="pl-3 pr-2 text-gray-400 pointer-events-none"><i
-                            class="{{ $categoryField['icon'] }}"></i></span>
-                    <select wire:model.defer="{{ $categoryField['livewire'] }}" id="{{ $categoryField['name'] }}"
-                        class="block w-full border-0 py-2 pl-1 pr-3 text-gray-900 focus:ring-0 sm:text-sm" required>
-                        <option value="">-- Chọn {{ strtolower($categoryField['label']) }} --</option>
-                        @foreach ($categoryField['options'] as $key => $option)
-                            <option value="{{ $key }}">{{ $option }}</option>
-                        @endforeach
-                    </select>
-                </div>
-            </div>
-
-
-            {{-- Bảo hành --}}
-            <div class="pt-2 pb-2 pl-3 pr-3 mt-4 rounded border border-green-600 bg-green-50">
-                <label class="cursor-pointer inline-flex items-center space-x-2 text-green-800 select-none mb-0 group">
-                    <input type="checkbox" class="cursor-pointer form-checkbox h-4 w-4 text-green-600"
-                        onclick="event.preventDefault(); Livewire.emit('toggleWarranty', {{ $toggleWarranty ? 'null' : 'true' }})"
-                        {{ $warranty_start ? 'checked' : '' }} />
-                    <i class="fas fa-shield-alt"></i>
-                    <span class="text-sm">Linh kiện có bảo hành</span>
-                </label>
-
-                @if ($toggleWarranty)
-                    <div class="mt-3 flex flex-wrap gap-4 pb-1">
-                        <div class="flex-1 min-w-[12rem]">
-                            <label for="warranty_start" class="block text-sm font-medium text-green-800">Ngày bắt đầu
-                                bảo hành</label>
-                            <div
-                                class="mt-1 relative rounded-md shadow-sm flex items-center border border-green-600 focus-within:border-green-700 focus-within:ring-1 focus-within:ring-green-700">
-                                <span class="pl-3 pr-2 text-green-600 pointer-events-none"><i
-                                        class="fas fa-shield-alt"></i></span>
-                                <input wire:model.defer="warranty_start" type="date" id="warranty_start"
-                                    class="block w-full border-0 py-2 pl-1 pr-3 text-green-900 placeholder-green-400 focus:ring-0 sm:text-sm"
-                                    required />
+                    <form wire:submit.prevent="createSubmit" class="needs-validation" novalidate>
+                        <!-- Serial Number -->
+                        <div class="mb-3">
+                            <label for="serial_number" class="form-label fw-semibold">
+                                Serial Number <span class="text-danger">*</span>
+                            </label>
+                            <div class="input-group input-group-lg">
+                                <span class="input-group-text bg-light">
+                                    <i class="fas fa-barcode"></i>
+                                </span>
+                                <input 
+                                    type="text" 
+                                    class="form-control" 
+                                    id="serial_number"
+                                    wire:model.defer="serial_number"
+                                    placeholder="Nhập serial number"
+                                    required
+                                >
                             </div>
                         </div>
-                        <div class="flex-1 min-w-[12rem]">
-                            <label for="warranty_end" class="block text-sm font-medium text-green-800">Ngày kết thúc
-                                bảo
-                                hành</label>
-                            <div
-                                class="mt-1 relative rounded-md shadow-sm flex items-center border border-green-600 focus-within:border-green-700 focus-within:ring-1 focus-within:ring-green-700">
-                                <span class="pl-3 pr-2 text-green-600 pointer-events-none"><i
-                                        class="fas fa-calendar"></i></span>
-                                <input wire:model.defer="warranty_end" type="date" id="warranty_end"
-                                    class="block w-full border-0 py-2 pl-1 pr-3 text-green-900 placeholder-green-400 focus:ring-0 sm:text-sm"
-                                    required />
+
+                        <!-- Tên linh kiện -->
+                        <div class="mb-3">
+                            <label for="name" class="form-label fw-semibold">
+                                Tên linh kiện <span class="text-danger">*</span>
+                            </label>
+                            <div class="input-group input-group-lg">
+                                <span class="input-group-text bg-light">
+                                    <i class="fas fa-tags"></i>
+                                </span>
+                                <input 
+                                    type="text" 
+                                    class="form-control" 
+                                    id="name"
+                                    wire:model.defer="name"
+                                    placeholder="Nhập tên linh kiện"
+                                    required
+                                >
                             </div>
                         </div>
-                    </div>
-                @endif
-            </div>
-            {{-- Nguồn nhập --}}
-            <div class="mt-3">
-                <label for="stockin-source" class="block text-sm font-medium text-gray-700">Nguồn nhập</label>
-                <div
-                    class="mt-1 relative rounded-md shadow-sm flex items-center border border-gray-300 focus-within:border-primary-600 focus-within:ring-1 focus-within:ring-primary-600">
-                    <span class="pl-3 pr-2 text-gray-400 pointer-events-none"><i class="fas fa-barcode"></i></span>
-                    <input wire:model.defer="stockin_source" type="text" id="stockin-source"
-                        class="block w-full border-0 py-2 pl-1 pr-3 text-gray-900 placeholder-gray-400 focus:ring-0 sm:text-sm"
-                        placeholder="Nguồn nhập" />
+
+                        <!-- Ngày nhập kho -->
+                        <div class="mb-3">
+                            <label for="stockin_at" class="form-label fw-semibold">
+                                Ngày nhập kho <span class="text-danger">*</span>
+                            </label>
+                            <div class="input-group input-group-lg">
+                                <span class="input-group-text bg-light">
+                                    <i class="fas fa-calendar"></i>
+                                </span>
+                                <input 
+                                    type="date" 
+                                    class="form-control" 
+                                    id="stockin_at"
+                                    wire:model.defer="stockin_at"
+                                    required
+                                >
+                            </div>
+                        </div>
+
+                        <!-- Phân loại -->
+                        <div class="mb-3">
+                            <label for="category_id" class="form-label fw-semibold">
+                                Phân loại <span class="text-danger">*</span>
+                            </label>
+                            <div class="input-group input-group-lg">
+                                <span class="input-group-text bg-light">
+                                    <i class="fas fa-cogs"></i>
+                                </span>
+                                <select 
+                                    class="form-select" 
+                                    id="category_id"
+                                    wire:model.defer="category_id"
+                                    required
+                                >
+                                    <option value="">-- Chọn phân loại --</option>
+                                    @foreach ($categories as $category)
+                                        <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Bảo hành -->
+                        <div class="mb-3">
+                            <div class="form-check form-check-lg">
+                                <input 
+                                    class="form-check-input" 
+                                    type="checkbox" 
+                                    id="has_warranty"
+                                >
+                                <label class="form-check-label fw-semibold" for="has_warranty">
+                                    Linh kiện có bảo hành
+                                </label>
+                            </div>
+                        </div>
+
+                        <div id="warranty-fields" class="row gap-3" style="display: none;">
+                            <div class="col-12 col-sm-6">
+                                <div class="mb-3">
+                                    <label for="warranty_start" class="form-label fw-semibold">Ngày bắt đầu bảo hành</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light">
+                                            <i class="fas fa-shield-alt"></i>
+                                        </span>
+                                        <input 
+                                            type="date" 
+                                            class="form-control" 
+                                            id="warranty_start"
+                                            wire:model.defer="warranty_start"
+                                        >
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-6">
+                                <div class="mb-3">
+                                    <label for="warranty_end" class="form-label fw-semibold">Ngày kết thúc bảo hành</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light">
+                                            <i class="fas fa-calendar"></i>
+                                        </span>
+                                        <input 
+                                            type="date" 
+                                            class="form-control" 
+                                            id="warranty_end"
+                                            wire:model.defer="warranty_end"
+                                        >
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Mô tả -->
+                        <div class="mb-4">
+                            <textarea 
+                                class="form-control" 
+                                id="note"
+                                wire:model.defer="note"
+                                rows="4"
+                                placeholder="Ghi chú về linh kiện"
+                            ></textarea>
+                        </div>
+
+                        <!-- Nút submit -->
+                        <div class="d-grid gap-2 d-md-flex">
+                            <button type="submit" class="btn btn-primary btn-lg flex-fill">
+                                <i class="fas fa-plus me-2"></i>Thêm mới
+                            </button>
+                            <button type="button" class="btn btn-secondary btn-lg" onclick="resetForm()">
+                                <i class="fas fa-times me-2"></i>Hủy bỏ
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
-
-
-            {{-- Các field condition, location --}}
-            @foreach ($fields as $field)
-                <div>
-                    <label for="{{ $field['name'] }}"
-                        class="block text-sm font-medium text-gray-700">{{ $field['label'] }}</label>
-                    <div
-                        class="mt-1 relative rounded-md shadow-sm flex items-center border border-gray-300 focus-within:border-primary-600 focus-within:ring-1 focus-within:ring-primary-600">
-                        <span class="pl-3 pr-2 text-gray-400 pointer-events-none"><i
-                                class="{{ $field['icon'] }}"></i></span>
-                        <select wire:model.defer="{{ $field['livewire'] }}" id="{{ $field['name'] }}"
-                            class="block w-full border-0 py-2 pl-1 pr-3 text-gray-900 focus:ring-0 sm:text-sm">
-                            <option value="">-- Chọn {{ strtolower($field['label']) }} --</option>
-                            @foreach ($field['options'] as $key => $option)
-                                <option value="{{ $key }}">{{ $option }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
-            @endforeach
-
-            {{-- Hãng sản xuất --}}
-            <div class="flex flex-wrap gap-4">
-                <div class="flex-1 min-w-[12rem]">
-                    <label for="{{ $manufacturerField['name'] }}"
-                        class="block text-sm font-medium text-gray-700">{{ $manufacturerField['label'] }}</label>
-                    <div
-                        class="mt-1 relative rounded-md shadow-sm flex items-center border border-gray-300 focus-within:border-primary-600 focus-within:ring-1 focus-within:ring-primary-600">
-                        <span class="pl-3 pr-2 text-gray-400 pointer-events-none"><i
-                                class="{{ $manufacturerField['icon'] }}"></i></span>
-                        <select wire:model.defer="{{ $manufacturerField['livewire'] }}"
-                            id="{{ $manufacturerField['name'] }}"
-                            class="block w-full border-0 py-2 pl-1 pr-3 text-gray-900 focus:ring-0 sm:text-sm">
-                            <option value="">-- Chọn {{ strtolower($manufacturerField['label']) }} --</option>
-                            @foreach ($manufacturerField['options'] as $key => $option)
-                                <option value="{{ $key }}">{{ $option }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
-
-            </div>
-
-            {{-- Mô tả --}}
-            <div>
-                <label for="note" class="block text-sm font-medium text-gray-700">Mô tả</label>
-                <textarea wire:model.defer="note" id="note" rows="3"
-                    class="mt-1 block w-full rounded-md border border-gray-300 shadow-sm py-2 pl-1 pr-3 text-gray-900 placeholder-gray-400 focus:border-primary-600 focus:ring focus:ring-primary-200 focus:ring-opacity-50 sm:text-sm"
-                    placeholder="Ghi chú về linh kiện"></textarea>
-            </div>
-
-            {{-- Nút submit --}}
-            <div>
-                <button type="submit"
-                    class="inline-flex justify-center items-center gap-2 rounded-md bg-green-600 px-4 py-2 text-white text-sm font-semibold hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
-                    <i class="fas fa-plus"></i> Thêm mới
-                </button>
-            </div>
-
-        </form>
+        </div>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Tự động set ngày bắt đầu bảo hành = ngày nhập kho
+    const stockinAtInput = document.getElementById('stockin_at');
+    const warrantyStartInput = document.getElementById('warranty_start');
+    
+    if (stockinAtInput && warrantyStartInput) {
+        stockinAtInput.addEventListener('change', function() {
+            warrantyStartInput.value = this.value;
+        });
+    }
+
+    // Xử lý hiển thị/ẩn field bảo hành
+    const warrantyCheckbox = document.getElementById('has_warranty');
+    const warrantyFields = document.getElementById('warranty-fields');
+    
+    if (warrantyCheckbox && warrantyFields) {
+        warrantyCheckbox.addEventListener('change', function() {
+            if (this.checked) {
+                warrantyFields.style.display = 'flex';
+                // Tự động set ngày bắt đầu bảo hành = ngày nhập kho
+                if (stockinAtInput && stockinAtInput.value) {
+                    warrantyStartInput.value = stockinAtInput.value;
+                }
+            } else {
+                warrantyFields.style.display = 'none';
+            }
+        });
+    }
+});
+
+// Livewire event listener để xử lý khi component được load
+document.addEventListener('livewire:load', function() {
+    Livewire.hook('message.processed', (message, component) => {
+        // Khi Livewire xử lý xong, kiểm tra và set giá trị warranty_start
+        const stockinAtInput = document.getElementById('stockin_at');
+        const warrantyStartInput = document.getElementById('warranty_start');
+        
+        if (stockinAtInput && warrantyStartInput && stockinAtInput.value) {
+            warrantyStartInput.value = stockinAtInput.value;
+        }
+    });
+});
+
+// Function reset form
+function resetForm() {
+    // Reset tất cả input fields
+    const form = document.querySelector('form');
+    if (form) {
+        form.reset();
+    }
+    
+    // Set ngày nhập kho về hôm nay
+    const stockinAtInput = document.getElementById('stockin_at');
+    if (stockinAtInput) {
+        const today = new Date().toISOString().split('T')[0]; // Format: YYYY-MM-DD
+        stockinAtInput.value = today;
+    }
+    
+    // Ẩn field bảo hành
+    const warrantyFields = document.getElementById('warranty-fields');
+    if (warrantyFields) {
+        warrantyFields.style.display = 'none';
+    }
+    
+    // Uncheck checkbox bảo hành
+    const warrantyCheckbox = document.getElementById('has_warranty');
+    if (warrantyCheckbox) {
+        warrantyCheckbox.checked = false;
+    }
+    
+    // Clear Livewire models (nếu cần)
+    if (typeof Livewire !== 'undefined') {
+        Livewire.emit('resetForm');
+    }
+}
+</script>

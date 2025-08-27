@@ -11,13 +11,11 @@
         href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback" />
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="{{ asset('plugins/fontawesome-free/css/all.min.css') }}" />
-    <!-- AdminLTE -->
-    <link rel="stylesheet" href="{{ asset('dist/css/adminlte.min.css') }}" />
     <!-- Tailwind -->
     <script src="https://cdn.tailwindcss.com"></script>
 
     {{-- Custom & Livewire --}}
-    <link rel="stylesheet" href="{{ asset('css/layouts/app.css') }}">
+    {{-- <link rel="stylesheet" href="{{ asset('css/layouts/app.css') }}"> --}}
     @livewireStyles
 </head>
 
@@ -25,15 +23,11 @@
 
     <div class="flex h-screen overflow-hidden">
         {{-- Sidebar cố định --}}
-        <aside
-            class="relative flex flex-col h-full tp-server layouts sidebar main-sidebar sidebar-dark-primary bg-dark-main elevation-4">
+        <aside style="width:220px; min-width:220px; max-width:220px; overflow-x:auto; overflow-y:auto; display:block;">
             <x-partials.flashes.alert />
             @include('layouts.elements.sidebar-user')
             @include('layouts.elements.sidebar-menu')
-            @include('layouts.elements.sidebar-cover')
-
         </aside>
-
 
         {{-- Nội dung chính + footer --}}
         <div class="tp-server layouts content-wrapper flex flex-col flex-1 overflow-hidden">
@@ -53,7 +47,6 @@
     <script src="{{ asset('plugins/jquery/jquery.min.js') }}"></script>
     <script src="{{ asset('plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('dist/js/adminlte.min.js') }}"></script>
-    <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
     <script src="{{ asset('js/layouts/app.js') }}"></script>
     <script src="{{ asset('js/layouts/modal.js') }}"></script>
     @livewireScripts
