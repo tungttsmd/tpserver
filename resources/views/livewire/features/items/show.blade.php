@@ -182,7 +182,7 @@
                         </ul>
                     </div>
                     <div class="mt-2">
-                        {{ $suggestions->links('livewire.elements.components.arrow-paginator') }}
+                        {{ $suggestions->links('livewire.components.arrow-pagination') }}
                     </div>
                 @else
                     <p class="text-gray-500 italic text-md ml-4">Không có linh kiện tương tự.</p>

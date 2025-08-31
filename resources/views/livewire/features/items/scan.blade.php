@@ -5,7 +5,7 @@
             <div class="card">
                 <div class="card-body">
                     <!-- Thông báo -->
-                    @include('livewire.elements.components.alert')
+                    @include('livewire.components.alert')
 
                     <!-- Nhóm nút chọn chế độ -->
                     <div class="d-flex flex-wrap align-items-center gap-3 mb-3">
