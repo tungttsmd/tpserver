@@ -3,6 +3,7 @@
 use App\Exports\UserLogsExport;
 use App\Exports\VendorsExport;
 use App\Http\Controllers\DatabaseController;
+use App\Http\Livewire\Features\Logs\ComponentLivewire;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ComponentController;
@@ -14,7 +15,8 @@ use App\Http\Controllers\ComponentRecallLogController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\StaticController;
 use App\Http\Controllers\UserController;
-use Maatwebsite\Excel\Facades\Excel;
+use App\Http\Livewire\Features\Components\ComponentCreateLivewire;
+use App\Http\Livewire\Features\Components\ComponentScanLivewire;
 
 // // // Mật khẩu bạn muốn mã hóa
 // $password = 'admin';  // Thay thế bằng mật khẩu thực tế
@@ -31,13 +33,8 @@ Route::post('login', [AuthController::class, 'loginpost'])->name('auth.loginpost
 
 Route::middleware('auth')->group(function () {
 
-    // Livewire: tải xuống
-    Route::get('/vendors/download', function () {
-        return Excel::download(new VendorsExport, 'vendors.xlsx');
-    })->name('vendors.download');
-    Route::get('/user-logs/download', function () {
-        return Excel::download(new UserLogsExport, 'user-logs.xlsx');
-    })->name('user-logs.download');
+    Route::get('/item/create', ComponentCreateLivewire::class)->name('item.create');
+    Route::get('/item/scan', ComponentScanLivewire::class)->name('item.scan');
 
     // 1. Đăng xuất
     Route::get('logout', [AuthController::class, 'logout'])->name('auth.logout');

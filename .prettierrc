@@ -1,0 +1,28 @@
+{
+  "printWidth": 200,
+  "tabWidth": 4,
+  "useTabs": false,
+  "singleQuote": true,
+  "semi": true,
+  "trailingComma": "es5",
+  "bracketSpacing": true,
+  "arrowParens": "always",
+  "htmlWhitespaceSensitivity": "ignore",
+  "overrides": [
+    {
+      "files": "*.blade.php",
+      "options": {
+        "parser": "html",
+        "printWidth": 200,
+        "htmlWhitespaceSensitivity": "ignore"
+      }
+    },
+    {
+      "files": "*.php",
+      "options": {
+        "parser": "php",
+        "printWidth": 200
+      }
+    }
+  ]
+}

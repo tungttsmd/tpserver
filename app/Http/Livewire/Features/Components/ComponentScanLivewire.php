@@ -20,14 +20,14 @@ class ComponentScanLivewire extends Component
     public function render()
     {
         $data = [
-            'component' => null,
+            'item' => null,
             'qrcode' => null,
             'suggestions' => collect(),
         ];
         if ($this->serialNumber) {
             $data = $this->scan($this->serialNumber);
         }
-        return view('livewire.features.components.scan', $data);
+        return view('livewire.features.items.scan', $data);
     }
     public function mount() {}
     public function realtime()
@@ -48,7 +48,7 @@ class ComponentScanLivewire extends Component
     {
         if (!$serial) {
             return [
-                'component' => null,
+                'item' => null,
                 'qrcode' => null,
                 'suggestions' => collect(),
             ];
@@ -56,7 +56,7 @@ class ComponentScanLivewire extends Component
             $serial = trim($serial);
 
             // 1. Lấy chính xác 100%
-            $component = HardwareComponent::with([
+            $item = HardwareComponent::with([
                 'category',
                 'condition',
                 'manufacturer',
@@ -65,18 +65,18 @@ class ComponentScanLivewire extends Component
             $qrcode = "https://api.qrserver.com/v1/create-qr-code/?data={$serial}&size=240x240";
 
             // Phương pháp search đề xuất thông minh
-            $suggestions = $this->smartMatching($component, $serial);
+            $suggestions = $this->smartMatching($item, $serial);
         }
         return [
-            'component' => $component,
+            'item' => $item,
             'qrcode' => $qrcode,
             'suggestions' => $suggestions,
         ];
     }
-    public function smartMatching($component, $serial)
+    public function smartMatching($item, $serial)
     {
         $baseQuery = HardwareComponent::with('category', 'status')
-            ->when($component, fn($q) => $q->where('id', '!=', $component->id));
+            ->when($item, fn($q) => $q->where('id', '!=', $item->id));
 
         // 1. prefix
         $suggestions = (clone $baseQuery)

@@ -1,38 +1,33 @@
-@if (session('success') || session('error'))
-    <div id="flash-message"
-        class="fixed top-4 right-4 z-50 bg-white border-l-4 shadow-lg rounded px-4 py-3 flex items-start gap-3
-        {{ session('success') ? 'border-green-500' : 'border-red-500' }}">
+<!-- Alert container -->
+<div id="alert-container" class="fixed top-4 right-4 z-50 space-y-2"></div>
 
-        <div class="flex-1">
-            <p class="font-semibold">
-                {{ session('success') ? 'Thành công' : 'Lỗi' }}
-            </p>
-            <p>{{ session('success') ?? session('error') }}</p>
-        </div>
-
-        <button onclick="hideFlashMessage()" class="text-gray-500 hover:text-gray-800">
-            &times;
-        </button>
-    </div>
-@endif
 <script>
-    window.hideFlashMessage = function() {
-        const el = document.getElementById('flash-message');
-        if (el) {
-            el.style.opacity = '0';
-            setTimeout(() => el.remove(), 300); // Xóa hẳn khỏi DOM
-        }
-    };
+    document.addEventListener('danger-alert', event => {
+        const data = event.detail; // dữ liệu dispatch từ Livewire
+        const container = document.getElementById('alert-container');
+        if (!container) return;
 
-    document.addEventListener('DOMContentLoaded', () => {
-        const el = document.getElementById('flash-message');
-        if (el) {
-            // Animation xuất hiện
-            el.style.transition = 'opacity 0.3s ease';
-            el.style.opacity = '1';
+        // Tạo alert
+        const alert = document.createElement('div');
+        alert.className =
+            "bg-red-500 text-white p-4 rounded shadow flex justify-between items-start gap-4 max-w-md";
 
-            // Tự ẩn sau 3 giây
-            setTimeout(() => hideFlashMessage(), 3000);
-        }
+        // Nội dung
+        const content = document.createElement('div');
+        content.innerHTML =
+            `<strong>${data.message}</strong><br>${Object.values(data.errors).flat().join('<br>')}`;
+
+        // Nút đóng
+        const closeBtn = document.createElement('button');
+        closeBtn.innerHTML = '&times;';
+        closeBtn.className = "ml-4 font-bold text-lg";
+        closeBtn.addEventListener('click', () => alert.remove());
+
+        alert.appendChild(content);
+        alert.appendChild(closeBtn);
+        container.appendChild(alert);
+
+        // Tự động 5s ẩn
+        setTimeout(() => alert.remove(), 5000);
     });
 </script>

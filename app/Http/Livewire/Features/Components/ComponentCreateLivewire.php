@@ -4,12 +4,9 @@ namespace App\Http\Livewire\Features\Components;
 
 use App\Models\Category;
 use App\Models\Component as HardwareComponent;
-use App\Models\ComponentLog;
 use App\Models\Condition;
-use App\Models\Location;
 use App\Models\LogComponent;
 use App\Models\Manufacturer;
-use App\Models\Vendor;
 use Carbon\Carbon;
 use Illuminate\Validation\ValidationException;
 use Livewire\Component;
@@ -45,12 +42,12 @@ class ComponentCreateLivewire extends Component
     public function toggleWarranty($value = null)
     {
         $this->toggleWarranty = $value;
-        
+
         if ($value) {
             // Nếu bật bảo hành, set ngày bắt đầu = ngày nhập kho
             if ($this->stockin_at) {
                 $this->warranty_start = $this->stockin_at;
-                
+
                 // Tự động tính ngày kết thúc (12 tháng)
                 $startDate = \Carbon\Carbon::parse($this->stockin_at);
                 $endDate = $startDate->copy()->addMonths(12);
@@ -73,7 +70,7 @@ class ComponentCreateLivewire extends Component
     public function render()
     {
         $data = $this->getRelationData();
-        return view('livewire.features.components.create', $data);
+        return view('livewire.features.items.create', $data);
     }
 
     public function updatedStockinAt($value)
@@ -81,7 +78,7 @@ class ComponentCreateLivewire extends Component
         // Khi ngày nhập kho thay đổi, cập nhật ngày bảo hành nếu đang bật
         if ($this->toggleWarranty && $value) {
             $this->warranty_start = $value;
-            
+
             // Tự động tính ngày kết thúc (12 tháng)
             $startDate = \Carbon\Carbon::parse($value);
             $endDate = $startDate->copy()->addMonths(12);

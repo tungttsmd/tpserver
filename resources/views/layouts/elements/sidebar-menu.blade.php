@@ -7,128 +7,125 @@
                 <span style="margin-left:4px;">Linh kiện</span>
             </a>
             <ul id="menu1" style="display:none; list-style:none; padding-left:20px;">
-                <li><a href="#"
-                        onclick="event.preventDefault(); Livewire.emit('route', 'components', 'create')">Thêm mới linh
-                        kiện</a></li>
-                <li><a href="#"
-                        onclick="event.preventDefault(); Livewire.emit('route', 'components', 'scan')">Scan/tra cứu linh
-                        kiện</a></li>
-                <li><a href="#"
-                        onclick="event.preventDefault(); Livewire.emit('route', 'components', null, 'current-stock')">Đang
-                        tồn kho</a></li>
-                <li><a href="#"
-                        onclick="event.preventDefault(); Livewire.emit('route', 'components', null, 'current-stockout')">Đã
-                        xuất kho</a></li>
-            </ul>
+                <li><a href="/item/create">Thêm mới linh kiện</a></li>
+                <li><a href="/item/scan">Scan linh kiện</a></li>
         </li>
-        <li>
-            <a href="#" onclick="toggleMenu(event, 'menu2')" style="display:flex;align-items:center;">
-                <span id="icon-menu2" class="fa fa-angle-right"
-                    style="width:18px;min-width:18px;text-align:center;display:inline-block;"></span>
-                <span style="margin-left:4px;">Khách hàng</span>
-            </a>
-            <ul id="menu2" style="display:none; list-style:none; padding-left:20px;">
-                <li><a href="#"
-                        onclick="event.preventDefault(); Livewire.emit('route', 'customers', 'create')">Thêm mới khách
-                        hàng</a></li>
-                <li><a href="#"
-                        onclick="event.preventDefault(); Livewire.emit('route', 'customers', 'index','customers')">Danh
-                        sách khách hàng</a></li>
-            </ul>
-        </li>
-        <li>
-            <a href="#" onclick="toggleMenu(event, 'menu3')" style="display:flex;align-items:center;">
-                <span id="icon-menu3" class="fa fa-angle-right"
-                    style="width:18px;min-width:18px;text-align:center;display:inline-block;"></span>
-                <span style="margin-left:4px;">Đối tác</span>
-            </a>
-            <ul id="menu3" style="display:none; list-style:none; padding-left:20px;">
-                <li><a href="#" onclick="event.preventDefault(); Livewire.emit('route', 'vendors', 'create')">Thêm
-                        mới đối tác</a></li>
-                <li><a href="#"
-                        onclick="event.preventDefault(); Livewire.emit('route', 'vendors', 'index','vendors')">Danh sách
-                        đối tác</a></li>
-            </ul>
-        </li>
-        <li>
-            <a href="#" onclick="toggleMenu(event, 'menu4')" style="display:flex;align-items:center;">
-                <span id="icon-menu4" class="fa fa-angle-right"
-                    style="width:18px;min-width:18px;text-align:center;display:inline-block;"></span>
-                <span style="margin-left:4px;">Vị trí</span>
-            </a>
-            <ul id="menu4" style="display:none; list-style:none; padding-left:20px;">
-                <li><a href="#"
-                        onclick="event.preventDefault(); Livewire.emit('route', 'locations', 'create')">Thêm mới vị
-                        trí</a></li>
-                <li><a href="#"
-                        onclick="event.preventDefault(); Livewire.emit('route', 'locations', 'index','locations')">Danh
-                        sách vị trí</a></li>
-            </ul>
-        </li>
-        <li>
-            <a href="#" onclick="toggleMenu(event, 'menu5')" style="display:flex;align-items:center;">
-                <span id="icon-menu5" class="fa fa-angle-right"
-                    style="width:18px;min-width:18px;text-align:center;display:inline-block;"></span>
-                <span style="margin-left:4px;">Thống kê</span>
-            </a>
-            <ul id="menu5" style="display:none; list-style:none; padding-left:20px;">
-                <li><a href="#"
-                        onclick="event.preventDefault();Livewire.emit('route', 'stats','stock-variation')">Biến động tồn
-                        kho</a></li>
-                <li><a href="#" onclick="event.preventDefault();Livewire.emit('route', 'stats','index')">Thống kê
-                        linh kiện</a></li>
-            </ul>
-        </li>
-        <li>
-            <a href="#" onclick="toggleMenu(event, 'menu6')" style="display:flex;align-items:center;">
-                <span id="icon-menu6" class="fa fa-angle-right"
-                    style="width:18px;min-width:18px;text-align:center;display:inline-block;"></span>
-                <span style="margin-left:4px;">Người dùng</span>
-            </a>
-            <ul id="menu6" style="display:none; list-style:none; padding-left:20px;">
-                <li><a href="#" onclick="event.preventDefault(); Livewire.emit('route', 'users', 'create')">Thêm
-                        mới người dùng</a></li>
-                <li><a href="#" onclick="event.preventDefault(); Livewire.emit('route', 'users', 'index')">Danh
-                        sách người dùng</a></li>
-            </ul>
-        </li>
-        <li>
-            <a href="#" onclick="toggleMenu(event, 'menu7')" style="display:flex;align-items:center;">
-                <span id="icon-menu7" class="fa fa-angle-right"
-                    style="width:18px;min-width:18px;text-align:center;display:inline-block;"></span>
-                <span style="margin-left:4px;">Phân quyền</span>
-            </a>
-            <ul id="menu7" style="display:none; list-style:none; padding-left:20px;">
-                <li><a href="#" onclick="event.preventDefault(); Livewire.emit('route', 'roles', 'index')">Quản lý
-                        vai trò</a></li>
-            </ul>
-        </li>
-        <li>
-            <a href="#" onclick="toggleMenu(event, 'menu8')" style="display:flex;align-items:center;">
-                <span id="icon-menu8" class="fa fa-angle-right"
-                    style="width:18px;min-width:18px;text-align:center;display:inline-block;"></span>
-                <span style="margin-left:4px;">Tải xuống</span>
-            </a>
-            <ul id="menu8" style="display:none; list-style:none; padding-left:20px;">
-                <li><a href="#" onclick="event.preventDefault(); Livewire.emit('route', 'exports', 'index')">Tải
-                        xuống dữ liệu</a></li>
-            </ul>
-        </li>
-        <li>
-            <a href="#" onclick="toggleMenu(event, 'menu9')" style="display:flex;align-items:center;">
-                <span id="icon-menu9" class="fa fa-angle-right"
-                    style="width:18px;min-width:18px;text-align:center;display:inline-block;"></span>
-                <span style="margin-left:4px;">Lịch sử</span>
-            </a>
-            <ul id="menu9" style="display:none; list-style:none; padding-left:20px;">
-                <li><a href="#"
-                        onclick="event.preventDefault(); Livewire.emit('route', 'logs', 'user-action', 'user-action')">Nhật
-                        ký hoạt động</a></li>
-                <li><a href="#"
-                        onclick="event.preventDefault(); Livewire.emit('route', 'logs', 'component', 'component')">Nhập
-                        & xuất kho</a></li>
-            </ul>
-        </li>
+        <li><a href="#"
+                onclick="event.preventDefault(); Livewire.emit('route', 'components', null, 'current-stock')">Đang
+                tồn kho</a></li>
+        <li><a href="#"
+                onclick="event.preventDefault(); Livewire.emit('route', 'components', null, 'current-stockout')">Đã
+                xuất kho</a></li>
+    </ul>
+    </li>
+    <li>
+        <a href="#" onclick="toggleMenu(event, 'menu2')" style="display:flex;align-items:center;">
+            <span id="icon-menu2" class="fa fa-angle-right"
+                style="width:18px;min-width:18px;text-align:center;display:inline-block;"></span>
+            <span style="margin-left:4px;">Khách hàng</span>
+        </a>
+        <ul id="menu2" style="display:none; list-style:none; padding-left:20px;">
+            <li><a href="#" onclick="event.preventDefault(); Livewire.emit('route', 'customers', 'create')">Thêm
+                    mới khách
+                    hàng</a></li>
+            <li><a href="#"
+                    onclick="event.preventDefault(); Livewire.emit('route', 'customers', 'index','customers')">Danh
+                    sách khách hàng</a></li>
+        </ul>
+    </li>
+    <li>
+        <a href="#" onclick="toggleMenu(event, 'menu3')" style="display:flex;align-items:center;">
+            <span id="icon-menu3" class="fa fa-angle-right"
+                style="width:18px;min-width:18px;text-align:center;display:inline-block;"></span>
+            <span style="margin-left:4px;">Đối tác</span>
+        </a>
+        <ul id="menu3" style="display:none; list-style:none; padding-left:20px;">
+            <li><a href="#" onclick="event.preventDefault(); Livewire.emit('route', 'vendors', 'create')">Thêm
+                    mới đối tác</a></li>
+            <li><a href="#"
+                    onclick="event.preventDefault(); Livewire.emit('route', 'vendors', 'index','vendors')">Danh sách
+                    đối tác</a></li>
+        </ul>
+    </li>
+    <li>
+        <a href="#" onclick="toggleMenu(event, 'menu4')" style="display:flex;align-items:center;">
+            <span id="icon-menu4" class="fa fa-angle-right"
+                style="width:18px;min-width:18px;text-align:center;display:inline-block;"></span>
+            <span style="margin-left:4px;">Vị trí</span>
+        </a>
+        <ul id="menu4" style="display:none; list-style:none; padding-left:20px;">
+            <li><a href="#" onclick="event.preventDefault(); Livewire.emit('route', 'locations', 'create')">Thêm
+                    mới vị
+                    trí</a></li>
+            <li><a href="#"
+                    onclick="event.preventDefault(); Livewire.emit('route', 'locations', 'index','locations')">Danh
+                    sách vị trí</a></li>
+        </ul>
+    </li>
+    <li>
+        <a href="#" onclick="toggleMenu(event, 'menu5')" style="display:flex;align-items:center;">
+            <span id="icon-menu5" class="fa fa-angle-right"
+                style="width:18px;min-width:18px;text-align:center;display:inline-block;"></span>
+            <span style="margin-left:4px;">Thống kê</span>
+        </a>
+        <ul id="menu5" style="display:none; list-style:none; padding-left:20px;">
+            <li><a href="#"
+                    onclick="event.preventDefault();Livewire.emit('route', 'stats','stock-variation')">Biến động tồn
+                    kho</a></li>
+            <li><a href="#" onclick="event.preventDefault();Livewire.emit('route', 'stats','index')">Thống kê
+                    linh kiện</a></li>
+        </ul>
+    </li>
+    <li>
+        <a href="#" onclick="toggleMenu(event, 'menu6')" style="display:flex;align-items:center;">
+            <span id="icon-menu6" class="fa fa-angle-right"
+                style="width:18px;min-width:18px;text-align:center;display:inline-block;"></span>
+            <span style="margin-left:4px;">Người dùng</span>
+        </a>
+        <ul id="menu6" style="display:none; list-style:none; padding-left:20px;">
+            <li><a href="#" onclick="event.preventDefault(); Livewire.emit('route', 'users', 'create')">Thêm
+                    mới người dùng</a></li>
+            <li><a href="#" onclick="event.preventDefault(); Livewire.emit('route', 'users', 'index')">Danh
+                    sách người dùng</a></li>
+        </ul>
+    </li>
+    <li>
+        <a href="#" onclick="toggleMenu(event, 'menu7')" style="display:flex;align-items:center;">
+            <span id="icon-menu7" class="fa fa-angle-right"
+                style="width:18px;min-width:18px;text-align:center;display:inline-block;"></span>
+            <span style="margin-left:4px;">Phân quyền</span>
+        </a>
+        <ul id="menu7" style="display:none; list-style:none; padding-left:20px;">
+            <li><a href="#" onclick="event.preventDefault(); Livewire.emit('route', 'roles', 'index')">Quản lý
+                    vai trò</a></li>
+        </ul>
+    </li>
+    <li>
+        <a href="#" onclick="toggleMenu(event, 'menu8')" style="display:flex;align-items:center;">
+            <span id="icon-menu8" class="fa fa-angle-right"
+                style="width:18px;min-width:18px;text-align:center;display:inline-block;"></span>
+            <span style="margin-left:4px;">Tải xuống</span>
+        </a>
+        <ul id="menu8" style="display:none; list-style:none; padding-left:20px;">
+            <li><a href="#" onclick="event.preventDefault(); Livewire.emit('route', 'exports', 'index')">Tải
+                    xuống dữ liệu</a></li>
+        </ul>
+    </li>
+    <li>
+        <a href="#" onclick="toggleMenu(event, 'menu9')" style="display:flex;align-items:center;">
+            <span id="icon-menu9" class="fa fa-angle-right"
+                style="width:18px;min-width:18px;text-align:center;display:inline-block;"></span>
+            <span style="margin-left:4px;">Lịch sử</span>
+        </a>
+        <ul id="menu9" style="display:none; list-style:none; padding-left:20px;">
+            <li><a href="#"
+                    onclick="event.preventDefault(); Livewire.emit('route', 'logs', 'user-action', 'user-action')">Nhật
+                    ký hoạt động</a></li>
+            <li><a href="#"
+                    onclick="event.preventDefault(); Livewire.emit('route', 'logs', 'component', 'component')">Nhập
+                    & xuất kho</a></li>
+        </ul>
+    </li>
     </ul>
 </nav>
 <script>
