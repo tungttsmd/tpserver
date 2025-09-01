@@ -44,8 +44,23 @@ class ComponentCreateLivewire extends Component
     }
     public function toggleWarranty($value = null)
     {
-        $this->setDefaultDate($value);
         $this->toggleWarranty = $value;
+        
+        if ($value) {
+            // Nếu bật bảo hành, set ngày bắt đầu = ngày nhập kho
+            if ($this->stockin_at) {
+                $this->warranty_start = $this->stockin_at;
+                
+                // Tự động tính ngày kết thúc (12 tháng)
+                $startDate = \Carbon\Carbon::parse($this->stockin_at);
+                $endDate = $startDate->copy()->addMonths(12);
+                $this->warranty_end = $endDate->format('Y-m-d');
+            }
+        } else {
+            // Nếu tắt bảo hành, clear các ngày
+            $this->warranty_start = null;
+            $this->warranty_end = null;
+        }
     }
     public function getRelationData()
     {
@@ -59,6 +74,29 @@ class ComponentCreateLivewire extends Component
     {
         $data = $this->getRelationData();
         return view('livewire.features.components.create', $data);
+    }
+
+    public function updatedStockinAt($value)
+    {
+        // Khi ngày nhập kho thay đổi, cập nhật ngày bảo hành nếu đang bật
+        if ($this->toggleWarranty && $value) {
+            $this->warranty_start = $value;
+            
+            // Tự động tính ngày kết thúc (12 tháng)
+            $startDate = \Carbon\Carbon::parse($value);
+            $endDate = $startDate->copy()->addMonths(12);
+            $this->warranty_end = $endDate->format('Y-m-d');
+        }
+    }
+
+    public function updatedWarrantyStart($value)
+    {
+        // Khi ngày bắt đầu bảo hành thay đổi, tự động tính ngày kết thúc
+        if ($value) {
+            $startDate = \Carbon\Carbon::parse($value);
+            $endDate = $startDate->copy()->addMonths(12);
+            $this->warranty_end = $endDate->format('Y-m-d');
+        }
     }
 
     public function createSubmit()

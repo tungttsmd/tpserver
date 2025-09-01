@@ -14,7 +14,7 @@ class AuthController extends Controller
             return redirect()->intended('index'); // nếu đã login (do remember token) thì chuyển tiếp
         }
 
-        return view('auth.login');
+        return view('login');
     }
     // Đăng nhập người dùng
     public function loginpost(Request $request)
