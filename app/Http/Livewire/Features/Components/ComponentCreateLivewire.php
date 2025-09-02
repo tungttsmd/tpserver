@@ -23,12 +23,15 @@ class ComponentCreateLivewire extends Component
 
     public function mount()
     {
-        $this->setDefaultDate();
+        $today = Carbon::now()->format('Y-m-d');
+
+        if (!$this->stockin_at) {
+            $this->stockin_at = $today;
+        }
     }
     public function setDefaultDate($warranty = null)
     {
         $today = Carbon::now()->format('Y-m-d');
-
         $this->stockin_at = $today;
 
         if ($warranty === true) {
@@ -39,17 +42,20 @@ class ComponentCreateLivewire extends Component
             $this->warranty_end = null;
         }
     }
+
     public function toggleWarranty($value = null)
     {
         $this->toggleWarranty = $value;
 
         if ($value) {
-            // Nếu bật bảo hành, set ngày bắt đầu = ngày nhập kho
-            if ($this->stockin_at) {
+            // Chỉ set giá trị mặc định nếu chưa có
+            if (!$this->warranty_start && $this->stockin_at) {
                 $this->warranty_start = $this->stockin_at;
-
+            }
+            
+            if (!$this->warranty_end && $this->warranty_start) {
                 // Tự động tính ngày kết thúc (12 tháng)
-                $startDate = \Carbon\Carbon::parse($this->stockin_at);
+                $startDate = \Carbon\Carbon::parse($this->warranty_start);
                 $endDate = $startDate->copy()->addMonths(12);
                 $this->warranty_end = $endDate->format('Y-m-d');
             }
@@ -75,8 +81,8 @@ class ComponentCreateLivewire extends Component
 
     public function updatedStockinAt($value)
     {
-        // Khi ngày nhập kho thay đổi, cập nhật ngày bảo hành nếu đang bật
-        if ($this->toggleWarranty && $value) {
+        // Chỉ auto-update warranty khi checkbox được bật và warranty fields đang trống
+        if ($this->toggleWarranty && $value && !$this->warranty_start && !$this->warranty_end) {
             $this->warranty_start = $value;
 
             // Tự động tính ngày kết thúc (12 tháng)
@@ -88,8 +94,8 @@ class ComponentCreateLivewire extends Component
 
     public function updatedWarrantyStart($value)
     {
-        // Khi ngày bắt đầu bảo hành thay đổi, tự động tính ngày kết thúc
-        if ($value) {
+        // Chỉ auto-update warranty_end khi user chưa nhập giá trị end
+        if ($value && !$this->warranty_end) {
             $startDate = \Carbon\Carbon::parse($value);
             $endDate = $startDate->copy()->addMonths(12);
             $this->warranty_end = $endDate->format('Y-m-d');
@@ -175,6 +181,10 @@ class ComponentCreateLivewire extends Component
         $this->dispatchBrowserEvent('success-alert', [
             'message' => 'Thêm mới thành công!',
         ]);
+        
+        // Emit event để JavaScript xử lý reset form
+        $this->dispatchBrowserEvent('form-submit-success');
+        
         $this->resetExcept('serialNumber', 'view_form_content', 'createSuccess', 'historyViewList');
         $this->setDefaultDate();
     }

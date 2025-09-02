@@ -20,7 +20,7 @@
 
         <!-- Ngày nhập kho -->
         <x-atoms.wrappers.row-flex class="border justify-between">
-            <x-atoms.form.input livewire-id="category_id" form-id="stockin_at" type="date"
+            <x-atoms.form.input livewire-id="stockin_at" form-id="stockin_at" type="date"
                 label="Ngày nhập kho" required="true" class="flex w-full justify-between"/>
         </x-atoms.wrappers.row-flex>
 

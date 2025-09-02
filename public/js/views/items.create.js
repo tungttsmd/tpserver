@@ -2,7 +2,6 @@ class ItemCreateView {
     constructor(options = {}) {
         this.formSelector = options.formSelector || 'form';
         this.stockinAtId = options.stockinAtId || 'stockin_at';
-        this.warrantyStartId = options.warrantyStartId || 'warranty_start';
         this.warrantyCheckboxId = options.warrantyCheckboxId || 'has_warranty';
         this.warrantyFieldsId = options.warrantyFieldsId || 'warranty-fields';
         this.init();
@@ -15,14 +14,14 @@ class ItemCreateView {
                 this.setup();
             });
         });
+        // Lắng nghe event success từ Livewire để reset form
+        window.addEventListener('form-submit-success', () => {
+            this.resetForm();
+        });
     }
 
     getStockinInput() {
         return document.getElementById(this.stockinAtId);
-    }
-
-    getWarrantyStartInput() {
-        return document.getElementById(this.warrantyStartId);
     }
 
     getWarrantyCheckbox() {
@@ -38,31 +37,23 @@ class ItemCreateView {
     }
 
     setup() {
-        const stockinInput = this.getStockinInput();
-        const warrantyStart = this.getWarrantyStartInput();
         const warrantyCheckbox = this.getWarrantyCheckbox();
         const warrantyFields = this.getWarrantyFields();
 
-        if (stockinInput && warrantyStart) {
-            warrantyStart.value = warrantyCheckbox.checked ? stockinInput.value : '';
-            stockinInput.addEventListener('change', () => {
-                warrantyStart.value = stockinInput.value;
-            });
-        }
-
         if (warrantyCheckbox && warrantyFields) {
-            // Ẩn/hiện dựa trên checkbox
             const updateDisplay = () => {
                 warrantyFields.style.display = warrantyCheckbox.checked ? 'flex' : 'none';
-                if (warrantyCheckbox.checked && stockinInput) {
-                    warrantyStart.value = stockinInput.value;
+                
+                // Emit event để Livewire xử lý logic warranty
+                if (warrantyCheckbox.checked) {
+                    window.Livewire.emit('toggleWarranty', true);
+                } else {
+                    window.Livewire.emit('toggleWarranty', false);
                 }
             };
 
             warrantyCheckbox.addEventListener('change', updateDisplay);
-
-            // Thực hiện 1 lần để set đúng trạng thái ban đầu mà không nhảy UI
-            updateDisplay();
+            updateDisplay(); // Gọi khi setup để khởi tạo giá trị ban đầu
         }
     }
 
