@@ -9,6 +9,8 @@
             <ul id="menu1" style="display:none; list-style:none; padding-left:20px;">
                 <li><a href="/item/create">Thêm mới linh kiện</a></li>
                 <li><a href="/item/scan">Scan linh kiện</a></li>
+                <li><a href="/item/index">Danh sách linh kiện trong kho</a></li>
+                <li><a href="/item/stockout">Danh sách linh kiện đã xuất kho</a></li>
         </li>
         <li><a href="#"
                 onclick="event.preventDefault(); Livewire.emit('route', 'components', null, 'current-stock')">Đang

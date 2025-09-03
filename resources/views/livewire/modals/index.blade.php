@@ -1,66 +1,84 @@
 {{-- Popup hidden mặc định --}}
 <div id="popup-overlay"
-    style="display: none; position: fixed; top: 0; left: 0;
-    width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999;
-    justify-content: center; align-items: center;">
-    <div class="tpserver container max-w-[768px]">
-        <div class="row justify-content-center">
-            <div class="col-lg-12">
-                <div class="card shadow-lg rounded-md">
-                    <div
-                        class="flex items-center justify-content-between pl-4 pr-2 py-2 bg-{{ $modalColor }} text-center rounded-t-md">
-                        <h4 class="mb-0"><i class="{{ $modalIcon }} me-2"></i>{{ $modalTitle }}</h4>
-                        <button type="button" onclick="closePopup()" class="btn btn-danger">
-                            <i class="fas fa-times me-1"></i> Đóng
-                        </button>
-                    </div>
-
-                    <div class="card-body bg-light-subtle border rounded-b-md">
-                        {{-- Form --}}
-                        @if ($controller === 'components')
-                            @if ($modalType === 'edit')
-                                <livewire:features.components.component-edit-livewire :component-id="$recordId" />
-                            @elseif ($modalType === 'show')
-                                <livewire:features.components.component-show-livewire :component-id="$recordId" />
-                            @elseif ($modalType === 'stockout')
-                                <livewire:features.components.component-stockout-livewire :component-id="$recordId" />
-                            @elseif ($modalType === 'stockreturn')
-                                <livewire:features.components.component-stockreturn-livewire :component-id="$recordId" />
-                            @endif
-                        @elseif ($controller === 'customers')
-                            @if ($modalType === 'edit')
-                                <livewire:features.customers.customer-edit-livewire :customer-id="$recordId" />
-                            @elseif ($modalType === 'show')
-                                <livewire:features.customers.customer-show-livewire :customer-id="$recordId" />
-                            @endif
-                        @elseif ($controller === 'locations')
-                            @if ($modalType === 'edit')
-                                <livewire:features.locations.location-edit-livewire :location-id="$recordId" />
-                            @elseif ($modalType === 'show')
-                                <livewire:features.locations.location-show-livewire :location-id="$recordId" />
-                            @endif
-                        @elseif ($controller === 'vendors')
-                            @if ($modalType === 'edit')
-                                <livewire:features.vendors.vendor-edit-livewire :vendor-id="$recordId" />
-                            @elseif ($modalType === 'show')
-                                <livewire:features.vendors.vendor-show-livewire :vendor-id="$recordId" />
-                            @endif
-                        @elseif ($controller === 'logs')
-                            <livewire:features.components.component-show-livewire :component-id="$recordId" />
-                        @else
-                            <div class="bg-main">
-                                <p>Không tìm thấy modal</p>
-                            </div>
-                        @endif
-                        <div class="flex flex-row">
-                            <p>{{ $controller }} || {{ $action }} || {{ $filter }} || {{ $recordId }}
-                            </p>
-                        </div>
-                        <link rel="stylesheet" href="{{ asset('css/components/modal.css') }}">
-                    </div>
+    class="hidden pt-[4vw] fixed top-0 left-0 w-full h-full bg-black bg-opacity-10 z-[999] flex justify-center">
+    <div class="max-w-[1140px] bg-white border border-beige rounded-lg p-4 h-fit flex flex-col">
+        <div class="flex justify-end mb-4">
+            <button type="button" onclick="closePopup()" class="text-red-600 ">
+                <i class="fas fa-times mr-1"></i> Đóng
+            </button>
+        </div>
+        <div>
+            @if ($modalRoute[0] === 'item')
+                @if ($modalType === 'edit')
+                    <livewire:features.components.component-edit-livewire :component-id="$recordId" />
+                @elseif ($modalType === 'show')
+                    <livewire:features.components.component-show-livewire :component-id="$recordId" />
+                @elseif ($modalType === 'stockout')
+                    <livewire:features.components.component-stockout-livewire :component-id="$recordId" />
+                @elseif ($modalType === 'stockreturn')
+                    <livewire:features.components.component-stockreturn-livewire :component-id="$recordId" />
+                @endif
+            @elseif ($modalRoute[0] === 'customer')
+                @if ($modalType === 'edit')
+                    <livewire:features.customers.customer-edit-livewire :customer-id="$recordId" />
+                @elseif ($modalType === 'show')
+                    <livewire:features.customers.customer-show-livewire :customer-id="$recordId" />
+                @endif
+            @elseif ($modalRoute[0] === 'location')
+                @if ($modalType === 'edit')
+                    <livewire:features.locations.location-edit-livewire :location-id="$recordId" />
+                @elseif ($modalType === 'show')
+                    <livewire:features.locations.location-show-livewire :location-id="$recordId" />
+                @endif
+            @elseif ($modalRoute[0] === 'partner')
+                @if ($modalType === 'edit')
+                    <livewire:features.vendors.vendor-edit-livewire :vendor-id="$recordId" />
+                @elseif ($modalType === 'show')
+                    <livewire:features.vendors.vendor-show-livewire :vendor-id="$recordId" />
+                @endif
+            @elseif ($modalRoute[0] === 'log')
+                <livewire:features.components.component-show-livewire :component-id="$recordId" />
+            @else
+                <div class="bg-main">
+                    <p>Không tìm thấy modal</p>
                 </div>
-            </div>
+            @endif
+            <!-- <link rel="stylesheet" href="{{ asset('css/components/modal.css') }}"> -->
         </div>
     </div>
 
+    <script>
+        const popupOverlay = document.getElementById('popup-overlay');
+
+        function showPopup() {
+            if (popupOverlay) {
+                popupOverlay.style.display = 'flex';
+            }
+        }
+
+        window.closePopup = function () {
+            if (popupOverlay) {
+                popupOverlay.style.display = 'none';
+            }
+        }
+
+        window.addEventListener('modal-show', event => {
+            showPopup();
+        });
+
+        // Đóng modal khi nhấn phím Escape
+        document.addEventListener('keydown', function (event) {
+            if (event.key === "Escape") {
+                closePopup();
+            }
+        });
+
+        // Đóng modal khi click ra ngoài
+        popupOverlay.addEventListener('click', function (event) {
+            // Chỉ đóng khi click vào chính overlay, không phải các element con
+            if (event.target === this) {
+                closePopup();
+            }
+        });
+    </script>
 </div>

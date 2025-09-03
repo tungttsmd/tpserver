@@ -4,9 +4,9 @@ namespace App\Http\Livewire\Features\Components;
 
 use App\Models\Action;
 use App\Models\Component as ModelsComponent;
-use App\Models\LogComponent;
 use App\Models\Customer;
 use App\Models\Location;
+use App\Models\LogComponent;
 use App\Models\Vendor;
 use Carbon\Carbon;
 use Illuminate\Validation\ValidationException;
@@ -16,12 +16,36 @@ use Livewire\WithPagination;
 class ComponentStockoutLivewire extends Component
 {
     use WithPagination;
-    public $componentId, $component;
-    public $qrcode, $stockoutType, $actionDefault, $actionDefaultId;
-    public $action_id, $stockout_at, $customer_id, $vendor_id, $location_id, $note, $none;
-    protected $actions, $customers = [], $vendors = [], $locations = [];
-    public $actionsStockoutCustomer, $actionsStockoutVendor, $actionsStockoutInternal;
-    public $vendorOptions, $customerOptions, $locationOptions;
+
+    public $componentId,
+        $component;
+
+    public $qrcode,
+        $stockoutType,
+        $actionDefault,
+        $actionDefaultId;
+
+    public $action_id,
+        $stockout_at,
+        $customer_id,
+        $vendor_id,
+        $location_id,
+        $note,
+        $none;
+
+    protected $actions,
+        $customers = [],
+        $vendors = [],
+        $locations = [];
+
+    public $actionsStockoutCustomer,
+        $actionsStockoutVendor,
+        $actionsStockoutInternal;
+
+    public $vendorOptions,
+        $customerOptions,
+        $locationOptions;
+
     protected $listeners = ['record' => 'record', 'routeRefreshCall' => '$refresh', 'componentId' => 'setComponentId', 'actionId' => 'setActionId'];
     public $actionSuggestion = [];
 
@@ -51,23 +75,25 @@ class ComponentStockoutLivewire extends Component
                 'locationOptions' => $this->locationOptions,
             ]
         );
-        return view('livewire.features.components.stockout', $data);
+        return view('livewire.features.items.stockout', $data);
     }
+
     public function mount()
     {
         $this->mountInit();
     }
+
     public function mountInit()
     {
         if (!$this->stockoutType) {
             $this->stockoutType = 'internal';
         }
         if (!$this->action_id) {
-            $this->action_id = '33'; // Mã xuất kho nội bộ
+            $this->action_id = '33';  // Mã xuất kho nội bộ
         }
 
-        if (!$this->stockout_at) { // Ngày xuất kho mặc định là hôm nay
-            $this->stockout_at = Carbon::now()->toDateString(); // == format('Y-m-d')
+        if (!$this->stockout_at) {  // Ngày xuất kho mặc định là hôm nay
+            $this->stockout_at = Carbon::now()->toDateString();  // == format('Y-m-d')
         }
         // Load danh sách hành động theo từng loại
         $this->actionsStockoutCustomer = Action::where('target', 'componentStockoutCustomer')->get();
@@ -78,21 +104,25 @@ class ComponentStockoutLivewire extends Component
         $this->customerOptions = Customer::select('id', 'name', 'phone', 'email')->orderBy('id', 'asc')->get();
         $this->locationOptions = Location::select('id', 'name')->orderBy('id', 'asc')->get();
 
-        // Load thông tin linh kiện
-        $this->component = ModelsComponent::with([
-            'category',
-            'condition',
-            'manufacturer',
-            'status',
-        ])->find($this->componentId);
+        // Load component information only if componentId is set
+        if ($this->componentId) {
+            $this->component = ModelsComponent::with([
+                'category',
+                'condition',
+                'manufacturer',
+                'status',
+            ])->find($this->componentId);
 
-        // Nếu không tìm thấy linh kiện thì nên xử lý fallback
-        if (!$this->component) {
-            abort(404, 'Không tìm thấy linh kiện!');
+            // If the component is not found, it should be handled as a fallback
+            if (!$this->component) {
+                // Instead of aborting, we can dispatch an event or set an error message
+                $this->dispatchBrowserEvent('danger-alert', ['message' => 'Component not found!']);
+                return;
+            }
+
+            // Create QR code path
+            $this->qrcode = "https://api.qrserver.com/v1/create-qr-code/?data={$this->component->serial_number}&size=240x240";
         }
-
-        // Tạo đường dẫn QR code
-        $this->qrcode = "https://api.qrserver.com/v1/create-qr-code/?data={$this->component->serial_number}&size=240x240";
     }
 
     public function stockout()
@@ -117,11 +147,10 @@ class ComponentStockoutLivewire extends Component
                 'messages' => $messages,
             ]);
 
-            return; // dừng hàm update
+            return;  // dừng hàm update
         }
 
         $user = auth()->user();
-
 
         switch ($this->stockoutType) {
             case 'customer':
@@ -151,8 +180,8 @@ class ComponentStockoutLivewire extends Component
                 'customer_id' => $customerId,
                 'vendor_id' => $vendorId,
                 'note' => $this->note,
-                'stockout_at' => Carbon::parse($this->stockout_at ?? now()), // fallback nếu null
-                'stockreturn_at' => null, // fallback nếu null
+                'stockout_at' => Carbon::parse($this->stockout_at ?? now()),  // fallback nếu null
+                'stockreturn_at' => null,  // fallback nếu null
             ]);
 
             // Cập nhật trạng thái
@@ -161,7 +190,7 @@ class ComponentStockoutLivewire extends Component
             ]);
 
             // Nội dung thông báo
-            $message = "Đã xuất kho linh kiện " . $this->component->name . " (" . $this->component->serial_number . ") thành công.";
+            $message = 'Đã xuất kho linh kiện ' . $this->component->name . ' (' . $this->component->serial_number . ') thành công.';
 
             // Thông báo
             $this->dispatchBrowserEvent('success-alert', [
@@ -189,6 +218,7 @@ class ComponentStockoutLivewire extends Component
         $this->mountInit();
         $this->emit('routeRefreshCall');
     }
+
     public function getRelationshipData()
     {
         return [
@@ -197,6 +227,7 @@ class ComponentStockoutLivewire extends Component
             'vendors' => Vendor::all()
         ];
     }
+
     public function setStockoutType($stockoutType)
     {
         $this->stockoutType = $stockoutType;
@@ -210,6 +241,7 @@ class ComponentStockoutLivewire extends Component
             $this->action_id = $this->actionsStockoutInternal->first()->id;
         }
     }
+
     public function record($id)
     {
         $this->componentId = $id;

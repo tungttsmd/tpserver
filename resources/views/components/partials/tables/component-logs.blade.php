@@ -1,7 +1,7 @@
 @props(['list' => []])
 
 <div>
-    <div class="filament-tables max-h-[64vh] overflow-auto">
+    <div class="max-h-[64vh] overflow-auto">
         <table class="min-w-full divide-y">
             <thead class="bg-gray-50 dark:bg-gray-800 sticky top-0 z-16">
                 <tr style="position: relative">

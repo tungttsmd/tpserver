@@ -9,36 +9,54 @@ use Livewire\WithPagination;
 class ComponentShowLivewire extends Component
 {
     use WithPagination;
-    public $date_created, $serial_number, $category_id, $condition_id, $manufacturer_id, $status_id, $name, $stockin_source, $stockin_at, $warranty_start, $warranty_end, $note;
+
+    public $date_created,
+        $serial_number,
+        $category_id,
+        $status_id,
+        $name,
+        $stockin_source,
+        $stockin_at,
+        $warranty_start,
+        $warranty_end,
+        $note;
+
     public $view_form_content = '';
     public $serialNumber = null;
     public $previous_view = null;
     public $filter = 'manual';
     public $createSuccess = null;
-    public $componentId, $component, $qrcode = null;
+
+    public $componentId, $component;
+
     protected $listeners = ['record' => 'record'];
 
     public function render()
     {
         $this->scan();
         $suggestions = $this->smartMatching($this->component, $this->component->serial_number ?? 0);
-        return view('livewire.features.components.show', ['suggestions' => $suggestions]);
+        return view('livewire.features.items.show', ['suggestions' => $suggestions]);
     }
+
     public function mount() {}
+
     public function realtime()
     {
         if ($this->filter === 'realtime') {
             $this->trigger();
         }
     }
+
     public function trigger()
     {
         $this->emitSelf('$refresh');
     }
+
     public function filter($filter)
     {
         $this->filter = $filter;
     }
+
     public function scan()
     {
         $id = trim($this->componentId);
@@ -46,12 +64,10 @@ class ComponentShowLivewire extends Component
         // 1. Lấy chính xác 100%
         $this->component = HardwareComponent::with([
             'category',
-            'condition',
-            'manufacturer',
             'status'
         ])->where('id', $id)->first();
-        $this->qrcode = "https://api.qrserver.com/v1/create-qr-code/?data={" . ($this->component->serial_number ?? 0) . "}&size=240x240";
     }
+
     public function smartMatching($component, $serial)
     {
         $baseQuery = HardwareComponent::with('category', 'status')
@@ -91,6 +107,7 @@ class ComponentShowLivewire extends Component
 
         return $suggestions;
     }
+
     public function record($id)
     {
         $this->componentId = $id;

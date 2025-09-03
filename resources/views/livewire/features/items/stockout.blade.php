@@ -247,11 +247,12 @@
             </div>
         </form>
     @else
-        <div
-            class="h-[78vh] justify-content-center col-lg-12 bg-yellow-100 text-yellow-800 p-3 rounded flex items-center gap-2">
-            <i class="fas fa-info-circle"></i> Đã xảy ra sự cố với biểu mẫu xuất kho, xin vui lòng liên hệ quản trị
-            viên
-            về vấn đề này.
+        <div class="h-[78vh] flex items-center justify-center text-center">
+            <div class="bg-blue-100 text-blue-800 p-6 rounded-lg shadow-md">
+                <i class="fas fa-qrcode fa-3x mb-4"></i>
+                <h2 class="text-2xl font-semibold mb-2">Chưa chọn linh kiện</h2>
+                <p class="text-lg">Vui lòng quét mã QR hoặc tìm kiếm để chọn một linh kiện cần xuất kho.</p>
+            </div>
         </div>
     @endif
     <div class="">

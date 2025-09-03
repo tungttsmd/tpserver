@@ -4,10 +4,8 @@ namespace App\Http\Livewire\Features\Components;
 
 use App\Models\Category;
 use App\Models\Component as HardwareComponent;
-use App\Models\Condition;
-use App\Models\Manufacturer;
 use App\Models\Status;
-use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -15,40 +13,65 @@ class ComponentIndexLivewire extends Component
 {
     use WithPagination;
 
-    public $categories, $conditions, $statuses, $manufacturers;
-    public $category, $condition, $status, $manufacturer;
+    public $categories, $statuses;
+    public $category, $status;
     public $columns, $table, $relationships, $search,  $perPage = 20;
-    public $dir = "desc", $sort = "updated_at";
+    public $dir = "desc", $sort = "NgayCapNhat", $filter;
     public $components;
     protected $listeners = ['routeRefreshCall' => '$refresh']; // alias refresh nội bộ của livewire
     public function render()
     {
-        $data = $this->index(session('route.filter') ?? null);
-        return view('livewire.features.components.index', [
-            'data' => $data,
-            'filter' => session('route.filter') ?? null
+        $query = $this->index(session('route.filter') ?? null);
+        $sortColumn = $this->sort === 'NgayCapNhat' ? 'components.updated_at' : $this->sort;
+
+        $list = $query
+            ->join('categories', 'components.category_id', '=', 'categories.id')
+            ->select(
+                'components.id as ID',
+                'components.serial_number as Serial',
+                'components.name as Ten',
+                'categories.name as PhanLoai',
+                'components.stockin_source as NguonNhap',
+                'components.stockin_at as NgayNhap',
+                'components.updated_at as NgayCapNhat',
+                DB::raw('TIMESTAMPDIFF(MONTH, CURDATE(), components.warranty_end) as BHConLai')
+            )
+            ->orderBy($sortColumn, $this->dir)
+            ->paginate($this->perPage);
+
+        return view('livewire.features.items.index', [
+            'list' => $list,
+            'columns' => $this->columns,
+            'sort' => $this->sort,
+            'dir' => $this->dir,
+            'filter' => $this->filter,
         ]);
     }
     public function mount()
     {
+        $this->columns = [
+            'ID' => 'ID',
+            'Serial' => 'Serial',
+            'Ten' => 'Tên',
+            'PhanLoai' => 'Phân loại',
+            'NguonNhap' => 'Nguồn nhập',
+            'NgayNhap' => 'Ngày nhập',
+            'NgayCapNhat' => 'Ngày cập nhật',
+            'BHConLai' => 'BH còn lại (tháng)',
+        ];
+
         // Khởi tạo giá trị mặc định cho các biến lọc (rỗng = không lọc)
         $this->category = '';
-        $this->condition = '';
         $this->status = '';
-        $this->manufacturer = '';
 
-        // Lấy toàn bộ danh sách Category, Condition, Status từ database
+        // Lấy toàn bộ danh sách Category, Status từ database
         $this->categories = Category::all();
-        $this->conditions = Condition::all();
         $this->statuses = Status::all();
-        $this->manufacturers = Manufacturer::all();
     }
     public function index($filter)
     {
         $query = HardwareComponent::with([
             'category',
-            'condition',
-            'manufacturer',
             'status'
         ]);
 
@@ -57,18 +80,6 @@ class ComponentIndexLivewire extends Component
         } elseif ($filter === 'current-stockout') {
             $query->where('status_id', 2); // "Đã xuất kho"
         }
-
-        // Lấy danh sách cột của bảng 'components'
-        $this->columns = Schema::getColumnListing('components');
-
-        // Lấy danh sách tên cột quan hệ dựa trên cột có hậu tố "_id"
-        $relationships = [];
-        foreach ($this->columns as $column) {
-            if (str_ends_with($column, '_id')) {
-                $relationships[] = substr($column, 0, -3); // cắt bỏ '_id'
-            }
-        }
-        $this->relationships = $relationships;
 
         // Tìm kiếm realtime theo serial_number hoặc note cơ bản
         if ($this->search) {
@@ -88,32 +99,17 @@ class ComponentIndexLivewire extends Component
             $query->where('category_id', $this->category);
         }
 
-        // Lọc theo condition_id
-        if ($this->condition) {
-            $query->where('condition_id', $this->condition);
-        }
-
-        // Lọc theo manufacturer_id
-        if ($this->manufacturer) {
-            $query->where('manufacturer_id', $this->manufacturer);
-        }
-
         // Giữ trạng thái sắp xếp khi lọc
-        if (in_array($this->sort, $this->columns)) {
-            $query->orderBy($this->sort, $this->dir);
-        }
 
-        return [
-            'components' => $query->paginate($this->perPage),
-            'columns' => $this->columns,
-            'relationships' => $this->relationships,
-        ];
+        return $query;
     }
+
     public function resetFilters()
     {
-        $this->reset(['search', 'category', 'condition', 'status', 'perPage', 'sort', 'dir']);
-        $this->resetPage();  // reset phân trang về trang 1
+        $this->reset(['search', 'category', 'status', 'perPage', 'sort', 'dir']);
+        $this->resetPage(); // reset phân trang về trang 1
     }
+
     public function sortBy($sort_column)
     {
         if ($this->sort === $sort_column) {

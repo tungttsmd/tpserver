@@ -1,5 +1,5 @@
 @props([
-    'class' => '', // thêm class tuỳ ý khi gọi component
+    'class' => 'flex flex-row justify-between', // thêm class tuỳ ý khi gọi component
     'classLabel' => '', // thêm class tuỳ ý cho label khi gọi component
     'classInput' => '', // thêm class tuỳ ý cho label khi gọi component
     'defer' => true, // mặc định là realtime, nếu muốn defer thì truyền defer=true
@@ -14,7 +14,7 @@
     $defer = filter_var($defer, FILTER_VALIDATE_BOOLEAN);
 @endphp
 
-<div class="{{ $class }}">
+       <div {{ $attributes->merge(['class' => $class]) }}>
     <label for="{{ $formId }}" {{ $attributes->merge(['class' => 'pr-2 ' . $classLabel]) }}>
         {{ $label }}
         @if ($required)

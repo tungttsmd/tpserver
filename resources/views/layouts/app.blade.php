@@ -6,6 +6,7 @@
     <title>@yield('title', 'My App')</title>
     @livewireStyles
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="{{ asset('plugins/fontawesome-free/css/all.min.css') }}" />
     <link rel="stylesheet" href="{{ asset('css/layouts/app.css') }}">
 </head>
 
@@ -25,9 +26,10 @@
             </main>
         </div>
     </div>
-
+    <livewire:modal-controller />
     @livewireScripts
-    {{-- <script src="{{ asset('js/layouts/app.js') }}"></script> --}}
+    @stack('scripts')
+
 </body>
 
 

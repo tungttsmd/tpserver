@@ -12,8 +12,6 @@ return new class extends Migration {
             $table->string('serial_number')->unique()->index();
             $table->string('name')->unique()->index()->nullable()->index();
             $table->unsignedBigInteger('category_id')->nullable()->index();
-            $table->unsignedBigInteger('condition_id')->nullable()->index();
-            $table->unsignedBigInteger('manufacturer_id')->nullable()->index();
             $table->unsignedBigInteger('status_id')->nullable()->index();
 
             $table->text('stockin_source')->nullable();
@@ -28,9 +26,6 @@ return new class extends Migration {
             $table->timestamps(); // Thêm index thủ công cho $table->timestamps();
             $table->index('created_at');
             $table->index('updated_at');
-
-            //WHERE category = ? AND vendor = ? AND condition = ? AND location = ? for fastest query
-            $table->index(['category_id', 'condition_id', 'manufacturer_id'], 'index_category_condition_manufacturer');
         });
     }
 

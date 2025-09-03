@@ -29,8 +29,6 @@ class ComponentFactory extends Factory
             'serial_number'    => strtoupper($this->faker->unique()->bothify('TPSC-####-???')),
             'name'             => $this->faker->unique()->words(2, true),
             'category_id'      => $this->faker->numberBetween(1, 10),
-            'condition_id'     => $this->faker->numberBetween(1, 10),
-            'manufacturer_id'  => $this->faker->numberBetween(1, 10),
             'status_id'        =>  1, // So 2 se bi loi neu khong duoc them thu cong, boi phai di kem action_id = 39 nua
             'note'             => $this->faker->sentence,
 

@@ -18,8 +18,7 @@
         <div
             {{
                 $attributes->class([
-                    'filament-page-actions',
-                    'flex flex-wrap items-center gap-4' => ! $fullWidth,
+                                        'flex flex-wrap items-center gap-4' => ! $fullWidth,
                     match ($alignment) {
                         'center' => 'justify-center',
                         'right' => 'flex-row-reverse space-x-reverse',
@@ -29,13 +28,11 @@
                 ])
             }}
         >
-            {{ \Filament\Facades\Filament::renderHook('page.actions.start') }}
-
+            
             @foreach ($actions as $action)
                 {{ $action }}
             @endforeach
 
-            {{ \Filament\Facades\Filament::renderHook('page.actions.end') }}
-        </div>
+                    </div>
     @endif
 @endif
