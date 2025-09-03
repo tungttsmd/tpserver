@@ -5,7 +5,7 @@
 ])
 <button
     {{ $attributes->merge([
-        'class' => '' . $class,
+        'class' => $class,
         'type' => 'button',
         'onclick' => '',
     ]) }}>

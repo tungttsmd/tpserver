@@ -52,7 +52,7 @@
         <!-- Nút submit -->
         <x-atoms.wrappers.row-flex class="border justify-between">
             <x-atoms.form.button type="submit" label="Thêm mới" />
-            <x-atoms.form.button type="button" label="Huỷ bỏ" onclick="itemCreateView.resetForm()" />
+            <x-atoms.form.button type="button" label="Đặt lại" onclick="itemCreateView.resetForm()" />
         </x-atoms.wrappers.row-flex>
     </form>
 

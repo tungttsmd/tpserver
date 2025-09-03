@@ -68,7 +68,7 @@ class ComponentStockreturnLivewire extends Component
             'componentLogs' => $this->componentLogs,
             'lastestComponentLog' => $this->lastestComponentLog
         ]);
-        return view('livewire.features.components.stockreturn', $data);
+        return view('livewire.features.items.stockreturn', $data);
     }
     public function mount()
     {

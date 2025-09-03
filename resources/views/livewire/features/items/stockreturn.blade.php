@@ -1,204 +1,209 @@
-    <div class="tpserver stockout container ">
-        @if (is_object($component))
-            <form wire:submit.prevent='stockreturn'>
-                <div class="overflow-y-auto max-h-[36vh]">
-                    <div class="overflow-y-auto max-h-[72vh]">
-                        {{-- Thông tin linh kiện --}}
-                        <div class="col-lg-12 p-0 overflow-y-auto max-h-[158px]">
-                            <div class="d-flex flex-column flex-md-row justify-between gap-4 mb-2">
-                                {{-- Bên trái --}}
-                                <div class="flex-1 space-y-3 text-[16px]">
-                                    <p class="font-semibold text-[20px]">
-                                        <i class="fas fa-barcode mr-1"></i>
-                                        <span>{{ $component->serial_number ?? 'N/A' }}</span>
-                                    </p>
-                                    <p class="font-semibold text-[18px]" style="color: #4b6cb7">
-                                        <i class="fas fa-tags mr-1"></i>
-                                        <span>{{ strtoupper($component->name) }}</span>
-                                    </p>
-                                    <p>
-                                        <i class="fas fa-cube mr-1 text-green-600"></i>
-                                        Loại: <span
-                                            class="text-gray-700">{{ optional($component->category)->name }}</span>
-                                    </p>
-                                    <p>
-
-                                        @php
-                                            $start = \Carbon\Carbon::parse($component->warranty_start);
-                                            $end = \Carbon\Carbon::parse($component->warranty_end);
-                                            $months = $start->diffInMonths(date: $end);
-                                            $color = match (true) {
-                                                $months <= 0 => 'red',
-                                                $months > 48 => 'purple', // tím
-                                                $months > 36 => 'indigo', // chàm
-                                                $months > 24 => 'blue', // lam
-                                                $months > 12 => 'green', // lục
-                                                $months > 6 => 'yellow', // vàng
-                                                $months > 3 => 'orange', // cam
-                                                default => 'gray', // fallback
-                                            };
-                                        @endphp
-                                        <i class="fas fa-shield-alt mr-1 text-{{ $color }}-600"></i>
-
-                                        <strong class="text-{{ $color }}-700">
-                                            Bảo hành: {{ $months }} tháng ({{ $start->format('d/m/Y') }} -
-                                            {{ $end->format('d/m/Y') }})
-                                        </strong>
-                                    </p>
-                                </div>
-
-                                {{-- QR Code --}}
-                                <div class="w-md-40 d-flex flex-column align-items-center">
-                                    <div class="relative w-32 h-32">
-                                        {{-- Ảnh mặc định --}}
-                                        <img src="{{ asset('img/qrcode-default.jpg') }}" alt="Default QR"
-                                            class="absolute inset-0 w-full h-full object-contain rounded shadow p-2" />
-
-                                        {{-- Ảnh qrcode thật --}}
-                                        <img src="{{ $qrcode }}" alt="QR Code"
-                                            class="relative w-full h-full object-contain rounded shadow p-2"
-                                            onload="this.previousElementSibling.style.display='none'" />
-                                    </div>
-                                </div>
+<div class="w-[540px]">
+    @if (is_object($component))
+        <form wire:submit.prevent='stockreturn'>
+            <div class="overflow-y-auto max-h-[72vh]">
+                {{-- Thông tin linh kiện --}}
+                <div class="max-h-[120px] mb-2">
+                    <div class="flex flex-col gap-2">
+                        <div class="flex flex-row gap-2">
+                            <div class="col-6 w-full truncate">
+                                <p class="w-full truncate" style="color: #4b6cb7">
+                                    Tên linh kiện: <span class="font-bold">{{ strtoupper($component->name) }}</span>
+                                </p>
+                                <p class="w-full truncate">
+                                    Mã sản phẩm:
+                                    <span class="font-bold">{{ data_get($component, 'serial_number') ?? 'N/A' }}</span>
+                                </p>
                             </div>
-                            <hr class="my-3" />
-
-                            {{-- Thông tin thêm --}}
-                            <div class="text-md flex-col">
-                                <p class="mb-2"><i class="fas fa-layer-group mr-1 text-gray-500"></i> Trạng thái:
-                                    {{ optional($component->status)->name }}</p>
-                                <p class="mb-2"><i class="fas fa-map-marker-alt mr-1 text-gray-500"></i> Vị trí:
-                                    {{ optional($component->location)->name }}</p>
-                                <p class="mb-2"><i class="fas fa-signature mr-1 text-gray-500"></i> Hãng:
-                                    {{ optional($component->manufacturer)->name }}</p>
-                                <p class="mb-2"><i class="fas fa-building mr-1 text-gray-500"></i> Nhà cung cấp:
-                                    {{ optional($component->vendor)->name }}</p>
-                                <p class="mb-2"><i class="fas fa-comment-alt mr-1 text-gray-500"></i> Ghi chú:
-                                    {{ $component->note }}</p>
+                            <div class="col-6 w-full truncate">
+                                <p class="w-full truncate">
+                                    Phân loại: <span class="font-bold">{{ optional($component->category)->name }}</span>
+                                </p>
+                                <p class="w-full truncate">
+                                    Nguồn nhập: <span>{{ $component->stockin_source }}</span>
+                                </p>
                             </div>
                         </div>
-                        <hr>
-
-                        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"
-                            rel="stylesheet">
-                        <style>
-                            .btn-tab {
-                                padding: 0.5rem 1rem !important;
-                                /* border-gray-300 */
-                                transition: background-color 0.2s !important;
-                            }
-
-                            .btn-tab:hover {
-                                background-color: #f3f4f6 !important;
-                                /* hover:bg-gray-100 */
-                            }
-
-                            .btn-tab.active {
-                                background-color: #553686 !important;
-                                color: white !important;
-                                /* text-white */
-                                box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1) !important;
-                                /* shadow-md */
-                            }
-                        </style>
-
+                        <hr />
+                        <div class="flex flex-row gap-2">
+                            <div class="col-6 w-full">
+                                <p class="w-full">
+                                    @php
+                                        $start = \Carbon\Carbon::parse($component->warranty_start);
+                                        $end = \Carbon\Carbon::parse($component->warranty_end);
+                                        $months = $start->diffInMonths($end);
+                                        $color = match (true) {
+                                            $months <= 0 => 'red',
+                                            $months > 48 => 'purple',
+                                            $months > 36 => 'indigo',
+                                            $months > 24 => 'blue',
+                                            $months > 12 => 'green',
+                                            $months > 6 => 'yellow',
+                                            $months > 3 => 'orange',
+                                            default => 'gray',
+                                        };
+                                    @endphp
+                                    <i class="fas fa-shield-alt mr-1 text-{{ $color }}-600"></i>
+                                    <strong class="text-{{ $color }}-700">
+                                        Bảo hành: {{ $months }} tháng <br> ({{ $start->format('d/m/Y') }}
+                                        -
+                                        {{ $end->format('d/m/Y') }})
+                                    </strong>
+                                </p>
+                            </div>
+                            <div class="col-6 w-full">
+                                <p class="w-full">
+                                    @php
+                                        $start = \Carbon\Carbon::parse($component->stockin_at);
+                                        $now = \Carbon\Carbon::now();
+                                        $months = $start->diffInMonths($now);
+                                        $color = match (true) {
+                                            $months > 12 => 'orange',
+                                            $months > 6 => 'yellow',
+                                            $months > 3 => 'cyan',
+                                            $months > 2 => 'blue',
+                                            $months > 1 => 'limes',
+                                            $months <= 1 => 'green',
+                                            default => 'gray',
+                                        };
+                                    @endphp
+                                    <i class="fas fa-clock mr-1 text-{{ $color }}-600"></i>
+                                    <strong class="text-{{ $color }}-700">
+                                        Nhập kho: {{ $months }} tháng trước
+                                        ({{ $start->format('d/m/Y') }})
+                                    </strong>
+                                </p>
+                            </div>
+                        </div>
                     </div>
+                </div>
+                <hr />
+                <div class="mt-4">
+                {{-- Lý do thu hồi --}}
+                    <x-atoms.form.textarea livewire-id="note" form-id="note" placeholder="Nhập lý do thu hồi..."
+                        rows="3" class-input="mb-2 border rounded" />
+                    {{-- Ngày thu hồi --}}
+                    <x-atoms.form.input livewire-id="stockreturn_at" form-id="stockreturn_at" label="Ngày thu hồi"
+                        type="date" border="true" required class-input="mb-2 border rounded" />
+                </div>
+                <div class="flex flex-col gap-2 pt-2">
+                    {{-- Thông tin xuất kho --}}
+                    <div class="space-y-2 text-sm">
+                        <div class="flex items-center gap-2">
+                            {{-- Loại hành động --}}
+                            @php
+                                $actionType = match (true) {
+                                    isset($lastestComponentLog->customer_id) => [
+                                        'label' => 'Bán hàng',
+                                        'color' => 'bg-blue-100 text-blue-800',
+                                    ],
+                                    isset($lastestComponentLog->vendor_id) => [
+                                        'label' => 'Hoàn/Sửa/Bảo Hành',
+                                        'color' => 'bg-purple-100 text-purple-800',
+                                    ],
+                                    isset($lastestComponentLog->location_id) => [
+                                        'label' => 'Xuất nội bộ',
+                                        'color' => 'bg-green-100 text-green-800',
+                                    ],
+                                    default => ['label' => 'Không xác định', 'color' => 'bg-gray-100 text-gray-800'],
+                                };
+                            @endphp
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-6">
-                        <div>
-                            <label class="form-label">Ngày thực hiện</label>
-                            <input type="text" class="form-control"
-                                value="{{ $lastestComponentLog->created_at ? \Carbon\Carbon::parse($lastestComponentLog->created_at)->format('d/m/Y - h:iA l') : '—' }}"
-                                readonly>
-                        </div>
-
-                        <div>
-                            <label class="form-label">Thời gian xuất kho</label>
-                            <input type="text" class="form-control"
-                                value="{{ $lastestComponentLog->stockout_at ? \Carbon\Carbon::parse($lastestComponentLog->stockout_at)->format('d/m/Y - h:iA l') : '—' }}"
-                                readonly>
-                        </div>
-                        <div>
-                            <label class="form-label">Hành động</label>
-                            <input type="text" class="form-control" value="{{ $lastestComponentLog->action->note }}"
-                                readonly>
-                        </div>
-                        <div>
-                            <label class="form-label">Người thực hiện</label>
-                            <input type="text" class="form-control" value="{{ $lastestComponentLog->user->alias }}"
-                                readonly>
-                        </div>
-
-
-
-                    </div>
-                    <div class="w-[100%] grid grid-cols-1 md:grid-cols-1 gap-12 pt-2">
-                        @if (isset($lastestComponentLog->customer->name))
-                            <div>
-                                <label class="form-label">Khách mua hàng</label>
-                                <input type="text" class="form-control"
-                                    value="{{ $lastestComponentLog->customer->name ?? '---' }}" readonly>
+                            <div class="text-sm text-gray-700 w-full">
+                                <span
+                                    class="inline-flex items-center px-3 py-1 rounded-full text-md font-medium {{ $actionType['color'] }}">
+                                    {{ $actionType['label'] }}: {{ $lastestComponentLog->action->note ?? '---' }}
+                                </span>
                             </div>
-                        @elseif (isset($lastestComponentLog->location->name))
-                            <div>
-                                <label class="form-label">Vị trí</label>
-                                <input type="text" class="form-control"
-                                    value="{{ $lastestComponentLog->location->name ?? '---' }}" readonly>
+                        </div>
+                        {{-- Chi tiết đối tượng --}}
+                        @if (isset($lastestComponentLog->customer))
+                            <div class="text-sm text-gray-700 w-full">
+                                <span
+                                    class="inline-flex items-center px-3 py-1 rounded-full text-md font-medium {{ $actionType['color'] }}">
+                                    Khách hàng: {{ $lastestComponentLog->customer->name ?? '---' }}
+                                </span>
                             </div>
-                        @elseif (isset($lastestComponentLog->vendor->name))
-                            <div>
-                                <label class="form-label">Nhà cung cấp</label>
-                                <input type="text" class="form-control"
-                                    value="{{ $lastestComponentLog->vendor->name ?? '---' }}" readonly>
+                        @elseif (isset($lastestComponentLog->location))
+                            <div class="text-sm text-gray-700 w-full">
+                                <span
+                                    class="inline-flex items-center px-3 py-1 rounded-full text-md font-medium {{ $actionType['color'] }}">
+                                    Vị trí: {{ $lastestComponentLog->location->name ?? '---' }}</span>
+                            </div>
+                        @elseif (isset($lastestComponentLog->vendor))
+                            <div class="text-sm text-gray-700 w-full">
+                                <span
+                                    class="inline-flex items-center px-3 py-1 rounded-full text-md font-medium {{ $actionType['color'] }}">
+                                    Đối tác: {{ $lastestComponentLog->vendor->name ?? '---' }}</span>
                             </div>
                         @endif
+                        <hr />
+                        <div class="flex items-center gap-2">
+                            <span class="font-medium text-gray-700">Ngày nhập:</span>
+                            <span class="text-gray-900">
+                                {{ $component->stockin_at ? \Carbon\Carbon::parse($component->stockin_at)->format('d/m/Y - h:iA l') : '—' }}
+                            </span>
+                        </div>
+                        <hr />
+                        <div class="flex items-center gap-2">
+                            <span class="font-medium text-gray-700">Xuất kho gần nhất:</span>
+                            <span class="text-gray-900">
+                                {{ $lastestComponentLog->stockout_at ? \Carbon\Carbon::parse($lastestComponentLog->stockout_at)->format('d/m/Y - h:iA l') : '—' }}
+                                @php
+                                    $stockoutDate = $lastestComponentLog->stockout_at
+                                        ? \Carbon\Carbon::parse($lastestComponentLog->stockout_at)
+                                        : null;
+                                    $now = \Carbon\Carbon::now();
+                                    if ($stockoutDate) {
+                                        $diffInDays = $now->diffInDays($stockoutDate, false);
+                                        $color = $diffInDays < 0 ? 'text-red-600' : 'text-green-600';
+                                    }
+                                @endphp
+                            </span>
+                        </div>
+
+                        @if ($lastestComponentLog->note)
+                            <div class="text-sm items-center gap-2">
+                                <span class="font-medium text-gray-700">Lý do xuất kho:</span>
+                                <span class="font-normal text-gray-900">{{ $lastestComponentLog->note ?? '—' }}</span>
+                            </div>
+                        @endif
+                        <hr />
+                        <div class="flex items-center gap-2">
+                            <span class="font-medium text-gray-700">Người thực hiện:</span>
+                            <span class="text-gray-900">{{ $lastestComponentLog->user->alias ?? '—' }}</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="font-medium text-gray-700">Ngày thực hiện:</span>
+                            <span
+                                class="text-gray-900">{{ $lastestComponentLog->created_at ? \Carbon\Carbon::parse($lastestComponentLog->created_at)->format('d/m/Y - h:iA l') : '—' }}</span>
+                        </div>
                     </div>
                 </div>
-
-                {{-- Ngày thu hồi --}}
-                <div class="flex-grow-1 pt-3" style="min-width: 200px;">
-                    <label for="stockreturn_at" class="form-label">Ngày thu hồi<span class="text-warning">
-                            *</span></label>
-                    <div class="input-group border-main">
-                        <span class="input-group-text border-0" icon-scale border-0"><i
-                                class="fas fa-calendar-alt"></i></span>
-                        <input wire:model.lazy="stockreturn_at" type="date" class="form-control input-hover border-0"
-                            required>
-                    </div>
-
-                    {{-- Khối thu hồi --}}
-                    {{ print_r($debug) }}
-                    <div class="my-3">
-                        <label for="note" class="text-danger-subtle form-label pl-3"><strong>Lý do thu hồi
-                                (không
-                                bắt
-                                buộc)</strong></label>
-                        <textarea wire:model.defer="note" name="note" id="note"
-                            class="border-danger-subtle form-control @error('note') is-invalid @enderror" rows="4"
-                            placeholder="Nhập lý do thu hồi..."></textarea>
-                    </div>
-
-                    <div class="d-flex justify-content-between mt-3">
-                        <button type="submit" class="btn bg-danger-subtle">
-                            <i class="fas fa-undo mr-2"></i> Xác nhận thu hồi
-                        </button>
-                        <button type="button" onclick="closePopup()" class="btn btn-warning">
-                            <i class="fas fa-times-circle mr-2"></i> Hủy bỏ
-                        </button>
-                    </div>
-                </div>
-            </form>
-        @else
-            <div
-                class="h-[78vh] justify-content-center col-lg-12 bg-yellow-100 text-yellow-800 p-3 rounded flex items-center gap-2">
-                <i class="fas fa-info-circle"></i> Đã xảy ra sự cố với biểu mẫu xuất kho, xin vui lòng liên hệ quản trị
-                viên
-                về vấn đề này.
             </div>
-        @endif
-        <script>
-            window.addEventListener('closePopup', () => {
-                console.log('closePopup event received');
-            });
-        </script>
-    </div>
+
+            <hr class="my-4" />
+            <div class="flex justify-between gap-3">
+                <x-atoms.form.button type="submit" label="Xác nhận thu hồi" color="primary"
+                    class="flex-1 py-2 text-sm font-medium" />
+                <x-atoms.form.button type="button" label="Hủy bỏ" color="secondary" onclick="closePopup()"
+                    class="flex-1 py-2 text-sm font-medium" />
+            </div>
+        </form>
+    @else
+        <div class="h-[78vh] flex items-center justify-center text-center">
+            <div class="bg-yellow-100 text-yellow-800 p-6 rounded-lg shadow-md">
+                <i class="fas fa-exclamation-triangle fa-3x mb-4"></i>
+                <h2 class="text-xl font-semibold mb-2">Lỗi tải biểu mẫu</h2>
+                <p class="text-gray-700">Đã xảy ra sự cố khi tải biểu mẫu thu hồi. Vui lòng thử lại hoặc liên hệ quản
+                    trị viên nếu sự cố vẫn tiếp diễn.</p>
+            </div>
+        </div>
+    @endif
+</div>
+
+<script>
+    window.addEventListener('closePopup', () => {
+        closePopup();
+    });
+</script>

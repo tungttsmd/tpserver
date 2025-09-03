@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Features\Components;
 use App\Models\Category;
 use App\Models\Component as HardwareComponent;
 use App\Models\Status;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -16,12 +17,13 @@ class ComponentIndexLivewire extends Component
     public $categories, $statuses;
     public $category, $status;
     public $columns, $table, $relationships, $search,  $perPage = 20;
-    public $dir = "desc", $sort = "NgayCapNhat", $filter;
+    public $dir = "desc", $sort = "NgayCapNhat";
     public $components;
+    public $filter;
     protected $listeners = ['routeRefreshCall' => '$refresh']; // alias refresh nội bộ của livewire
     public function render()
     {
-        $query = $this->index(session('route.filter') ?? null);
+        $query = $this->index($this->filter);
         $sortColumn = $this->sort === 'NgayCapNhat' ? 'components.updated_at' : $this->sort;
 
         $list = $query
@@ -47,8 +49,9 @@ class ComponentIndexLivewire extends Component
             'filter' => $this->filter,
         ]);
     }
-    public function mount()
+    public function mount(Request $request)
     {
+        $this->filter = $request->path();
         $this->columns = [
             'ID' => 'ID',
             'Serial' => 'Serial',
@@ -75,9 +78,9 @@ class ComponentIndexLivewire extends Component
             'status'
         ]);
 
-        if ($filter === 'current-stock') {
+        if ($filter === 'item/index') {
             $query->where('status_id', 1); // "Đang tồn kho"
-        } elseif ($filter === 'current-stockout') {
+        } elseif ($filter === 'item/stockout') {
             $query->where('status_id', 2); // "Đã xuất kho"
         }
 

@@ -17,112 +17,51 @@ class ComponentStockoutLivewire extends Component
 {
     use WithPagination;
 
-    public $componentId,
-        $component;
+    // Component State
+    public $componentId, $component;
 
-    public $qrcode,
-        $stockoutType,
-        $actionDefault,
-        $actionDefaultId;
+    // Form Properties
+    public $stockoutType = 'internal';
+    public $action_id = '33'; // Default to 'Xuất kho nội bộ'
+    public $stockout_at;
+    public $customer_id, $vendor_id, $location_id;
+    public $note;
 
-    public $action_id,
-        $stockout_at,
-        $customer_id,
-        $vendor_id,
-        $location_id,
-        $note,
-        $none;
+    // Options for Selects
+    public $actionStockoutCustomer, $actionStockoutVendor, $actionStockoutInternal;
+    public $vendorOptions, $customerOptions, $locationOptions;
 
-    protected $actions,
-        $customers = [],
-        $vendors = [],
-        $locations = [];
-
-    public $actionsStockoutCustomer,
-        $actionsStockoutVendor,
-        $actionsStockoutInternal;
-
-    public $vendorOptions,
-        $customerOptions,
-        $locationOptions;
-
-    protected $listeners = ['record' => 'record', 'routeRefreshCall' => '$refresh', 'componentId' => 'setComponentId', 'actionId' => 'setActionId'];
-    public $actionSuggestion = [];
-
-    public function render()
-    {
-        $this->mountInit();
-
-        if ($this->locationOptions->isNotEmpty() && !$this->location_id) {
-            $this->location_id = $this->locationOptions->first()->id;
-        }
-        if ($this->vendorOptions->isNotEmpty() && !$this->vendor_id) {
-            $this->vendor_id = $this->vendorOptions->first()->id;
-        }
-        if ($this->customerOptions->isNotEmpty() && !$this->customer_id) {
-            $this->customer_id = $this->customerOptions->first()->id;
-        }
-
-        $data = array_merge(
-            $this->getRelationshipData(),
-            [
-                'actions' => $this->actions,
-                'actionStockoutCustomer' => $this->actionsStockoutCustomer,
-                'actionStockoutVendor' => $this->actionsStockoutVendor,
-                'actionStockoutInternal' => $this->actionsStockoutInternal,
-                'vendorOptions' => $this->vendorOptions,
-                'customerOptions' => $this->customerOptions,
-                'locationOptions' => $this->locationOptions,
-            ]
-        );
-        return view('livewire.features.items.stockout', $data);
-    }
+    protected $listeners = ['record' => 'record', 'routeRefreshCall' => '$refresh'];
 
     public function mount()
     {
-        $this->mountInit();
-    }
+        $this->stockout_at = Carbon::now()->toDateString();
 
-    public function mountInit()
-    {
-        if (!$this->stockoutType) {
-            $this->stockoutType = 'internal';
-        }
-        if (!$this->action_id) {
-            $this->action_id = '33';  // Mã xuất kho nội bộ
-        }
-
-        if (!$this->stockout_at) {  // Ngày xuất kho mặc định là hôm nay
-            $this->stockout_at = Carbon::now()->toDateString();  // == format('Y-m-d')
-        }
-        // Load danh sách hành động theo từng loại
-        $this->actionsStockoutCustomer = Action::where('target', 'componentStockoutCustomer')->get();
-        $this->actionsStockoutVendor = Action::where('target', 'componentStockoutVendor')->get();
-        $this->actionsStockoutInternal = Action::where('target', 'componentStockoutInternal')->get();
+        // Load options for select dropdowns
+        $this->actionStockoutCustomer = Action::where('target', 'componentStockoutCustomer')->get();
+        $this->actionStockoutVendor = Action::where('target', 'componentStockoutVendor')->get();
+        $this->actionStockoutInternal = Action::where('target', 'componentStockoutInternal')->get();
 
         $this->vendorOptions = Vendor::select('id', 'name', 'phone', 'email')->orderBy('id', 'asc')->get();
         $this->customerOptions = Customer::select('id', 'name', 'phone', 'email')->orderBy('id', 'asc')->get();
         $this->locationOptions = Location::select('id', 'name')->orderBy('id', 'asc')->get();
 
-        // Load component information only if componentId is set
-        if ($this->componentId) {
-            $this->component = ModelsComponent::with([
-                'category',
-                'condition',
-                'manufacturer',
-                'status',
-            ])->find($this->componentId);
-
-            // If the component is not found, it should be handled as a fallback
-            if (!$this->component) {
-                // Instead of aborting, we can dispatch an event or set an error message
-                $this->dispatchBrowserEvent('danger-alert', ['message' => 'Component not found!']);
-                return;
-            }
-
-            // Create QR code path
-            $this->qrcode = "https://api.qrserver.com/v1/create-qr-code/?data={$this->component->serial_number}&size=240x240";
+        // Set default select values
+        if ($this->locationOptions->isNotEmpty()) {
+            $this->location_id = $this->locationOptions->first()->id;
         }
+        if ($this->vendorOptions->isNotEmpty()) {
+            $this->vendor_id = $this->vendorOptions->first()->id;
+        }
+        if ($this->customerOptions->isNotEmpty()) {
+            $this->customer_id = $this->customerOptions->first()->id;
+        }
+    }
+
+    public function render()
+    {
+        $this->loadComponent();
+        return view('livewire.features.items.stockout');
     }
 
     public function stockout()
@@ -132,13 +71,10 @@ class ComponentStockoutLivewire extends Component
                 'location_id' => 'nullable|exists:locations,id',
                 'vendor_id' => 'nullable|exists:vendors,id',
                 'customer_id' => 'nullable|exists:customers,id',
-                'note' => 'nullable|string',
+                'note' => 'nullable|string|max:10000',
             ]);
         } catch (ValidationException $e) {
-            // Lấy lỗi validation dưới dạng array (key => [message,...])
             $errors = $e->validator->errors()->toArray();
-
-            // Có thể convert thành chuỗi gộp message để dễ show alert
             $messages = collect($errors)->flatten()->implode(' ');
 
             $this->dispatchBrowserEvent('danger-alert', [
@@ -147,31 +83,27 @@ class ComponentStockoutLivewire extends Component
                 'messages' => $messages,
             ]);
 
-            return;  // dừng hàm update
+            return;
         }
 
         $user = auth()->user();
+        $customerId = null;
+        $vendorId = null;
+        $locationId = null;
 
         switch ($this->stockoutType) {
             case 'customer':
                 $customerId = $this->customer_id;
-                $vendorId = null;
-                $locationId = null;
                 break;
             case 'vendor':
-                $customerId = null;
                 $vendorId = $this->vendor_id;
-                $locationId = null;
                 break;
             case 'internal':
-                $customerId = null;
-                $vendorId = null;
                 $locationId = $this->location_id;
                 break;
         }
 
         try {
-            // Tạo log xuất kho
             LogComponent::create([
                 'component_id' => $this->componentId,
                 'user_id' => $user->id,
@@ -180,24 +112,16 @@ class ComponentStockoutLivewire extends Component
                 'customer_id' => $customerId,
                 'vendor_id' => $vendorId,
                 'note' => $this->note,
-                'stockout_at' => Carbon::parse($this->stockout_at ?? now()),  // fallback nếu null
-                'stockreturn_at' => null,  // fallback nếu null
+                'stockout_at' => Carbon::parse($this->stockout_at ?? now()),
+                'stockreturn_at' => null,
             ]);
 
-            // Cập nhật trạng thái
-            $this->component->update([
-                'status_id' => 2
-            ]);
+            $this->component->update(['status_id' => 2]);
 
-            // Nội dung thông báo
             $message = 'Đã xuất kho linh kiện ' . $this->component->name . ' (' . $this->component->serial_number . ') thành công.';
+            $this->dispatchBrowserEvent('success-alert', ['message' => $message]);
 
-            // Thông báo
-            $this->dispatchBrowserEvent('success-alert', [
-                'message' => $message,
-            ]);
         } catch (\Throwable $e) {
-            // Ghi log nếu cần
             logger()->error('Stockout failed: ' . $e->getMessage(), [
                 'exception' => $e,
                 'componentId' => $this->componentId,
@@ -210,40 +134,40 @@ class ComponentStockoutLivewire extends Component
 
             return;
         }
-        // Đóng modal
+
         $this->dispatchBrowserEvent('closePopup');
-
-        // Reset tất cả trạng thái về giá trị ban đầu
-        $this->reset(['note']);
-        $this->mountInit();
+        $this->reset('note');
         $this->emit('routeRefreshCall');
-    }
-
-    public function getRelationshipData()
-    {
-        return [
-            'locations' => Location::all(),
-            'customers' => Customer::all(),
-            'vendors' => Vendor::all()
-        ];
     }
 
     public function setStockoutType($stockoutType)
     {
         $this->stockoutType = $stockoutType;
 
-        // Gán action_id mặc định theo stockoutType nếu chưa có
-        if ($this->stockoutType === 'customer' && $this->actionsStockoutCustomer->isNotEmpty()) {
-            $this->action_id = $this->actionsStockoutCustomer->first()->id;
-        } elseif ($this->stockoutType === 'vendor' && $this->actionsStockoutVendor->isNotEmpty()) {
-            $this->action_id = $this->actionsStockoutVendor->first()->id;
-        } elseif ($this->stockoutType === 'internal' && $this->actionsStockoutInternal->isNotEmpty()) {
-            $this->action_id = $this->actionsStockoutInternal->first()->id;
+        if ($this->stockoutType === 'customer' && $this->actionStockoutCustomer->isNotEmpty()) {
+            $this->action_id = $this->actionStockoutCustomer->first()->id;
+        } elseif ($this->stockoutType === 'vendor' && $this->actionStockoutVendor->isNotEmpty()) {
+            $this->action_id = $this->actionStockoutVendor->first()->id;
+        } elseif ($this->stockoutType === 'internal' && $this->actionStockoutInternal->isNotEmpty()) {
+            $this->action_id = $this->actionStockoutInternal->first()->id;
         }
     }
 
     public function record($id)
     {
         $this->componentId = $id;
+        $this->loadComponent();
+    }
+
+    private function loadComponent()
+    {
+        if ($this->componentId) {
+            $this->component = ModelsComponent::with(['category', 'status'])->find($this->componentId);
+
+            if (!$this->component) {
+                $this->dispatchBrowserEvent('danger-alert', ['message' => 'Component not found!']);
+                $this->componentId = null; // Reset ID if not found
+            }
+        }
     }
 }
