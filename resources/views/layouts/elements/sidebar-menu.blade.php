@@ -20,13 +20,8 @@
                 <span style="margin-left:4px;">Khách hàng</span>
             </a>
             <ul id="menu2" style="display:none; list-style:none; padding-left:20px;">
-                <li><a href="#"
-                        onclick="event.preventDefault(); Livewire.emit('route', 'customers', 'create')">Thêm
-                        mới khách
-                        hàng</a></li>
-                <li><a href="#"
-                        onclick="event.preventDefault(); Livewire.emit('route', 'customers', 'index','customers')">Danh
-                        sách khách hàng</a></li>
+                <li><a href="/customer/create">Thêm mới khách hàng</a></li>
+                <li><a href="/customer/index">Danh sách khách hàng</a></li>
             </ul>
         </li>
         <li>
@@ -50,8 +45,7 @@
                 <span style="margin-left:4px;">Vị trí</span>
             </a>
             <ul id="menu4" style="display:none; list-style:none; padding-left:20px;">
-                <li><a href="#"
-                        onclick="event.preventDefault(); Livewire.emit('route', 'locations', 'create')">Thêm
+                <li><a href="#" onclick="event.preventDefault(); Livewire.emit('route', 'locations', 'create')">Thêm
                         mới vị
                         trí</a></li>
                 <li><a href="#"
@@ -66,8 +60,8 @@
                 <span style="margin-left:4px;">Thống kê</span>
             </a>
             <ul id="menu5" style="display:none; list-style:none; padding-left:20px;">
-                <li><a href="#"
-                        onclick="event.preventDefault();Livewire.emit('route', 'stats','stock-variation')">Biến động tồn
+                <li><a href="#" onclick="event.preventDefault();Livewire.emit('route', 'stats','stock-variation')">Biến
+                        động tồn
                         kho</a></li>
                 <li><a href="#" onclick="event.preventDefault();Livewire.emit('route', 'stats','index')">Thống kê
                         linh kiện</a></li>

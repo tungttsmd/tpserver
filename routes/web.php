@@ -17,6 +17,8 @@ use App\Http\Livewire\Features\Components\ComponentCreateLivewire;
 use App\Http\Livewire\Features\Components\ComponentIndexLivewire;
 use App\Http\Livewire\Features\Components\ComponentScanLivewire;
 use App\Http\Livewire\Features\Components\ComponentStockoutLivewire;
+use App\Http\Livewire\Features\Customers\CustomerCreateLivewire;
+use App\Http\Livewire\Features\Customers\CustomerIndexLivewire;
 use App\Http\Livewire\Features\Logs\ComponentLivewire;
 use Illuminate\Support\Facades\Route;
 
@@ -37,6 +39,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/item/scan', ComponentScanLivewire::class)->name('item.scan');
     Route::get('/item/index', ComponentIndexLivewire::class)->name('item.index');
     Route::get('/item/stockout', ComponentIndexLivewire::class)->name('item.stockout');
+
+    Route::get('/customer/create', CustomerCreateLivewire::class)->name('customer.stockout');
+    Route::get('/customer/index', CustomerIndexLivewire::class)->name('customer.stockout');
 
     // // 1. Đăng xuất
     // Route::get('logout', [AuthController::class, 'logout'])->name('auth.logout');

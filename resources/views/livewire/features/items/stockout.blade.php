@@ -85,26 +85,25 @@
                     <x-atoms.form.textarea livewire-id="note" form-id="note" placeholder="Nhập lý do xuất kho..."
                         border="true" />
                     {{-- Ngày xuất kho --}}
-                    <x-atoms.form.input livewire-id="stockout_at" form-id="stockout_at" label="Ngày xuất kho"
-                        type="date" required class-input="border rounded" />
+                    <x-atoms.form.input livewire-id="stockout_at" form-id="stockout_at" label="Ngày xuất kho" type="date"
+                        required class-input="border rounded" />
                     <div class="flex gap-3 mb-4 w-full border rounded p-1 bg-gray-50">
                         <x-atoms.form.button type="button" label="Xuất nội bộ"
                             class="{{ $stockoutType === 'internal'
-                                ? 'flex-1 transition-all duration-300 transform scale-105 origin-center bg-green-100 text-green-800 rounded shadow-md'
-                                : 'flex-1 transition-all duration-300 transform scale-95 origin-center opacity-50 hover:scale-100 hover:opacity-100' }}"
+            ? 'flex-1 transition-all duration-300 transform scale-105 origin-center bg-green-100 text-green-800 rounded shadow-md'
+            : 'flex-1 transition-all duration-300 transform scale-95 origin-center opacity-50 hover:scale-100 hover:opacity-100' }}"
                             wire:click="setStockoutType('internal')" />
 
                         <x-atoms.form.button type="button" label="Bán hàng"
                             class="{{ $stockoutType === 'customer'
-                                ? 'flex-1 transition-all duration-300 transform scale-105 origin-center bg-green-100 text-green-800 rounded shadow-md'
-                                : 'flex-1 transition-all duration-300 transform scale-95 origin-center opacity-50 hover:scale-100 hover:opacity-100' }}"
+            ? 'flex-1 transition-all duration-300 transform scale-105 origin-center bg-green-100 text-green-800 rounded shadow-md'
+            : 'flex-1 transition-all duration-300 transform scale-95 origin-center opacity-50 hover:scale-100 hover:opacity-100' }}"
                             wire:click="setStockoutType('customer')" />
 
                         <x-atoms.form.button type="button" label="Hoàn/Sửa/Bảo Hành"
                             class="{{ $stockoutType === 'vendor'
-                                ? 'flex-1 transition-all duration-300 transform scale-105 origin-center bg-green-100 text-green-800 rounded shadow-md'
-                                : 'flex-1 transition-all duration-300 transform scale-95 origin-center opacity-50 hover:scale-100 hover:opacity-100' }}"
-                            wire:click="setStockoutType('vendor')" />
+            ? 'flex-1 transition-all duration-300 transform scale-105 origin-center bg-green-100 text-green-800 rounded shadow-md'
+            : 'flex-1 transition-all duration-300 transform scale-95 origin-center opacity-50 hover:scale-100 hover:opacity-100' }}" wire:click="setStockoutType('vendor')" />
                     </div>
                 </div>
 

@@ -24,64 +24,13 @@
                                 </p>
                             </div>
                         </div>
-                        <hr />
-                        <div class="flex flex-row gap-2">
-                            <div class="col-6 w-full">
-                                <p class="w-full">
-                                    @php
-                                        $start = \Carbon\Carbon::parse($component->warranty_start);
-                                        $end = \Carbon\Carbon::parse($component->warranty_end);
-                                        $months = $start->diffInMonths($end);
-                                        $color = match (true) {
-                                            $months <= 0 => 'red',
-                                            $months > 48 => 'purple',
-                                            $months > 36 => 'indigo',
-                                            $months > 24 => 'blue',
-                                            $months > 12 => 'green',
-                                            $months > 6 => 'yellow',
-                                            $months > 3 => 'orange',
-                                            default => 'gray',
-                                        };
-                                    @endphp
-                                    <i class="fas fa-shield-alt mr-1 text-{{ $color }}-600"></i>
-                                    <strong class="text-{{ $color }}-700">
-                                        Bảo hành: {{ $months }} tháng <br> ({{ $start->format('d/m/Y') }}
-                                        -
-                                        {{ $end->format('d/m/Y') }})
-                                    </strong>
-                                </p>
-                            </div>
-                            <div class="col-6 w-full">
-                                <p class="w-full">
-                                    @php
-                                        $start = \Carbon\Carbon::parse($component->stockin_at);
-                                        $now = \Carbon\Carbon::now();
-                                        $months = $start->diffInMonths($now);
-                                        $color = match (true) {
-                                            $months > 12 => 'orange',
-                                            $months > 6 => 'yellow',
-                                            $months > 3 => 'cyan',
-                                            $months > 2 => 'blue',
-                                            $months > 1 => 'limes',
-                                            $months <= 1 => 'green',
-                                            default => 'gray',
-                                        };
-                                    @endphp
-                                    <i class="fas fa-clock mr-1 text-{{ $color }}-600"></i>
-                                    <strong class="text-{{ $color }}-700">
-                                        Nhập kho: {{ $months }} tháng trước
-                                        ({{ $start->format('d/m/Y') }})
-                                    </strong>
-                                </p>
-                            </div>
-                        </div>
                     </div>
                 </div>
                 <hr />
                 <div class="mt-4">
-                {{-- Lý do thu hồi --}}
-                    <x-atoms.form.textarea livewire-id="note" form-id="note" placeholder="Nhập lý do thu hồi..."
-                        rows="3" class-input="mb-2 border rounded" />
+                    {{-- Lý do thu hồi --}}
+                    <x-atoms.form.textarea livewire-id="note" form-id="note" placeholder="Nhập lý do thu hồi..." rows="3"
+                        class-input="mb-2 border rounded" />
                     {{-- Ngày thu hồi --}}
                     <x-atoms.form.input livewire-id="stockreturn_at" form-id="stockreturn_at" label="Ngày thu hồi"
                         type="date" border="true" required class-input="mb-2 border rounded" />
@@ -137,6 +86,29 @@
                                     Đối tác: {{ $lastestComponentLog->vendor->name ?? '---' }}</span>
                             </div>
                         @endif
+                        <hr />
+                        <div class="flex items-center gap-2">
+                            @php
+                                $start = \Carbon\Carbon::parse($component->warranty_start);
+                                $end = \Carbon\Carbon::parse($component->warranty_end);
+                                $months = $start->diffInMonths($end);
+                                $color = match (true) {
+                                    $months <= 0 => 'red',
+                                    $months > 48 => 'purple',
+                                    $months > 36 => 'indigo',
+                                    $months > 24 => 'blue',
+                                    $months > 12 => 'green',
+                                    $months > 6 => 'yellow',
+                                    $months > 3 => 'orange',
+                                    default => 'gray',
+                                };
+                            @endphp
+                            <span class="text-{{$color}}-700"><strong>Bảo hành:</strong> {{ $months }} tháng
+                                ({{ $start->format('d/m/Y') }}
+                                -
+                                {{ $end->format('d/m/Y') }})
+                            </span>
+                        </div>
                         <hr />
                         <div class="flex items-center gap-2">
                             <span class="font-medium text-gray-700">Ngày nhập:</span>

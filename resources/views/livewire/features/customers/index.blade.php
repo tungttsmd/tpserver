@@ -1,15 +1,13 @@
-<div class="p-4 w-full">
+<div>
     {{-- Bộ lọc --}}
-    <x-partials.filters.customers />
+    <x-partials.filters.items />
 
     {{-- Bảng dữ liệu --}}
-    <x-partials.tables.default :filter="$filter" :list="$data['customers']->toArray()['data']" :columns="$data['columns']" :sort="$sort"
-        :dir="$dir" />
+    <x-partials.tables.default actions="components" :filter="$filter" :list="$list" :columns="array_keys($columns)"
+        :headers="array_values($columns)" :sort="$sort" :dir="$dir" />
 
     {{-- Phân trang --}}
-    <div class="m-6">
-        {{ $data['customers']->links('components.atoms.table.pagination') }}
+    <div>
+        {{ $list->links('components.atoms.table.pagination') }}
     </div>
-    {{-- Component style --}}
-    <link rel="stylesheet" href="{{ asset('css/components/index.css') }}">
 </div>
