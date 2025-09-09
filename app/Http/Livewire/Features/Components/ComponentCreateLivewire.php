@@ -4,9 +4,7 @@ namespace App\Http\Livewire\Features\Components;
 
 use App\Models\Category;
 use App\Models\Component as HardwareComponent;
-use App\Models\Condition;
 use App\Models\LogComponent;
-use App\Models\Manufacturer;
 use Carbon\Carbon;
 use Illuminate\Validation\ValidationException;
 use Livewire\Component;
@@ -15,11 +13,11 @@ class ComponentCreateLivewire extends Component
 {
     protected $listeners = ['routeRefreshCall' => '$refresh', 'createSubmit' => 'createSubmit', 'toggleWarranty' => 'toggleWarranty'];
 
-    public $stockin_at, $serial_number, $category_id, $stockin_source, $condition_id, $manufacturer_id, $status_id, $name, $warranty_start, $warranty_end, $note;
+    public $stockin_at, $serial_number, $category_id, $stockin_source, $status_id, $name;
+    public $warranty_start, $warranty_end, $note;
     public $serialNumber = null;
     public $createSuccess = null;
     public $toggleWarranty = null;
-
 
     public function mount()
     {
@@ -31,6 +29,7 @@ class ComponentCreateLivewire extends Component
     }
     public function setDefaultDate($warranty = null)
     {
+
         $today = Carbon::now()->format('Y-m-d');
         $this->stockin_at = $today;
 
@@ -52,7 +51,7 @@ class ComponentCreateLivewire extends Component
             if (!$this->warranty_start && $this->stockin_at) {
                 $this->warranty_start = $this->stockin_at;
             }
-            
+
             if (!$this->warranty_end && $this->warranty_start) {
                 // Tự động tính ngày kết thúc (12 tháng)
                 $startDate = \Carbon\Carbon::parse($this->warranty_start);
@@ -69,8 +68,6 @@ class ComponentCreateLivewire extends Component
     {
         return [
             'categories' => Category::select('id', 'name')->get(),
-            'conditions' => Condition::select('id', 'name')->get(),
-            'manufacturers' => Manufacturer::select('id', 'name')->get(),
         ];
     }
     public function render()
@@ -132,17 +129,12 @@ class ComponentCreateLivewire extends Component
             return;
         }
 
-        $qrcode = "https://api.qrserver.com/v1/create-qr-code/?data={$this->serial_number}&size=240x240";
-        $barcode = "https://bwipjs-api.metafloor.com/?bcid=code128&text={$this->serial_number}&scale=3&width=64&height=8&includetext&textxalign=center&background=ffffff";
-
         $insert = [
             'serial_number' => $this->serial_number,
             'name' => $this->name,
             'stockin_at' => $this->stockin_at,
             'category_id' => $this->category_id ?? null,
-            'condition_id' => $this->condition_id ?? null,
             'stockin_source' => $this->stockin_source ?? null,
-            'manufacturer_id' => $this->manufacturer_id ?? null,
             'status_id' => 1, // Mặc định thêm mới là Đang tồn kho
             'note' => $this->note ?? null,
             'warranty_start' => $this->isValidMysqlTimestamp($this->warranty_start) ? $this->warranty_start : null,
@@ -150,21 +142,17 @@ class ComponentCreateLivewire extends Component
         ];
 
         $component = HardwareComponent::create($insert);
-        $component->load(['category', 'condition', 'manufacturer']);
+        $component->load(['category']);
 
         $this->createSuccess = [
             'serial_number' => $component->serial_number,
             'name' => $component->name,
             'stockin_at' => $component->stockin_at,
             'category' => $component->category->name ?? null,
-            'condition' => $component->condition->name ?? null,
             'stockin_source' => $component->stockin_source ?? null,
-            'manufacturer' => $component->manufacturer->name ?? null,
             'note' => $component->note ?? null,
             'warranty_start' => $component->warranty_start ?? null,
             'warranty_end' => $component->warranty_end ?? null,
-            'qrcode' => $qrcode ?? null,
-            'barcode' => $barcode ?? null,
         ];
 
         LogComponent::create([
@@ -181,11 +169,13 @@ class ComponentCreateLivewire extends Component
         $this->dispatchBrowserEvent('success-alert', [
             'message' => 'Thêm mới thành công!',
         ]);
-        
-        // Emit event để JavaScript xử lý reset form
-        $this->dispatchBrowserEvent('form-submit-success');
-        
-        $this->resetExcept('serialNumber', 'view_form_content', 'createSuccess', 'historyViewList');
+
+        $this->resetForm();
+        $this->setDefaultDate();
+    }
+    public function resetForm()
+    {
+        $this->reset();
         $this->setDefaultDate();
     }
     public function rules()
@@ -196,8 +186,6 @@ class ComponentCreateLivewire extends Component
             'category_id' => 'required|exists:categories,id',
             'stockin_at' => 'date|after_or_equal:1970-01-01',
             'stockin_source' => 'nullable|string|max:255',
-            'condition_id' => 'nullable|exists:conditions,id',
-            'manufacturer_id' => 'nullable|exists:manufacturers,id',
 
             'note' => 'nullable|string|max:10000',
             'warranty_start' => 'nullable|date|after_or_equal:1970-01-01',

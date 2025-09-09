@@ -7,10 +7,10 @@
                 <span style="margin-left:4px;">Linh kiện</span>
             </a>
             <ul id="menu1" style="display:none; list-style:none; padding-left:20px;">
-                <li><a href="/item/create">Thêm mới linh kiện</a></li>
-                <li><a href="/item/scan">Scan linh kiện</a></li>
-                <li><a href="/item/index">Danh sách linh kiện</a></li>
-                <li><a href="/item/stockout">Danh sách xuất kho</a></li>
+                <li><a href="{{ route('item.create') }}">Thêm mới linh kiện</a></li>
+                <li><a href="{{ route('item.scan') }}">Scan linh kiện</a></li>
+                <li><a href="{{ route('item.index') }}">Danh sách linh kiện</a></li>
+                <li><a href="{{ route('item.stockout') }}">Danh sách xuất kho</a></li>
             </ul>
         </li>
         <li>
@@ -20,8 +20,8 @@
                 <span style="margin-left:4px;">Khách hàng</span>
             </a>
             <ul id="menu2" style="display:none; list-style:none; padding-left:20px;">
-                <li><a href="/customer/create">Thêm mới khách hàng</a></li>
-                <li><a href="/customer/index">Danh sách khách hàng</a></li>
+                <li><a href="{{ route('customer.create') }}">Thêm mới khách hàng</a></li>
+                <li><a href="{{ route('customer.index') }}">Danh sách khách hàng</a></li>
             </ul>
         </li>
         <li>
@@ -31,11 +31,8 @@
                 <span style="margin-left:4px;">Đối tác</span>
             </a>
             <ul id="menu3" style="display:none; list-style:none; padding-left:20px;">
-                <li><a href="#" onclick="event.preventDefault(); Livewire.emit('route', 'vendors', 'create')">Thêm
-                        mới đối tác</a></li>
-                <li><a href="#"
-                        onclick="event.preventDefault(); Livewire.emit('route', 'vendors', 'index','vendors')">Danh sách
-                        đối tác</a></li>
+                <li><a href="{{ route('vendor.create') }}">Thêm mới đối tác</a></li>
+                <li><a href="{{ route('vendor.index') }}">Danh sách đối tác</a></li>
             </ul>
         </li>
         <li>
@@ -45,12 +42,8 @@
                 <span style="margin-left:4px;">Vị trí</span>
             </a>
             <ul id="menu4" style="display:none; list-style:none; padding-left:20px;">
-                <li><a href="#" onclick="event.preventDefault(); Livewire.emit('route', 'locations', 'create')">Thêm
-                        mới vị
-                        trí</a></li>
-                <li><a href="#"
-                        onclick="event.preventDefault(); Livewire.emit('route', 'locations', 'index','locations')">Danh
-                        sách vị trí</a></li>
+                <li><a href="{{ route('location.create') }}">Thêm mới vị trí</a></li>
+                <li><a href="{{ route('location.index') }}">Danh sách vị trí</a></li>
             </ul>
         </li>
         <li>
@@ -60,7 +53,8 @@
                 <span style="margin-left:4px;">Thống kê</span>
             </a>
             <ul id="menu5" style="display:none; list-style:none; padding-left:20px;">
-                <li><a href="#" onclick="event.preventDefault();Livewire.emit('route', 'stats','stock-variation')">Biến
+                <li><a href="#"
+                        onclick="event.preventDefault();Livewire.emit('route', 'stats','stock-variation')">Biến
                         động tồn
                         kho</a></li>
                 <li><a href="#" onclick="event.preventDefault();Livewire.emit('route', 'stats','index')">Thống kê
@@ -98,8 +92,7 @@
                 <span style="margin-left:4px;">Tải xuống</span>
             </a>
             <ul id="menu8" style="display:none; list-style:none; padding-left:20px;">
-                <li><a href="#" onclick="event.preventDefault(); Livewire.emit('route', 'exports', 'index')">Tải
-                        xuống dữ liệu</a></li>
+                <li><a href="{{ route('export.index') }}">Tải xuống dữ liệu</a></li>
             </ul>
         </li>
         <li>

@@ -1,34 +1,27 @@
 @if ($paginator->hasPages())
-    <nav role="navigation" aria-label="Pagination Navigation" class="fi-pagination flex items-center justify-center gap-2">
-        {{-- Previous Page Link --}}
+    <nav class="flex items-center gap-2 justify-center mt-4">
+        {{-- Previous Page --}}
         @if ($paginator->onFirstPage())
-            <span class="fi-pagination-item text-gray-400 bg-white px-3 py-2 text-sm rounded-md cursor-not-allowed">
-                Trước </span>
-                @else
-                    <button wire:click="previousPage" wire:loading.attr="disabled"
-                        class="fi-pagination-item text-gray-700 bg-white hover:bg-gray-100 px-3 py-2 text-sm rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500">
-                        Trước </button>
+            <span class="px-3 py-1 text-gray-400 cursor-not-allowed">Trước</span>
+        @else
+            <button wire:click="previousPage" class="px-3 py-1">
+                Trước
+            </button>
         @endif
 
-        {{-- Pagination Elements --}}
+        {{-- Page Numbers --}}
         <div class="hidden md:flex gap-1">
             @foreach ($elements as $element)
                 @if (is_string($element))
-                    <span class="fi-pagination-item text-gray-500 bg-white px-3 py-2 text-sm rounded-md">
-                        {{ $element }}
-                    </span>
+                    <span class="px-3 py-1">{{ $element }}</span>
                 @endif
 
                 @if (is_array($element))
                     @foreach ($element as $page => $url)
                         @if ($page == $paginator->currentPage())
-                            <span aria-current="page"
-                                class="fi-pagination-item font-semibold text-primary-600 bg-primary-100 px-3 py-2 text-sm rounded-md">
-                                {{ $page }}
-                            </span>
+                            <span class="px-3 py-1 border">{{ $page }}</span>
                         @else
-                            <button wire:click="gotoPage({{ $page }})"
-                                class="fi-pagination-item text-gray-700 bg-white hover:bg-gray-100 px-3 py-2 text-sm rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500">
+                            <button wire:click="gotoPage({{ $page }})" class="px-3 py-1 text-gray-600">
                                 {{ $page }}
                             </button>
                         @endif
@@ -37,16 +30,13 @@
             @endforeach
         </div>
 
-        {{-- Next Page Link --}}
+        {{-- Next Page --}}
         @if ($paginator->hasMorePages())
-            <button wire:click="nextPage" wire:loading.attr="disabled"
-                class="fi-pagination-item text-gray-700 bg-white hover:bg-gray-100 px-3 py-2 text-sm rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500">
+            <button wire:click="nextPage" class="px-3 py-1">
                 Sau
             </button>
         @else
-            <span class="fi-pagination-item text-gray-400 bg-white px-3 py-2 text-sm rounded-md cursor-not-allowed">
-                Sau
-            </span>
+            <span class="px-3 py-1 text-gray-400 cursor-not-allowed">Sau</span>
         @endif
     </nav>
 @endif

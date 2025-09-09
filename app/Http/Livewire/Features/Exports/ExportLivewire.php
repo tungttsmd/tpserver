@@ -45,12 +45,8 @@ class ExportLivewire extends Component
 
                 case 'categories':
                     return Excel::download(new CategoryExport, 'categories.xlsx');
-                case 'manufacturers':
-                    return Excel::download(new ManufacturerExport, 'manufacturers.xlsx');
                 case 'statuses':
                     return Excel::download(new StatusExport, 'statuses.xlsx');
-                case 'conditions':
-                    return Excel::download(new ConditionExport, 'conditions.xlsx');
                 case 'actions':
                     return Excel::download(new ActionExport, 'actions.xlsx');
 

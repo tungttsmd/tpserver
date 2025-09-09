@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Schema;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\DB;
 
 class CustomerIndexLivewire extends Component
 {
@@ -21,20 +21,17 @@ class CustomerIndexLivewire extends Component
         $this->filter = $request->path();
         $this->columns = [
             'ID' => 'ID',
-            'Ten' => 'Khách hàng',
+            'Ten' => 'Tên khách hàng',
             'DienThoai' => 'Số điện thoại',
             'Email' => 'Email',
             'DiaChi' => 'Địa chỉ',
-            'NgayNhap' => 'Ngày nhập',
-            'NgayCapNhat' => 'Ngày cập nhật',
-            'BHConLai' => 'BH còn lại (tháng)',
+            'NgayCapNhat' => 'Cập nhật',
+            'NgayTao' => 'Ngày tạo',
         ];
     }
     public function render()
     {
-
-
-        $query = Customer::query();
+        $query = $this->index();
         $sortColumn = $this->sort === 'NgayCapNhat' ? 'customers.updated_at' : $this->sort;
 
         $list = $query
@@ -45,8 +42,8 @@ class CustomerIndexLivewire extends Component
                 'customers.email as Email',
                 'customers.address as DiaChi',
                 'customers.note as GhiChu',
-                'customers.created_at as NgayTao',
-                'customers.updated_at as NgayCapNhat'
+                DB::raw('DATE_FORMAT(customers.created_at, "%d/%m/%Y") as NgayTao'),
+                DB::raw('DATE_FORMAT(customers.updated_at, "%d/%m/%Y") as NgayCapNhat'),
             )->orderBy($sortColumn, $this->dir)
             ->paginate($this->perPage);
 
@@ -67,6 +64,23 @@ class CustomerIndexLivewire extends Component
             $this->sort = $sort_column;
             $this->dir = 'asc';
         }
+    }
+
+    public function index()
+    {
+        $query = Customer::query();
+
+        // Tìm kiếm realtime theo serial_number hoặc note cơ bản
+        if ($this->search) {
+            $query->where(function ($q) {
+                $q->where('name', 'like', '%' . $this->search . '%')
+                    ->orWhere('phone', 'like', '%' . $this->search . '%')
+                    ->orWhere('email', 'like', '%' . $this->search . '%')
+                    ->orWhere('address', 'like', '%' . $this->search . '%');
+            });
+        }
+
+        return $query;
     }
     public function resetFilters()
     {

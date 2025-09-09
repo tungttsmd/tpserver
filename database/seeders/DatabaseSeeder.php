@@ -26,8 +26,6 @@ class DatabaseSeeder extends Seeder
             CustomerSeeder::class,
             StatusSeeder::class,
             LocationSeeder::class,
-            ConditionSeeder::class,
-            ManufacturerSeeder::class,
             RoleSeeder::class,
         ]);
     }

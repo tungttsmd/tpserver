@@ -8,39 +8,40 @@ use Livewire\Component;
 
 class VendorCreateLivewire extends Component
 {
-    public $name, $phone, $email, $address, $logo_url, $note;
+    public $name, $phone, $email, $address, $note;
+    protected $listeners = ['routeRefreshCall' => '$refresh', 'createSubmit' => 'createSubmit'];
+
     public function render()
     {
         return view('livewire.features.vendors.create');
     }
-    public function createVendor()
+    public function createSubmit()
     {
-        // 'name' => $this->name,
-        // 'phone' => $this->phone,
-        // 'email' => $this->email,
-        // 'address' => $this->address,
-        // 'logo_url' => $this->logo_url,
-        // 'note' => $this->note,
+        try {
+            $this->validate([
+                'name' => 'required|string|max:255|unique:vendors,name',
+                'phone' => 'nullable|string|max:20',
+                'email' => 'nullable|email|max:255',
+                'address' => 'nullable|string',
+                'note' => 'nullable|string',
+            ]);
 
-        $this->validate([
-            'name' => 'required|string|max:255|unique:vendors,name',
-            'phone' => 'nullable|string|max:20',
-            'email' => 'nullable|email|max:255',
-            'address' => 'nullable|string',
-            'logo_url' => 'nullable',
-            'note' => 'nullable|string',
-        ]);
+            Vendor::create([
+                'name' => $this->name,
+                'phone' => $this->phone,
+                'email' => $this->email,
+                'address' => $this->address,
+                'note' => $this->note,
+            ]);
 
-        Vendor::create([
-            'name' => $this->name,
-            'phone' => $this->phone,
-            'email' => $this->email,
-            'address' => $this->address,
-            'logo_url' => $this->logo_url,
-            'note' => $this->note,
-        ]);
-
-        session()->flash('success', 'Nhà cung cấp đã được tạo thành công.');
-        $this->reset(); // reset form
+            session()->flash('success', 'Nhà cung cấp đã được tạo thành công.');
+            $this->resetForm();
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            $this->dispatchBrowserEvent('danger-alert', ['message' => 'Thông tin nhập liệu không hợp lệ!']);
+        }
+    }
+    public function resetForm()
+    {
+        $this->reset();
     }
 }

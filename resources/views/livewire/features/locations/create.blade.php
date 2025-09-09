@@ -1,44 +1,46 @@
-<div class="row p-4 w-full">
-    <!-- Cột phải: Thông tin -->
-    <div class="p-0 w-full md:w-1/2 p-4 h-full flex flex-col gap-12">
-        <div class="flex-1 basis-4/5 overflow-y-auto">
-            <div class="border rounded-xl p-4 bg-white">
-                <h5 class="text-green-600 font-semibold mb-3 flex items-center">
-                    <i class="fas fa-map-marker-alt mr-2"></i>Thông tin vị trí
-                </h5>
-                <ul class="text-sm divide-y divide-gray-200">
-                    <li class="py-2"><strong>Tên:</strong> <span id="previewLocName">-</span></li>
-                    <li class="py-2"><strong>Ghi chú:</strong> <span id="previewLocNote">-</span></li>
-                </ul>
-            </div>
-        </div>
-    </div>
+@props([
+    'name' => '',
+    'note' => '',
+])
 
-    <!-- Cột trái: Form nhập -->
-    <div class="col-md-6 border-end">
-        <form wire:submit.prevent="createLocation" id="locationForm">
-            <div class="mb-3">
-                <label class="form-label">Tên vị trí<span class="text-red-500">*</span></label>
-                <input wire:model.defer="name" type="text" name="name" class="form-control border rounded p-2"
-                    required>
+<div class="livewire-component-container">
+    <form wire:submit.prevent="createSubmit" novalidate class="max-w-[480px] flex flex-col gap-4 border p-4 rounded-lg">
+        @if (session()->has('success'))
+            <div class="bg-green-100 text-green-800 p-4 rounded">
+                {{ session('success') }}
             </div>
+        @elseif (session()->has('error'))
+            <div class="bg-red-100 text-red-800 p-4 rounded">
+                {{ session('error') }}
+            </div>
+        @endif
 
-            <div class="mb-3">
-                <label class="form-label">Ghi chú</label>
-                <textarea wire:model.defer="note" name="note" class="form-control border rounded p-2" rows="3"></textarea>
-            </div>
-                <button type="submit"
-                    class="btn btn-success px-4 py-2 rounded text-white bg-green-600 hover:bg-green-700">
-                    <i class="fas fa-save mr-2"></i> Lưu vị trí
-                </button>
-        </form>
-    </div>
+        <!-- Tên vị trí -->
+        <x-atoms.wrappers.row-flex class="border justify-between">
+            <x-atoms.form.input
+                livewire-id="name"
+                form-id="name"
+                type="text"
+                label="Tên vị trí"
+                placeholder="Nhập tên vị trí"
+                required="true"
+                class="flex w-full justify-between" />
+        </x-atoms.wrappers.row-flex>
+
+        <!-- Ghi chú -->
+        <x-atoms.wrappers.row-flex class="border justify-between">
+            <x-atoms.form.textarea
+                livewire-id="note"
+                form-id="note"
+                label="Ghi chú"
+                placeholder="Nhập ghi chú (nếu có)"
+                rows="3" />
+        </x-atoms.wrappers.row-flex>
+
+        <!-- Nút submit -->
+        <x-atoms.wrappers.row-flex class="border justify-between mt-4">
+            <x-atoms.form.button type="submit" label="Thêm mới" />
+            <x-atoms.form.button wire:click="resetForm" type="button" label="Đặt lại" />
+        </x-atoms.wrappers.row-flex>
+    </form>
 </div>
-
-<script>
-    const locForm = document.getElementById('locationForm');
-    locForm.addEventListener('input', () => {
-        document.getElementById('previewLocName').textContent = locForm.name.value || '-';
-        document.getElementById('previewLocNote').textContent = locForm.note.value || '-';
-    });
-</script>

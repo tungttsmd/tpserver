@@ -8,30 +8,34 @@ use Livewire\Component;
 class LocationCreateLivewire extends Component
 {
     public $name, $note;
+    protected $listeners = ['routeRefreshCall' => '$refresh', 'createSubmit' => 'createSubmit'];
     public function render()
     {
         return view('livewire.features.locations.create');
     }
-    public function createLocation()
+    public function createSubmit()
     {
-        // 'name' => $this->name,
-        // 'phone' => $this->phone,
-        // 'email' => $this->email,
-        // 'address' => $this->address,
-        // 'logo_url' => $this->logo_url,
-        // 'note' => $this->note,
+        try {
+            $this->validate([
+                'name' => 'required|string|max:255|unique:locations,name',
+                'note' => 'nullable|string',
+            ]);
 
-        $this->validate([
-            'name' => 'required|string|max:255|unique:locations,name',
-            'note' => 'nullable|string',
-        ]);
+            $insert = [
+                'name' => $this->name,
+                'note' => $this->note,
+            ];
 
-        Location::create([
-            'name' => $this->name,
-            'note' => $this->note,
-        ]);
+            Location::create($insert);
 
-        session()->flash('success', 'Vị trí mới đã được tạo thành công.');
-        $this->reset(); // reset form
+            $this->dispatchBrowserEvent('success-alert', ['message' => 'Vị trí mới đã được tạo thành công!']);
+            $this->resetForm();
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            $this->dispatchBrowserEvent('danger-alert', ['message' => 'Thông tin nhập liệu không hợp lệ!']);
+        }
+    }
+    public function resetForm()
+    {
+        $this->reset();
     }
 }

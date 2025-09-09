@@ -30,7 +30,7 @@
                 @elseif ($modalType === 'show')
                     <livewire:features.locations.location-show-livewire :location-id="$recordId" />
                 @endif
-            @elseif ($modalRoute[0] === 'partner')
+            @elseif ($modalRoute[0] === 'vendor')
                 @if ($modalType === 'edit')
                     <livewire:features.vendors.vendor-edit-livewire :vendor-id="$recordId" />
                 @elseif ($modalType === 'show')

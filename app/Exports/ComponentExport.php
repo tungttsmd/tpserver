@@ -11,13 +11,11 @@ class ComponentExport implements FromCollection, WithHeadings, WithMapping
 {
     public function collection()
     {
-        return Component::with(['category', 'condition', 'manufacturer', 'status'])->select(
+        return Component::with(['category', 'status'])->select(
             'id',
             'serial_number',
             'name',
             'category_id',
-            'condition_id',
-            'manufacturer_id',
             'status_id',
             'stockin_source',
             'stockin_at',
@@ -30,7 +28,7 @@ class ComponentExport implements FromCollection, WithHeadings, WithMapping
     }
     public function headings(): array
     {
-        return ['Id', 'Serial number', 'Tên linh kiện', 'Phân loại', 'Tình trạng', 'Hãng sản xuất', 'Trạng thái', 'Nội dung', 'Nguồn nhập', 'Ngày nhập', 'Bắt đầu bảo hành', 'Kết thúc bảo hành', 'Cập nhật', 'Ngày tạo'];
+        return ['Id', 'Serial number', 'Tên linh kiện', 'Phân loại', 'Trạng thái', 'Nội dung', 'Nguồn nhập', 'Ngày nhập', 'Bắt đầu bảo hành', 'Kết thúc bảo hành', 'Cập nhật', 'Ngày tạo'];
     }
     public function map($row): array
     {
@@ -39,8 +37,6 @@ class ComponentExport implements FromCollection, WithHeadings, WithMapping
             $row->serial_number,
             $row->name ?? '--',
             $row->category->name ?? '--',
-            $row->condition->name ?? '--',
-            $row->manufacturer->name ?? '--',
             $row->status->name ?? '--',
             $row->note,
             $row->stockin_source,

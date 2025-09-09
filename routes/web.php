@@ -19,7 +19,12 @@ use App\Http\Livewire\Features\Components\ComponentScanLivewire;
 use App\Http\Livewire\Features\Components\ComponentStockoutLivewire;
 use App\Http\Livewire\Features\Customers\CustomerCreateLivewire;
 use App\Http\Livewire\Features\Customers\CustomerIndexLivewire;
+use App\Http\Livewire\Features\Exports\ExportLivewire;
+use App\Http\Livewire\Features\Locations\LocationCreateLivewire;
+use App\Http\Livewire\Features\Locations\LocationIndexLivewire;
 use App\Http\Livewire\Features\Logs\ComponentLivewire;
+use App\Http\Livewire\Features\Vendors\VendorCreateLivewire;
+use App\Http\Livewire\Features\Vendors\VendorIndexLivewire;
 use Illuminate\Support\Facades\Route;
 
 // // // Mật khẩu bạn muốn mã hóa
@@ -40,8 +45,16 @@ Route::middleware('auth')->group(function () {
     Route::get('/item/index', ComponentIndexLivewire::class)->name('item.index');
     Route::get('/item/stockout', ComponentIndexLivewire::class)->name('item.stockout');
 
-    Route::get('/customer/create', CustomerCreateLivewire::class)->name('customer.stockout');
-    Route::get('/customer/index', CustomerIndexLivewire::class)->name('customer.stockout');
+    Route::get('/customer/create', CustomerCreateLivewire::class)->name('customer.create');
+    Route::get('/customer/index', CustomerIndexLivewire::class)->name('customer.index');
+
+    Route::get('/vendor/create', VendorCreateLivewire::class)->name('vendor.create');
+    Route::get('/vendor/index', VendorIndexLivewire::class)->name('vendor.index');
+
+    Route::get('/location/create', LocationCreateLivewire::class)->name('location.create');
+    Route::get('/location/index', LocationIndexLivewire::class)->name('location.index');
+
+    Route::get('/export/index', ExportLivewire::class)->name('export.index');
 
     // // 1. Đăng xuất
     // Route::get('logout', [AuthController::class, 'logout'])->name('auth.logout');

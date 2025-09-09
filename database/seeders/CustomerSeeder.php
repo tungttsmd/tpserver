@@ -22,7 +22,6 @@ class CustomerSeeder extends Seeder
                 'phone' => $faker->optional()->phoneNumber,
                 'email' => $faker->unique()->safeEmail,
                 'address' => $faker->address,
-                'avatar_url' => "https://i.pravatar.cc/150?u={$avatar_id}",
                 'note' => $faker->sentence(6),
                 'created_at' => $date_created,
                 'updated_at' => $date_updated,

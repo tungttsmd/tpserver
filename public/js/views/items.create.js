@@ -8,15 +8,14 @@ class ItemCreateView {
     }
 
     init() {
-        document.addEventListener('DOMContentLoaded', () => this.setup());
+        document.addEventListener('DOMContentLoaded', () => {
+            this.setup();
+        });
+
         document.addEventListener('livewire:load', () => {
             Livewire.hook('message.processed', () => {
                 this.setup();
             });
-        });
-        // Lắng nghe event success từ Livewire để reset form
-        window.addEventListener('form-submit-success', () => {
-            this.resetForm();
         });
     }
 
@@ -39,11 +38,9 @@ class ItemCreateView {
     setup() {
         const warrantyCheckbox = this.getWarrantyCheckbox();
         const warrantyFields = this.getWarrantyFields();
-
         if (warrantyCheckbox && warrantyFields) {
             const updateDisplay = () => {
                 warrantyFields.style.display = warrantyCheckbox.checked ? 'flex' : 'none';
-                
                 // Emit event để Livewire xử lý logic warranty
                 if (warrantyCheckbox.checked) {
                     window.Livewire.emit('toggleWarranty', true);
@@ -52,25 +49,12 @@ class ItemCreateView {
                 }
             };
 
+            // cleanup trước
+            warrantyCheckbox.removeEventListener('change', warrantyCheckbox._listener || (() => {}));
+
+            // gắn mới
+            warrantyCheckbox._listener = updateDisplay;
             warrantyCheckbox.addEventListener('change', updateDisplay);
-            updateDisplay(); // Gọi khi setup để khởi tạo giá trị ban đầu
         }
-    }
-
-    resetForm() {
-        const form = this.getForm();
-        if (form) form.reset();
-
-        const stockinInput = this.getStockinInput();
-        if (stockinInput) {
-            const today = new Date().toISOString().split('T')[0];
-            stockinInput.value = today;
-        }
-
-        const warrantyFields = this.getWarrantyFields();
-        if (warrantyFields) warrantyFields.style.display = 'none';
-
-        const warrantyCheckbox = this.getWarrantyCheckbox();
-        if (warrantyCheckbox) warrantyCheckbox.checked = false;
     }
 }

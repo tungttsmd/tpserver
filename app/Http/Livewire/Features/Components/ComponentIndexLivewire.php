@@ -34,8 +34,8 @@ class ComponentIndexLivewire extends Component
                 'components.name as Ten',
                 'categories.name as PhanLoai',
                 'components.stockin_source as NguonNhap',
-                'components.stockin_at as NgayNhap',
-                'components.updated_at as NgayCapNhat',
+                DB::raw("DATE_FORMAT(components.stockin_at, '%d/%m/%Y') as NgayNhap"),
+                DB::raw("DATE_FORMAT(components.updated_at, '%d/%m/%Y') as NgayCapNhat"),
                 DB::raw('TIMESTAMPDIFF(MONTH, CURDATE(), components.warranty_end) as BHConLai')
             )
             ->orderBy($sortColumn, $this->dir)
@@ -55,12 +55,13 @@ class ComponentIndexLivewire extends Component
         $this->columns = [
             'ID' => 'ID',
             'Serial' => 'Serial',
-            'Ten' => 'Tên',
+            'Ten' => 'Tên linh kiện',
             'PhanLoai' => 'Phân loại',
             'NguonNhap' => 'Nguồn nhập',
-            'NgayNhap' => 'Ngày nhập',
-            'NgayCapNhat' => 'Ngày cập nhật',
-            'BHConLai' => 'BH còn lại (tháng)',
+            'BHConLai' => 'BH',
+            'NgayCapNhat' => 'Cập nhật',
+            'NgayNhap' => 'Ngày tạo',
+
         ];
 
         // Khởi tạo giá trị mặc định cho các biến lọc (rỗng = không lọc)

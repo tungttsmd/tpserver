@@ -22,7 +22,6 @@ class VendorSeeder extends Seeder
                 'phone' => $faker->optional()->phoneNumber,
                 'email' => $faker->unique()->companyEmail,
                 'address' => $faker->address,
-                'logo_url' => "https://i.pravatar.cc/150?u={$logo_id}",
                 'note' => $faker->sentence(6),
                 'created_at' => $date_created,
                 'updated_at' => $date_updated,
