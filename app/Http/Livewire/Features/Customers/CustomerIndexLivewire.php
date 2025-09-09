@@ -32,6 +32,8 @@ class CustomerIndexLivewire extends Component
     }
     public function render()
     {
+
+
         $query = Customer::query();
         $sortColumn = $this->sort === 'NgayCapNhat' ? 'customers.updated_at' : $this->sort;
 

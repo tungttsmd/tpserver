@@ -1,10 +1,10 @@
 <div>
     {{-- Bộ lọc --}}
-    <x-partials.filters.items />
+    <x-partials.filters.customers />
 
     {{-- Bảng dữ liệu --}}
-    <x-partials.tables.default actions="components" :filter="$filter" :list="$list" :columns="array_keys($columns)"
-        :headers="array_values($columns)" :sort="$sort" :dir="$dir" />
+    <x-partials.tables.default actions="components" :filter="$filter" :list="$list->items()"
+        :columns="array_keys($columns)" :headers="array_values($columns)" :sort="$sort" :dir="$dir" />
 
     {{-- Phân trang --}}
     <div>
