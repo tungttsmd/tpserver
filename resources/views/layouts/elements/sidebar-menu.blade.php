@@ -102,12 +102,8 @@
                 <span style="margin-left:4px;">Lịch sử</span>
             </a>
             <ul id="menu9" style="display:none; list-style:none; padding-left:20px;">
-                <li><a href="#"
-                        onclick="event.preventDefault(); Livewire.emit('route', 'logs', 'user-action', 'user-action')">Nhật
-                        ký hoạt động</a></li>
-                <li><a href="#"
-                        onclick="event.preventDefault(); Livewire.emit('route', 'logs', 'component', 'component')">Nhập
-                        & xuất kho</a></li>
+                <li><a href="{{ route('log.users') }}">Nhật ký hoạt động</a></li>
+                <li><a href="{{ route('log.items') }}">Nhập & xuất kho</a></li>
             </ul>
         </li>
     </ul>

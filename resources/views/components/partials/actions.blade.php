@@ -27,6 +27,10 @@
             <x-partials.actions.vendors :record-id="$recordId" />
         @break
 
+        @case('log/items')
+            <x-partials.actions.log-items :record-id="$recordId" />
+        @break
+
         @default
             <span>--</span>
     @endswitch

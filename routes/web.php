@@ -23,8 +23,11 @@ use App\Http\Livewire\Features\Exports\ExportLivewire;
 use App\Http\Livewire\Features\Locations\LocationCreateLivewire;
 use App\Http\Livewire\Features\Locations\LocationIndexLivewire;
 use App\Http\Livewire\Features\Logs\ComponentLivewire;
+use App\Http\Livewire\Features\Logs\LogItemLivewire;
+use App\Http\Livewire\Features\Logs\LogUserLivewire;
 use App\Http\Livewire\Features\Vendors\VendorCreateLivewire;
 use App\Http\Livewire\Features\Vendors\VendorIndexLivewire;
+use App\Models\LogComponent;
 use Illuminate\Support\Facades\Route;
 
 // // // Mật khẩu bạn muốn mã hóa
@@ -55,6 +58,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/location/index', LocationIndexLivewire::class)->name('location.index');
 
     Route::get('/export/index', ExportLivewire::class)->name('export.index');
+
+    Route::get('/log/users', LogUserLivewire::class)->name('log.users');
+    Route::get('/log/items', LogItemLivewire::class)->name('log.items');
 
     // // 1. Đăng xuất
     // Route::get('logout', [AuthController::class, 'logout'])->name('auth.logout');

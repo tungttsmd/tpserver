@@ -4,7 +4,7 @@
 ])
 
 <div class="livewire-component-container">
-    <form wire:submit.prevent="createSubmit" novalidate class="max-w-[480px] flex flex-col gap-4 border p-4 rounded-lg">
+    <form wire:submit.prevent="createSubmit" novalidate class="max-w-[480px] flex flex-col gap-4">
         @if (session()->has('success'))
             <div class="bg-green-100 text-green-800 p-4 rounded">
                 {{ session('success') }}
@@ -16,7 +16,7 @@
         @endif
 
         <!-- Tên vị trí -->
-        <x-atoms.wrappers.row-flex class="border justify-between">
+        <x-atoms.wrappers.row-flex class="border-b justify-between">
             <x-atoms.form.input
                 livewire-id="name"
                 form-id="name"
@@ -28,7 +28,7 @@
         </x-atoms.wrappers.row-flex>
 
         <!-- Ghi chú -->
-        <x-atoms.wrappers.row-flex class="border justify-between">
+        <x-atoms.wrappers.row-flex class="border-b justify-between">
             <x-atoms.form.textarea
                 livewire-id="note"
                 form-id="note"
@@ -38,7 +38,7 @@
         </x-atoms.wrappers.row-flex>
 
         <!-- Nút submit -->
-        <x-atoms.wrappers.row-flex class="border justify-between mt-4">
+        <x-atoms.wrappers.row-flex class="border-b justify-between mt-4">
             <x-atoms.form.button type="submit" label="Thêm mới" />
             <x-atoms.form.button wire:click="resetForm" type="button" label="Đặt lại" />
         </x-atoms.wrappers.row-flex>

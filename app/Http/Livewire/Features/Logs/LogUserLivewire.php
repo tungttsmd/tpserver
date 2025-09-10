@@ -2,11 +2,12 @@
 
 namespace App\Http\Livewire\Features\Logs;
 
-use App\Models\LogComponent;
+use App\Models\LogUserAction;
+use Illuminate\Support\Facades\Schema;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-class ComponentLivewire extends Component
+class LogUserLivewire extends Component
 {
     use WithPagination;
     public $sort = 'updated_at';
@@ -14,12 +15,14 @@ class ComponentLivewire extends Component
 
     public function render()
     {
-        $componentLogs = LogComponent::with(['component', 'action', 'user', 'vendor', 'customer', 'location'])
+        $logUserActions = LogUserAction::with(['action', 'user'])
             ->orderBy($this->sort, $this->dir)
             ->paginate(20);
 
-        return view('livewire.features.logs.stockout', [
-            'componentLogs' => $componentLogs,
+        return view('livewire.features.logs.users', [
+            'logUserActions' => $logUserActions,
+            'columns' => Schema::getColumnListing('log_user_actions'),
+            'filter'=>session('route.filter'),
             'sort' => $this->sort,
             'dir' => $this->dir
         ]);
