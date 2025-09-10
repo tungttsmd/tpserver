@@ -41,6 +41,7 @@ class AuthController extends Controller
     // Đăng xuất người dùng
     public function logout()
     {
+        Auth::logout();
         return redirect('/');
     }
     public function logoutpost()

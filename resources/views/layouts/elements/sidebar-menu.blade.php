@@ -53,7 +53,8 @@
                 <span style="margin-left:4px;">Thống kê</span>
             </a>
             <ul id="menu5" style="display:none; list-style:none; padding-left:20px;">
-                <li><a href="#" onclick="event.preventDefault();Livewire.emit('route', 'stats','stock-variation')">Biến
+                <li><a href="#"
+                        onclick="event.preventDefault();Livewire.emit('route', 'stats','stock-variation')">Biến
                         động tồn
                         kho</a></li>
                 <li><a href="#" onclick="event.preventDefault();Livewire.emit('route', 'stats','index')">Thống kê
@@ -78,8 +79,8 @@
                 <span style="margin-left:4px;">Phân quyền</span>
             </a>
             <ul id="menu7" style="display:none; list-style:none; padding-left:20px;">
-                <li><a href="#" onclick="event.preventDefault(); Livewire.emit('route', 'roles', 'index')">Quản lý
-                        vai trò</a></li>
+                <li><a href="{{ route('role.index') }}">Quản lý vai trò</a></li>
+
             </ul>
         </li>
         <li>

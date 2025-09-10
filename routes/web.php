@@ -11,6 +11,8 @@ use App\Http\Livewire\Features\Locations\LocationCreateLivewire;
 use App\Http\Livewire\Features\Locations\LocationIndexLivewire;
 use App\Http\Livewire\Features\Logs\LogItemLivewire;
 use App\Http\Livewire\Features\Logs\LogUserLivewire;
+use App\Http\Livewire\Features\Roles\RoleIndexLivewire;
+use App\Http\Livewire\Features\Roles\RoleCreateLivewire;
 use App\Http\Livewire\Features\Users\UserCreateLivewire;
 use App\Http\Livewire\Features\Users\UserIndexLivewire;
 use App\Http\Livewire\Features\Vendors\VendorCreateLivewire;
@@ -47,11 +49,23 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/export/index', ExportLivewire::class)->name('export.index');
 
-    Route::get('/log/users', LogUserLivewire::class)->name('log.users');
-    Route::get('/log/items', LogItemLivewire::class)->name('log.items');
+    // Role Management
+    Route::prefix('role')->group(function () {
+        Route::get('/', RoleIndexLivewire::class)->name('role.index');
+        Route::get('/create', RoleCreateLivewire::class)->name('role.create');
+    });
 
-    Route::get('/user/index', UserIndexLivewire::class)->name('user.index');
-    Route::get('/user/create', UserCreateLivewire::class)->name('user.create');
+    // Log Management
+    Route::prefix('log')->group(function () {
+        Route::get('/users', LogUserLivewire::class)->name('log.users');
+        Route::get('/items', LogItemLivewire::class)->name('log.items');
+    });
+
+    // User Management
+    Route::prefix('user')->group(function () {
+        Route::get('/', UserIndexLivewire::class)->name('user.index');
+        Route::get('/create', UserCreateLivewire::class)->name('user.create');
+    });
 
     Route::get('/logout', [AuthController::class, 'logout'])->name('auth.logout');
     Route::post('/logout', [AuthController::class, 'logoutpost'])->name('auth.logoutpost');
