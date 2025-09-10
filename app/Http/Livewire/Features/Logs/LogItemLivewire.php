@@ -7,6 +7,7 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use PgSql\Lob;
 
 class LogItemLivewire extends Component
 {
@@ -19,7 +20,7 @@ class LogItemLivewire extends Component
     public $logItemId;
 
     public $search;
-    protected $listeners = ['record' => 'setLogItemId'];
+    protected $listeners = ['record' => 'setLogItemId', 'resetFilter' => 'resetFilters'];
     public function mount(Request $request)
     {
         $this->filter = $request->path();
@@ -30,12 +31,12 @@ class LogItemLivewire extends Component
             'ThaoTac' => 'Thao tác',
             'NguoiThucHien' => 'Người thực hiện',
             'NgayTao' => 'Ngày tạo',
-           
+
         ];
     }
     public function render()
     {
-        $componentLogs = LogComponent::query()
+        $componentLogs = $this->index()
             ->join('components', 'log_components.component_id', '=', 'components.id')
             ->join('actions', 'log_components.action_id', '=', 'actions.id')
             ->join('users', 'log_components.user_id', '=', 'users.id')
@@ -67,7 +68,24 @@ class LogItemLivewire extends Component
             'perPage' => $this->perPage
         ]);
     }
+    public function index()
+    {
+        $query = LogComponent::query();
 
+        // Tìm kiếm realtime theo serial_number hoặc note cơ bản
+        if ($this->search) {
+            $query->where(function ($q) {
+                $q->where('components.name', 'like', '%' . $this->search . '%')
+                    ->orWhere('actions.note', 'like', '%' . $this->search . '%')
+                    ->orWhere('users.alias', 'like', '%' . $this->search . '%')
+                    ->orWhere('locations.name', 'like', '%' . $this->search . '%')
+                    ->orWhere('vendors.name', 'like', '%' . $this->search . '%')
+                    ->orWhere('customers.name', 'like', '%' . $this->search . '%');
+            });
+        }
+
+        return $query;
+    }
     public function sortBy($field)
     {
         if ($this->sort === $field) {
@@ -80,5 +98,10 @@ class LogItemLivewire extends Component
     public function setLogItemId($id)
     {
         $this->logItemId = $id;
+    }
+    public function resetFilters()
+    {
+        $this->reset(['search', 'perPage', 'sort', 'dir']);
+        $this->resetPage(); // reset phân trang về trang 1
     }
 }

@@ -1,30 +1,18 @@
 <?php
 
-use App\Exports\UserLogsExport;
-use App\Exports\VendorsExport;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\ComponentController;
-use App\Http\Controllers\ComponentExportLogController;
-use App\Http\Controllers\ComponentRecallLogController;
-use App\Http\Controllers\DatabaseController;
-use App\Http\Controllers\PanelController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\RoleController;
-use App\Http\Controllers\StaticController;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\UserLogController;
 use App\Http\Livewire\Features\Components\ComponentCreateLivewire;
 use App\Http\Livewire\Features\Components\ComponentIndexLivewire;
 use App\Http\Livewire\Features\Components\ComponentScanLivewire;
-use App\Http\Livewire\Features\Components\ComponentStockoutLivewire;
 use App\Http\Livewire\Features\Customers\CustomerCreateLivewire;
 use App\Http\Livewire\Features\Customers\CustomerIndexLivewire;
 use App\Http\Livewire\Features\Exports\ExportLivewire;
 use App\Http\Livewire\Features\Locations\LocationCreateLivewire;
 use App\Http\Livewire\Features\Locations\LocationIndexLivewire;
-use App\Http\Livewire\Features\Logs\ComponentLivewire;
 use App\Http\Livewire\Features\Logs\LogItemLivewire;
 use App\Http\Livewire\Features\Logs\LogUserLivewire;
+use App\Http\Livewire\Features\Users\UserCreateLivewire;
+use App\Http\Livewire\Features\Users\UserIndexLivewire;
 use App\Http\Livewire\Features\Vendors\VendorCreateLivewire;
 use App\Http\Livewire\Features\Vendors\VendorIndexLivewire;
 use App\Models\LogComponent;
@@ -40,7 +28,7 @@ use Illuminate\Support\Facades\Route;
 // echo $hashedPassword;
 
 Route::get('/', [AuthController::class, 'login'])->name('auth.login');
-Route::post('login', [AuthController::class, 'loginpost'])->name('auth.loginpost');
+Route::post('/', [AuthController::class, 'loginpost'])->name('auth.loginpost');
 
 Route::middleware('auth')->group(function () {
     Route::get('/item/create', ComponentCreateLivewire::class)->name('item.create');
@@ -62,9 +50,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/log/users', LogUserLivewire::class)->name('log.users');
     Route::get('/log/items', LogItemLivewire::class)->name('log.items');
 
-    // // 1. Đăng xuất
-    // Route::get('logout', [AuthController::class, 'logout'])->name('auth.logout');
-    // Route::post('logout', [AuthController::class, 'logoutpost'])->name('auth.logoutpost');
+    Route::get('/user/index', UserIndexLivewire::class)->name('user.index');
+    Route::get('/user/create', UserCreateLivewire::class)->name('user.create');
+
+    Route::get('/logout', [AuthController::class, 'logout'])->name('auth.logout');
+    Route::post('/logout', [AuthController::class, 'logoutpost'])->name('auth.logoutpost');
 
     // // 2. Quản lý vai trò và phân quyền
     // Route::get('/roles', [RoleController::class, 'index'])->name('roles.index')->middleware('permission:role.view');

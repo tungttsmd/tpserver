@@ -16,7 +16,7 @@ class ComponentIndexLivewire extends Component
 
     public $categories, $statuses;
     public $category, $status;
-    public $columns, $table, $relationships, $search,  $perPage = 20;
+    public $columns, $table, $relationships, $search,  $perPage;
     public $dir = "desc", $sort = "NgayCapNhat";
     public $components;
     public $filter;

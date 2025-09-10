@@ -22,7 +22,6 @@ class AuthController extends Controller
         $credentials = $request->only('username', 'password');
         $remember = $request->has('remember');
 
-
         if (Auth::attempt($credentials, $remember)) {
             LogUserAction::create([
                 'action_id' => 1,

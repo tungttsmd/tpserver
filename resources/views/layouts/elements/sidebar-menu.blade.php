@@ -53,8 +53,7 @@
                 <span style="margin-left:4px;">Thống kê</span>
             </a>
             <ul id="menu5" style="display:none; list-style:none; padding-left:20px;">
-                <li><a href="#"
-                        onclick="event.preventDefault();Livewire.emit('route', 'stats','stock-variation')">Biến
+                <li><a href="#" onclick="event.preventDefault();Livewire.emit('route', 'stats','stock-variation')">Biến
                         động tồn
                         kho</a></li>
                 <li><a href="#" onclick="event.preventDefault();Livewire.emit('route', 'stats','index')">Thống kê
@@ -68,10 +67,8 @@
                 <span style="margin-left:4px;">Người dùng</span>
             </a>
             <ul id="menu6" style="display:none; list-style:none; padding-left:20px;">
-                <li><a href="#" onclick="event.preventDefault(); Livewire.emit('route', 'users', 'create')">Thêm
-                        mới người dùng</a></li>
-                <li><a href="#" onclick="event.preventDefault(); Livewire.emit('route', 'users', 'index')">Danh
-                        sách người dùng</a></li>
+                <li><a href="{{ route('user.create') }}">Tạo mới tài khoản</a></li>
+                <li><a href="{{ route('user.index') }}">Danh sách tài khoản</a></li>
             </ul>
         </li>
         <li>
@@ -102,7 +99,7 @@
                 <span style="margin-left:4px;">Lịch sử</span>
             </a>
             <ul id="menu9" style="display:none; list-style:none; padding-left:20px;">
-                <li><a href="{{ route('log.users') }}">Nhật ký hoạt động</a></li>
+                <li><a href="{{ route('log.users') }}">Hoạt động người dùng</a></li>
                 <li><a href="{{ route('log.items') }}">Nhập & xuất kho</a></li>
             </ul>
         </li>

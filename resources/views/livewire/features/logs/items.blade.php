@@ -3,15 +3,11 @@
     <x-partials.filters.log-items />
 
     {{-- Bảng dữ liệu --}}
-    <x-partials.tables.tag-style actions="log-items" :filter="$filter" :list="$list->items()" :columns="array_keys($columns)"
-        :headers="array_values($columns)" :sort="$sort" :dir="$dir" />
+    <x-partials.tables.tag-style actions="log-items" :filter="$filter" :list="$list->items()"
+        :columns="array_keys($columns)" :headers="array_values($columns)" :sort="$sort" :dir="$dir" />
 
     <!-- Pagination -->
     <div class="mt-4">
         {{ $list->links('components.atoms.table.pagination') }}
     </div>
-
-    {{-- Component style --}}
-    <link rel="stylesheet" href="{{ asset('css/components/index.css') }}">
-
 </div>

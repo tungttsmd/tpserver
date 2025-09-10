@@ -4,7 +4,9 @@ namespace App\Http\Livewire\Features\Components;
 
 use App\Models\Category;
 use App\Models\Component as ModelsComponent;
+use App\Models\LogUserAction;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 use Livewire\Component;
 
@@ -89,11 +91,13 @@ class ComponentEditLivewire extends Component
     {
         $this->validateData();
 
-        $component = ModelsComponent::findOrFail($this->componentId);
+        // Tìm component + load quan hệ
+        $component = ModelsComponent::with(['category'])->findOrFail($this->componentId);
 
-        $this->updateDateFields($component);
-        $this->updateGeneralFields($component);
+        // Ghi log người dùng
+        $this->logUserAction($component);
 
+        // Lưu model và thông báo
         $this->saveAndNotify($component);
     }
 
@@ -194,6 +198,36 @@ class ComponentEditLivewire extends Component
             $this->dispatchBrowserEvent('success-alert', ['message' => 'Cập nhật thành công!']);
         } else {
             $this->dispatchBrowserEvent('warning-alert', ['message' => 'Không có thay đổi để cập nhật.']);
+        }
+    }
+
+    private function logUserAction($component)
+    {
+        // Gán giá trị mới
+        $this->updateDateFields($component);
+        $this->updateGeneralFields($component);
+
+        // Lấy các thay đổi (dirty fields)
+        $dirty    = $component->getDirty();
+        $original = $component->getOriginal();
+
+        // Ghi log chi tiết từng trường
+        foreach ($dirty as $field => $newValue) {
+            $oldValue = $original[$field] ?? null;
+
+            // Nếu cần ghi kèm tên quan hệ, ví dụ category
+            if ($field === 'category_id') {
+                $oldValue = optional($component->getRelationValue('category')->find($oldValue))->name ?? $oldValue;
+                $newValue = optional($component->category)->name ?? $newValue;
+            }
+
+            LogUserAction::create([
+                'user_id'      => Auth::id(),
+                'action_id'    => 1,
+                'component_id' => $this->componentId,
+                'note'         => Auth::user()->alias .
+                    " tại linh kiện {$component->name} (#{$component->id}) đã thay đổi trường **{$field}** từ '{$oldValue}' thành '{$newValue}'",
+            ]);
         }
     }
 }

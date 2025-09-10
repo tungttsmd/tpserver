@@ -16,7 +16,7 @@ return new class extends Migration {
             $table->id();
             $table->unsignedBigInteger('user_id')->index();
             $table->string('action_id')->index(); // Mã thao tác nghiệp vụ
-            $table->string('note')->nullable(); // Nội dung nghiệp vụ của người dùng
+            $table->text('note')->nullable(); // Nội dung nghiệp vụ của người dùng
 
             $table->timestamps(); // Thêm index thủ công cho $table->timestamps();
             $table->index('created_at');

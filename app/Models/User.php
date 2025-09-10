@@ -12,7 +12,7 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable, HasRoles, HasPermissions;
 
-    protected $fillable = ['username', 'password'];
+    protected $fillable = ['username', 'password', 'alias'];
     protected $hidden = ['password', 'remember_token'];
     public function canEditPassword(): bool
     {
