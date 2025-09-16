@@ -38,6 +38,12 @@
                 @endif
             @elseif ($modalRoute[0] === 'log')
                 <livewire:features.components.component-show-livewire :component-id="$recordId" />
+            @elseif ($modalRoute[0] === 'role')
+                @if ($modalType === 'edit')
+                    <livewire:features.roles.role-edit-livewire :user-id="$recordId" />
+                @elseif ($modalType === 'show')
+                    <livewire:features.roles.role-show-livewire :user-id="$recordId" />
+                @endif
             @else
                 <div class="bg-main">
                     <p>Không tìm thấy modal</p>
@@ -56,7 +62,7 @@
             }
         }
 
-        window.closePopup = function () {
+        window.closePopup = function() {
             if (popupOverlay) {
                 popupOverlay.style.display = 'none';
             }
@@ -72,14 +78,14 @@
         });
 
         // Đóng modal khi nhấn phím Escape
-        document.addEventListener('keydown', function (event) {
+        document.addEventListener('keydown', function(event) {
             if (event.key === "Escape") {
                 closePopup();
             }
         });
 
         // Đóng modal khi click ra ngoài
-        popupOverlay.addEventListener('click', function (event) {
+        popupOverlay.addEventListener('click', function(event) {
             // Chỉ đóng khi click vào chính overlay, không phải các element con
             if (event.target === this) {
                 closePopup();

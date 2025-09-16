@@ -34,12 +34,13 @@
                 </tr>
             @else
                 @foreach (collect($list) as $record)
-                                        <tr class="even:bg-gray-50 hover:bg-gray-100">
+                    <tr class="even:bg-gray-50 hover:bg-gray-100">
                         @if ($filter)
                             <x-partials.actions :filter="$filter" header="Hành động" :record-id="data_get($record, 'ID')" />
                         @endif
                         @foreach ($columns as $column)
                             <x-atoms.table.td :value="data_get($record, $column)" />
+
                         @endforeach
                     </tr>
                 @endforeach

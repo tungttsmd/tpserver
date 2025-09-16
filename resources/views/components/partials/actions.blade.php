@@ -31,6 +31,10 @@
             <x-partials.actions.log-items :record-id="$recordId" />
         @break
 
+        @case('role/authorize')
+            <x-partials.actions.authorize :record-id="$recordId"/>
+        @break
+
         @default
             <span>--</span>
     @endswitch

@@ -11,120 +11,96 @@ use App\Http\Livewire\Features\Locations\LocationCreateLivewire;
 use App\Http\Livewire\Features\Locations\LocationIndexLivewire;
 use App\Http\Livewire\Features\Logs\LogItemLivewire;
 use App\Http\Livewire\Features\Logs\LogUserLivewire;
+use App\Http\Livewire\Features\Roles\RoleAuthorizeLivewire;
 use App\Http\Livewire\Features\Roles\RoleIndexLivewire;
 use App\Http\Livewire\Features\Roles\RoleCreateLivewire;
 use App\Http\Livewire\Features\Users\UserCreateLivewire;
 use App\Http\Livewire\Features\Users\UserIndexLivewire;
 use App\Http\Livewire\Features\Vendors\VendorCreateLivewire;
 use App\Http\Livewire\Features\Vendors\VendorIndexLivewire;
-use App\Models\LogComponent;
 use Illuminate\Support\Facades\Route;
 
-// // // Mật khẩu bạn muốn mã hóa
-// $password = 'admin';  // Thay thế bằng mật khẩu thực tế
-
-// // // Mã hóa mật khẩu với bcrypt
-// $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
-
-// // // In ra mã băm để bạn có thể sao chép
-// echo $hashedPassword;
-
+// Xác thực
 Route::get('/', [AuthController::class, 'login'])->name('auth.login');
 Route::post('/', [AuthController::class, 'loginpost'])->name('auth.loginpost');
-
 Route::middleware('auth')->group(function () {
-    Route::get('/item/create', ComponentCreateLivewire::class)->name('item.create');
-    Route::get('/item/scan', ComponentScanLivewire::class)->name('item.scan');
-    Route::get('/item/index', ComponentIndexLivewire::class)->name('item.index');
-    Route::get('/item/stockout', ComponentIndexLivewire::class)->name('item.stockout');
-
-    Route::get('/customer/create', CustomerCreateLivewire::class)->name('customer.create');
-    Route::get('/customer/index', CustomerIndexLivewire::class)->name('customer.index');
-
-    Route::get('/vendor/create', VendorCreateLivewire::class)->name('vendor.create');
-    Route::get('/vendor/index', VendorIndexLivewire::class)->name('vendor.index');
-
-    Route::get('/location/create', LocationCreateLivewire::class)->name('location.create');
-    Route::get('/location/index', LocationIndexLivewire::class)->name('location.index');
-
-    Route::get('/export/index', ExportLivewire::class)->name('export.index');
-
-    // Role Management
-    Route::prefix('role')->group(function () {
-        Route::get('/', RoleIndexLivewire::class)->name('role.index');
-        Route::get('/create', RoleCreateLivewire::class)->name('role.create');
-    });
-
-    // Log Management
-    Route::prefix('log')->group(function () {
-        Route::get('/users', LogUserLivewire::class)->name('log.users');
-        Route::get('/items', LogItemLivewire::class)->name('log.items');
-    });
-
-    // User Management
-    Route::prefix('user')->group(function () {
-        Route::get('/', UserIndexLivewire::class)->name('user.index');
-        Route::get('/create', UserCreateLivewire::class)->name('user.create');
-    });
-
     Route::get('/logout', [AuthController::class, 'logout'])->name('auth.logout');
     Route::post('/logout', [AuthController::class, 'logoutpost'])->name('auth.logoutpost');
+});
 
-    // // 2. Quản lý vai trò và phân quyền
-    // Route::get('/roles', [RoleController::class, 'index'])->name('roles.index')->middleware('permission:role.view');
-    // Route::get('/roles/create', [RoleController::class, 'create'])->name('roles.create')->middleware('permission:role.create');
-    // Route::post('/roles/create', [RoleController::class, 'store'])->name('roles.store')->middleware('permission:role.create');
-    // Route::get('/roles/{role}/permissions', [RoleController::class, 'edit'])->name('roles.permissions.edit')->middleware('permission:role.update');
-    // Route::put('/roles/{role}/permissions', [RoleController::class, 'update'])->name('roles.permissions.update')->middleware('permission:role.update');
+// Đã xác thực
+Route::middleware('auth')->group(function () {
 
-    // // 3. Dashboard và logs (chung cho admin hoặc user có quyền xem logs)
-    // Route::get('/index', [PanelController::class, 'index'])->name('index')->middleware('permission:dashboard.view');
-    // Route::get('/logs', [UserLogController::class, 'index'])->name('logs.index')->middleware('permission:log.view');
-    // Route::get('/export-logs', [ComponentExportLogController::class, 'index'])->name('logs.index-component-export')->middleware('permission:component.download_log');
-    // Route::get('/recall-logs', [ComponentRecallLogController::class, 'index'])->name('logs.index-component-recall')->middleware('permission:component.download_log');
+    // Khối linh kiện
+    Route::prefix('item')->group(function () {
+        Route::get('/create', ComponentCreateLivewire::class)
+            ->name('item.create')->middleware(['permission:item.create']);
+        Route::get('/scan', ComponentScanLivewire::class)
+            ->name('item.scan')->middleware(['permission:item.scan']);
+        Route::get('/index', ComponentIndexLivewire::class)
+            ->name('item.index')->middleware(['permission:item.index']);
+        Route::get('/stockout', ComponentIndexLivewire::class)
+            ->name('item.stockout')->middleware(['permission:item.index']);
+    });
 
-    // // 4. Quản lý người dùng
-    // Route::get('/users', [UserController::class, 'index'])->name('users.index')->middleware('permission:user.view');
-    // Route::get('/users/{user}', [UserController::class, 'show'])->name('users.show')->middleware('permission:user.view');
-    // Route::get('/users/{user}/roles', [UserController::class, 'editRoles'])->name('users.edit-roles')->middleware('permission:user.assign_role');
-    // Route::put('/users/{user}/roles', [UserController::class, 'updateRoles'])->name('users.update-roles')->middleware('permission:user.assign_role');
+    // Khối khách hàng
+    Route::prefix('customer')->group(function () {
+        Route::get('/create', CustomerCreateLivewire::class)
+            ->name('customer.create')->middleware(['permission:customer.create']);
+        Route::get('/index', CustomerIndexLivewire::class)
+            ->name('customer.index')->middleware(['permission:customer.index']);
+    });
 
-    // // 5. Profile cá nhân (user tự chỉnh sửa)
-    // Route::get('/profile/{user}/avatar/edit', [ProfileController::class, 'editAvatar'])->name('profile.edit-avatar')->middleware('permission:user.update');
-    // Route::put('/profile/{user}/avatar/update', [ProfileController::class, 'updateAvatar'])->name('profile.update-avatar')->middleware('permission:user.update');
-    // Route::get('/profile/{user}/alias/edit', [ProfileController::class, 'editAlias'])->name('profile.edit-alias')->middleware('permission:user.update');
-    // Route::put('/profile/{user}/alias/update', [ProfileController::class, 'updateAlias'])->name('profile.update-alias')->middleware('permission:user.update');
-    // Route::get('/profile/{user}/password/edit', [ProfileController::class, 'editPassword'])->name('profile.edit-password')->middleware('permission:user.update');
-    // Route::put('/profile/{user}/password/update', [ProfileController::class, 'updatePassword'])->name('profile.update-password')->middleware('permission:user.update');
+    // Khối nhà cung cấp
+    Route::prefix('vendor')->group(function () {
+        Route::get('/create', VendorCreateLivewire::class)
+            ->name('vendor.create')->middleware(['permission:vendor.create']);
+        Route::get('/index', VendorIndexLivewire::class)
+            ->name('vendor.index')->middleware(['permission:vendor.index']);
+    });
 
-    // // 6. Tải về danh sách linh kiện
-    // Route::get('/components/download', [ComponentController::class, 'download'])->name('components.download')->middleware('permission:component.download_log');
+    // Khối vị trí kho
+    Route::prefix('location')->group(function () {
+        Route::get('/create', LocationCreateLivewire::class)
+            ->name('location.create')->middleware(['permission:location.create']);
+        Route::get('/index', LocationIndexLivewire::class)
+            ->name('location.index')->middleware(['permission:location.index']);
+    });
 
-    // // 7. Scan linh kiện
-    // Route::get('/components/scan', [ComponentController::class, 'scan'])->name('components.scan')->middleware('permission:component.scan_qr');
-    // Route::post('components/scan', [ComponentController::class, 'scanpost'])->name('components.scanpost')->middleware('permission:component.scan_qr');
+    // Khối tải xuống file
+    Route::prefix('export')->group(function () {
+        Route::get('/index', ExportLivewire::class)
+            ->name('export.index')->middleware(['permission:export.index']);
+    });
 
-    // // 8. Xuất kho và thu hồi linh kiện
-    // Route::get('/components/{component}/export/confirm', [ComponentController::class, 'exportConfirm'])->name('components.exportConfirm')->middleware('permission:component.issue');
-    // Route::put('/components/{component}/export', [ComponentController::class, 'exportpost'])->name('components.exportpost')->middleware('permission:component.issue');
-    // Route::put('/components/{component}/recall', [ComponentController::class, 'recallpost'])->name('components.recallpost')->middleware('permission:component.recall');
+    // Khối nhật ký
+    Route::prefix('log')->group(function () {
+        Route::get('/users', LogUserLivewire::class)
+            ->name('log.users')->middleware(['permission:log.users']);
+        Route::get('/items', LogItemLivewire::class)
+            ->name('log.items')->middleware(['permission:log.items']);
+    });
 
-    // // 9. Xem danh sách linh kiện
-    // Route::get('/components', [ComponentController::class, 'index'])->name('components.index')->middleware('permission:component.view');
-    // Route::get('/components/export', [ComponentController::class, 'export'])->name('components.export')->middleware('permission:component.view');
-    // Route::get('/components/stock', [ComponentController::class, 'stock'])->name('components.stock')->middleware('permission:component.view');
+    // Khối người dùng
+    Route::prefix('user')->group(function () {
+        Route::get('/index', UserIndexLivewire::class)
+            ->name('user.index');
+            // ->middleware(['permission:user.index']);
+        Route::get('/create', UserCreateLivewire::class)
+            ->name('user.create');
+            // ->middleware(['permission:user.create']);
+    });
 
-    // // 10. CRUD linh kiện
-    // Route::get('/components/create', [ComponentController::class, 'create'])->name('components.create')->middleware('permission:component.create');
-    // Route::post('/components', [ComponentController::class, 'store'])->name('components.store')->middleware('permission:component.create');
-    // Route::get('/components/{component}', [ComponentController::class, 'show'])->name('components.show')->middleware('permission:component.view');
-    // Route::get('/components/{component}/edit', [ComponentController::class, 'edit'])->name('components.edit')->middleware('permission:component.update');
-    // Route::put('/components/{component}', [ComponentController::class, 'update'])->name('components.update')->middleware('permission:component.update');
-    // Route::delete('/components/{component}', [ComponentController::class, 'destroy'])->name('components.destroy')->middleware('permission:component.delete');
-
-    // // 11. Thống kê
-    // Route::get('/static', [StaticController::class, 'index'])->name('static.index')->middleware('permission:dashboard.view');
-
-    // // 12. Tải về logs người dùng
-    // Route::get('/logs/download', [UserLogController::class, 'download'])->name('logs.download')->middleware('permission:user.download_log');
+    // Khối phân quyền
+    Route::prefix('role')->group(function () {
+        Route::get('/index', RoleIndexLivewire::class)
+            ->name('role.index');
+            // ->middleware(['permission:role.index']);
+        Route::get('/authorize', RoleAuthorizeLivewire::class)
+            ->name('role.authorize');
+            // ->middleware(['permission:role.authorize']);
+        Route::get('/create', RoleCreateLivewire::class)
+            ->name('role.create');
+            // ->middleware(['permission:role.create']);
+    });
 });

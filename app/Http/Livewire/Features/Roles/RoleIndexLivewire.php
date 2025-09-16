@@ -33,7 +33,7 @@ class RoleIndexLivewire extends Component
             'TenVaiTro' => 'Tên vai trò',
             'TenHienThi' => 'Tên hiển thị',
             'NgayTao' => 'Ngày tạo',
-            'NgayCapNhat' => 'Cập nhật lần cuối',
+            'NgayCapNhat' => 'Cập nhật',
         ];
     }
     public function render()

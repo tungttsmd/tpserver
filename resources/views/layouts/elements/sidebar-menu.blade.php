@@ -79,8 +79,9 @@
                 <span style="margin-left:4px;">Phân quyền</span>
             </a>
             <ul id="menu7" style="display:none; list-style:none; padding-left:20px;">
+                <li><a href="{{ route('role.create') }}">Tạo mới vai trò</a></li>
+                <li><a href="{{ route('role.authorize') }}">Phân quyền người dùng</a></li>
                 <li><a href="{{ route('role.index') }}">Quản lý vai trò</a></li>
-
             </ul>
         </li>
         <li>

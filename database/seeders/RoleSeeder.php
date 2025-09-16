@@ -9,6 +9,7 @@ class RoleSeeder extends Seeder
 {
     public function run(): void
     {
+
         $colorList = [
             '#dc2626', // đỏ
             '#2563eb', // xanh dương
@@ -50,11 +51,12 @@ class RoleSeeder extends Seeder
             '#14b8a6', // xanh ngọc
         ];
 
+        Role::truncate();
+
         $roles = [
-            ['name' => 'admin', 'display_name' => 'Quản trị'],
+            ['name' => 'admin', 'display_name' => 'Quản trị viên'],
             ['name' => 'manager', 'display_name' => 'Quản lý'],
-            ['name' => 'storekeeper', 'display_name' => 'Thủ kho'],
-            ['name' => 'user', 'display_name' => 'Người dùng'],
+            ['name' => 'staff', 'display_name' => 'Nhân viên'],
         ];
 
         foreach ($roles as $role) {
