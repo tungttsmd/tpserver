@@ -1,4 +1,29 @@
 <nav>
+    <!-- User Info Section -->
+    <div class="user-info p-4 border-b border-gray-200">
+        <div class="flex items-center space-x-3">
+            <div class="bg-blue-500 text-white rounded-full w-10 h-10 flex items-center justify-center">
+                <i class="fas fa-user"></i>
+            </div>
+            <div class="flex-1 min-w-0">
+                <p class="text-sm font-medium text-gray-900 truncate">
+                    {{ Auth::user()->name }}
+                </p>
+                <p class="text-xs text-gray-500 truncate">
+                    @if(Auth::user()->roles->isNotEmpty())
+                        {{ Auth::user()->roles->first()->display_name ?? Auth::user()->roles->first()->name }}
+                    @else
+                        No Role
+                    @endif
+                </p>
+                <p class="text-xs text-gray-400 truncate">
+                    {{ '@' . Auth::user()->username }}
+                </p>
+            </div>
+            <x-atoms.form.button href="{{ route('auth.logout') }}" label="Đăng xuất" />
+        </div>
+    </div>
+
     <ul style="list-style:none; padding:0;">
         <li>
             <a href="#" onclick="toggleMenu(event, 'menu1')" style="display:flex;align-items:center;">

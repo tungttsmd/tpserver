@@ -21,6 +21,7 @@ class RawSeeder extends Seeder
             StatusSeeder::class,
             RoleSeeder::class,
             UserSeeder::class,
+            CategorySeeder::class,
         ]);
     }
 }

@@ -40,9 +40,9 @@
                 <livewire:features.components.component-show-livewire :component-id="$recordId" />
             @elseif ($modalRoute[0] === 'role')
                 @if ($modalType === 'edit')
-                    <livewire:features.roles.role-edit-livewire :user-id="$recordId" />
+                    <livewire:features.roles.role-edit-livewire :record-id="$recordId" />
                 @elseif ($modalType === 'show')
-                    <livewire:features.roles.role-show-livewire :user-id="$recordId" />
+                    <livewire:features.roles.role-show-livewire :record-id="$recordId" />
                 @endif
             @else
                 <div class="bg-main">

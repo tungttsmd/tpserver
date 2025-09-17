@@ -4,7 +4,6 @@ namespace App\Http\Livewire\Features\Roles;
 
 use App\Models\Role;
 use App\Models\User;
-use Illuminate\Http\Request;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -12,39 +11,82 @@ class RoleEditLivewire extends Component
 {
     use WithPagination;
 
-    public $userId;
-    public $selectedRoleId;
-    public $display_name = '';
-    public $roles = [];
+    public $userId, $roleId, $roleName;
+    public $submitRoleId;
+    public $recordId, $user;
     public $filter;
-    public $user;
+    protected $listeners = [
+        'record' => 'record',
+    ];
 
-    protected $listeners = ['record' => 'record'];
-    
-    public function mount(Request $request)
+    public function mount($recordId)
     {
-        $this->filter = $request->path();
-        $this->roles = Role::orderBy('name')->get();
+        $this->recordId = $recordId;
+        if ($this->recordId) {
+            $this->loadUser();
+        }
     }
-
-    public function updateSubmit()
-    {
-        
-
-    }
-
     public function render()
     {
-        return view('livewire.features.roles.edit');
+        $options = Role::select([
+            'id',
+            'name',
+            'display_name'
+        ])->get();
+
+        return view('livewire.features.roles.edit', [
+            'options' => $options
+        ]);
     }
-    public function record($id)
+    public function updateSubmit()
     {
-        $this->userId = $id;
-        $this->formRebinding();
+        // Nhận roleId mới
+        $refindRoleName = Role::find($this->roleId)->name;
+
+        // Valid
+        if ($refindRoleName === $this->roleName) {
+            $this->dispatchBrowserEvent(
+                'warning-alert',
+                ['message' => 'Vai trò không thay đổi!']
+            );
+            return;
+        }
+
+        // Success
+        // 🔹 Xóa tất cả role và permissions hiện tại
+        $this->user->roles()->detach(); // xóa role cũ
+        $this->user->permissions()->detach(); // xóa permission trực tiếp
+
+        // 🔹 Gán role mới
+        $this->user->assignRole($refindRoleName);
+        $this->user->syncRoles($refindRoleName);
+        $this->dispatchBrowserEvent(
+            'success-alert',
+            ['message' => 'Cập nhật vai trò thành công!']
+        );
+
+        // Làm mới form nếu cần
+        $this->loadUser();
+
+        // Làm mới bảng
+        $this->emitSelf('$refresh');
     }
-    public function formRebinding()
+    public function record($recordId)
     {
-        $this->user = User::with(['roles'])->findOrFail($this->userId);
-        $this->selectedRoleId = $this->user->roles->first()->id;
+        $this->recordId = $recordId;
+        $this->loadUser();
+    }
+    private function loadUser()
+    {
+        $this->user = User::with('roles')->find($this->recordId);
+
+        if ($this->user && $this->user->roles->first()) {
+            $this->roleId = $this->user->roles->first()->id;
+            $this->roleName = $this->user->roles->first()->name;
+        } else {
+            $this->roleId = null;
+            $this->roleName = null;
+        }
+        $this->emitSelf('$refresh');
     }
 }

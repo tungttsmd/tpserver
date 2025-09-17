@@ -84,23 +84,23 @@ Route::middleware('auth')->group(function () {
     // Khối người dùng
     Route::prefix('user')->group(function () {
         Route::get('/index', UserIndexLivewire::class)
-            ->name('user.index');
-            // ->middleware(['permission:user.index']);
+            ->name('user.index')
+            ->middleware(['permission:user.index']);
         Route::get('/create', UserCreateLivewire::class)
-            ->name('user.create');
-            // ->middleware(['permission:user.create']);
+            ->name('user.create')
+            ->middleware(['permission:user.create']);
     });
 
     // Khối phân quyền
     Route::prefix('role')->group(function () {
         Route::get('/index', RoleIndexLivewire::class)
-            ->name('role.index');
-            // ->middleware(['permission:role.index']);
+            ->name('role.index')
+            ->middleware(['permission:role.index']);
         Route::get('/authorize', RoleAuthorizeLivewire::class)
-            ->name('role.authorize');
-            // ->middleware(['permission:role.authorize']);
+            ->name('role.authorize')
+            ->middleware(['permission:role.authorize']);
         Route::get('/create', RoleCreateLivewire::class)
-            ->name('role.create');
-            // ->middleware(['permission:role.create']);
+            ->name('role.create')
+            ->middleware(['permission:role.create']);
     });
 });

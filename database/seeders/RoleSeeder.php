@@ -54,17 +54,19 @@ class RoleSeeder extends Seeder
         Role::truncate();
 
         $roles = [
-            ['name' => 'admin', 'display_name' => 'Quản trị viên'],
-            ['name' => 'manager', 'display_name' => 'Quản lý'],
-            ['name' => 'staff', 'display_name' => 'Nhân viên'],
+            ['id' => 3, 'name' => 'admin', 'display_name' => 'Quản trị viên'],
+            ['id' => 2, 'name' => 'manager', 'display_name' => 'Quản lý'],
+            ['id' => 1, 'name' => 'staff', 'display_name' => 'Nhân viên'],
         ];
 
         foreach ($roles as $role) {
             $randomColor = $colorList[array_rand($colorList)];
 
             Role::updateOrCreate(
-                ['name' => $role['name'], 'guard_name' => 'web'],
+                ['id' => $role['id']], // key chính là ID
                 [
+                    'name' => $role['name'],
+                    'guard_name' => 'web',
                     'display_name' => $role['display_name'],
                     'role_color' => $randomColor,
                 ]

@@ -25,25 +25,11 @@ class ComponentEditLivewire extends Component
     // Event listeners
     protected $listeners = ['record' => 'record'];
 
-    /**
-     * Lifecycle hook that runs when the component is initialized.
-     */
     public function mount()
-    {
-        $this->mountInit();
-    }
-
-    /**
-     * Initializes the component's state.
-     */
-    public function mountInit()
     {
         $this->formRebinding();
     }
 
-    /**
-     * Re-binds the component's properties from the model.
-     */
     public function formRebinding()
     {
         $this->component = ModelsComponent::findOrFail($this->componentId);
@@ -63,20 +49,12 @@ class ComponentEditLivewire extends Component
         $this->toggleWarranty = !is_null($this->component->warranty_start);
     }
 
-    /**
-     * Renders the component.
-     */
     public function render()
     {
         $data = array_merge($this->getRelationData(), ['component' => $this->component]);
         return view('livewire.features.items.edit', $data);
     }
 
-    /**
-     * Retrieves related data for the view.
-     *
-     * @return array
-     */
     public function getRelationData()
     {
         return [
@@ -84,9 +62,6 @@ class ComponentEditLivewire extends Component
         ];
     }
 
-    /**
-     * Updates the component record.
-     */
     public function update()
     {
         $this->validateData();
@@ -119,11 +94,6 @@ class ComponentEditLivewire extends Component
         ];
     }
 
-    /**
-     * Listens for the 'record' event to set the component ID and rebind the form.
-     *
-     * @param int $id
-     */
     public function record($id)
     {
         $this->componentId = $id;

@@ -2,7 +2,8 @@
 
 namespace App\Http\Livewire\Features\Roles;
 
-use App\Models\Role;
+use App\Models\User;
+use Spatie\Permission\Models\Role;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -10,106 +11,59 @@ class RoleShowLivewire extends Component
 {
     use WithPagination;
 
-    public $date_created,
-        $serial_number,
-        $category_id,
-        $status_id,
-        $name,
-        $stockin_source,
-        $stockin_at,
-        $warranty_start,
-        $warranty_end,
-        $note;
+    public $recordId;
+    public $role;
+    public $permissions = [];
+    public $filter;
+    public $roleId;
+    public $user;
 
-    public $view_form_content = '';
-    public $serialNumber = null;
-    public $previous_view = null;
-    public $filter = 'manual';
-    public $createSuccess = null;
+    protected $listeners = [
+        'record' => 'record',
+    ];
 
-    public $roleId, $role;
-
-    protected $listeners = ['record' => 'record'];
+    public function mount($recordId)
+    {
+        $this->recordId = $recordId;
+        if ($this->recordId) {
+            $this->loadRole();
+        }
+    }
 
     public function render()
     {
-        $this->scan();
-        $suggestions = $this->smartMatching($this->component, $this->component->serial_number ?? 0);
-        return view('livewire.features.role.show', ['suggestions' => $suggestions]);
+        return view('livewire.features.roles.show');
     }
 
-    public function mount() {}
-
-    public function realtime()
+    public function record($recordId)
     {
-        if ($this->filter === 'realtime') {
-            $this->trigger();
-        }
-    }
-
-    public function trigger()
-    {
+        $this->recordId = $recordId;
+        $this->loadRole();
         $this->emitSelf('$refresh');
     }
 
-    public function filter($filter)
+    private function loadRole()
     {
-        $this->filter = $filter;
-    }
+        // Lấy user
+        $this->user = User::with('roles')->find($this->recordId);
 
-    public function scan()
-    {
-        $id = trim($this->componentId);
-
-        // 1. Lấy chính xác 100%
-        $this->role = Role::with([
-            'category',
-            'status'
-        ])->where('id', $id)->first();
-    }
-
-    public function smartMatching($component, $serial)
-    {
-        $baseQuery = Role::with('category', 'status')
-            ->when($component, fn($q) => $q->where('id', '!=', $component->id));
-
-        // 1. prefix
-        $suggestions = (clone $baseQuery)
-            ->where('serial_number', 'like', $serial . '%')
-            ->orderBy('serial_number')
-            ->paginate(10);
-
-        // 2. chứa toàn bộ
-        if ($suggestions->isEmpty()) {
-            $suggestions = (clone $baseQuery)
-                ->where('serial_number', 'like', '%' . $serial . '%')
-                ->orderBy('serial_number')
-                ->paginate(10);
+        if (!$this->user || !$this->user->roles->first()) {
+            $this->role = null;
+            $this->roleId = null;
+            $this->permissions = collect();
+            return;
         }
 
-        // 3. nửa đầu
-        if ($suggestions->isEmpty()) {
-            $half = substr($serial, 0, floor(strlen($serial) * 0.5));
-            $suggestions = (clone $baseQuery)
-                ->where('serial_number', 'like', $half . '%')
-                ->orderBy('serial_number')
-                ->paginate(10);
-        }
+        // Lấy role đầu tiên của user
+        $this->roleId = $this->user->roles->first()->id;
+        $this->role = Role::find($this->roleId);
 
-        // 4. nửa sau
-        if ($suggestions->isEmpty()) {
-            $half = substr($serial, floor(strlen($serial) * 0.5));
-            $suggestions = (clone $baseQuery)
-                ->where('serial_number', 'like', '%' . $half)
-                ->orderBy('serial_number')
-                ->paginate(10);
-        }
-
-        return $suggestions;
-    }
-
-    public function record($id)
-    {
-        $this->roleId = $id;
+        // Lấy permissions nếu role tồn tại
+        $this->permissions = $this->role->permissions
+            ->groupBy(function ($permission) {
+                $parts = explode('.', $permission->name);
+                return $parts[0] ?? 'other';
+            })
+            ->sortKeys();
     }
 }
