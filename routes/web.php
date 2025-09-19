@@ -20,10 +20,12 @@ use App\Http\Livewire\Features\Vendors\VendorCreateLivewire;
 use App\Http\Livewire\Features\Vendors\VendorIndexLivewire;
 use App\Http\Livewire\Features\Stats\StatIndexLivewire;
 use App\Http\Livewire\Features\Stats\StatStockVariationLivewire;
+use App\Http\Livewire\Features\Index\IndexLivewire;
 use Illuminate\Support\Facades\Route;
 
 // Xác thực
 Route::get('/', [AuthController::class, 'login'])->name('auth.login');
+Route::get('/index', IndexLivewire::class)->name('index')->middleware('auth');
 Route::post('/', [AuthController::class, 'loginpost'])->name('auth.loginpost');
 Route::middleware('auth')->group(function () {
     Route::get('/logout', [AuthController::class, 'logout'])->name('auth.logout');
