@@ -6,6 +6,8 @@
     <title>@yield('title', 'My App')</title>
     @livewireStyles
     <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
     <link rel="stylesheet" href="{{ asset('plugins/fontawesome-free/css/all.min.css') }}" />
     <link rel="stylesheet" href="{{ asset('css/layouts/app.css') }}">
 </head>

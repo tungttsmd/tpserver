@@ -46,6 +46,9 @@ class PermissionSeeder extends Seeder
             'role.index' => 'Xem danh sách vai trò',
             'role.create' => 'Tạo mới vai trò',
             'role.authorize' => 'Phân quyền người dùng',
+            
+            // Stats (Thống kê) permissions
+            'stats.view' => 'Xem thống kê',
         ];
 
         // 2. Tạo permissions

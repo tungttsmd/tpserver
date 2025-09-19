@@ -18,6 +18,8 @@ use App\Http\Livewire\Features\Users\UserCreateLivewire;
 use App\Http\Livewire\Features\Users\UserIndexLivewire;
 use App\Http\Livewire\Features\Vendors\VendorCreateLivewire;
 use App\Http\Livewire\Features\Vendors\VendorIndexLivewire;
+use App\Http\Livewire\Features\Stats\StatIndexLivewire;
+use App\Http\Livewire\Features\Stats\StatStockVariationLivewire;
 use Illuminate\Support\Facades\Route;
 
 // Xác thực
@@ -102,5 +104,15 @@ Route::middleware('auth')->group(function () {
         Route::get('/create', RoleCreateLivewire::class)
             ->name('role.create')
             ->middleware(['permission:role.create']);
+    });
+
+    // Khối thống kê
+    Route::prefix('stats')->group(function () {
+        Route::get('/', StatIndexLivewire::class)
+            ->name('stats.index');
+            // ->middleware(['permission:stats.view']);
+        Route::get('/stock-variation', StatStockVariationLivewire::class)
+            ->name('stats.stock-variation');
+            // ->middleware(['permission:stats.view']);
     });
 });
