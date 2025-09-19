@@ -48,7 +48,8 @@ class PermissionSeeder extends Seeder
             'role.authorize' => 'Phân quyền người dùng',
             
             // Stats (Thống kê) permissions
-            'stats.view' => 'Xem thống kê',
+            'stats.index' => 'Xem thống kê linh kiện',
+            'stats.stock-variation' => 'Xem biến động linh kiện'
         ];
 
         // 2. Tạo permissions
@@ -69,10 +70,11 @@ class PermissionSeeder extends Seeder
         $log      = ['log.users', 'log.items'];
         $user     = ['user.index', 'user.create'];
         $role     = ['role.index', 'role.create', 'role.authorize'];
+        $stats    = ['stats.index', 'stats.stock-variation'];
 
         // Làm phẳng mảng quyền
         $staffPermissions   = array_merge($item, $customer, $vendor, $location);
-        $managerPermissions = array_merge($staffPermissions, $export, $log);
+        $managerPermissions = array_merge($staffPermissions, $export, $log, $stats);
         $adminPermissions   = array_merge($managerPermissions, $user, $role);
 
         // 4. Tạo role và gán permission

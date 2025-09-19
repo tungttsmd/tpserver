@@ -21,6 +21,7 @@
             <ul class="submenu">
                 <li><a href="{{ route('item.create') }}">Thêm mới linh kiện</a></li>
                 <li><a href="{{ route('item.index') }}">Danh sách linh kiện</a></li>
+                <li><a href="{{ route('item.stockout') }}">Linh kiện xuất kho</a></li>
             </ul>
         </li>
 

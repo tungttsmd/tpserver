@@ -47,9 +47,9 @@ class AuthController extends Controller
     public function logoutpost()
     {
         LogUserAction::create([
-            'action' => 'Đăng xuất',
-            'user' => Auth::user()->username ?? 'unknown',
-            'note' => 'Người dùng ' . Auth::user()->username . ' đã đăng xuất.'
+            'user_id' => auth()->id(),
+            'action_id' => 2,
+            'note' => 'Người dùng ' . Auth::user()->alias . '(' . Auth::user()->username . ') đã đăng xuất.'
         ]);
         Auth::logout();
         return redirect('/');

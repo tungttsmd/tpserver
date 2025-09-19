@@ -109,10 +109,10 @@ Route::middleware('auth')->group(function () {
     // Khối thống kê
     Route::prefix('stats')->group(function () {
         Route::get('/', StatIndexLivewire::class)
-            ->name('stats.index');
-            // ->middleware(['permission:stats.view']);
+            ->name('stats.index')
+            ->middleware(['permission:stats.index']);
         Route::get('/stock-variation', StatStockVariationLivewire::class)
-            ->name('stats.stock-variation');
-            // ->middleware(['permission:stats.view']);
+            ->name('stats.stock-variation')
+            ->middleware(['permission:stats.stock-variation']);
     });
 });
