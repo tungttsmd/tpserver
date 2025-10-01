@@ -22,6 +22,8 @@ class PermissionSeeder extends Seeder
             // Customer (Khách hàng) permissions
             'customer.create' => 'Tạo mới khách hàng',
             'customer.index' => 'Xem danh sách khách hàng',
+            'customer.show' => 'Xem chi tiết khách hàng',
+            'customer.edit' => 'Chỉnh sửa khách hàng',
 
             // Vendor (Nhà cung cấp) permissions
             'vendor.create' => 'Tạo mới nhà cung cấp',
@@ -63,7 +65,7 @@ class PermissionSeeder extends Seeder
 
         // 3. Gom nhóm quyền
         $item     = ['item.create', 'item.scan', 'item.index', 'item.stockout'];
-        $customer = ['customer.create', 'customer.index'];
+        $customer = ['customer.create', 'customer.index', 'customer.show', 'customer.edit'];
         $vendor   = ['vendor.create', 'vendor.index'];
         $location = ['location.create', 'location.index'];
         $export   = ['export.index'];

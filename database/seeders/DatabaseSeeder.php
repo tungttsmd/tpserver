@@ -25,6 +25,7 @@ class DatabaseSeeder extends Seeder
             VendorSeeder::class,
             ProfileRoleColorSeeder::class,
             CustomerSeeder::class,
+            OrdersTableSeeder::class,
             StatusSeeder::class,
             LocationSeeder::class,
             RoleSeeder::class,

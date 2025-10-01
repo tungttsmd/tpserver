@@ -1,145 +1,156 @@
-@props([
-    'data' => $customer,
-    'suggestions' => [],
-    'qrcode' => null,
-    'filter' => null,
-])
-<div class="row col-12 overflow-y-auto h-[64vh]"> {{-- ✅ Wrap 2 khối vào row mới --}}
-    {{-- Thông tin linh kiện --}}
-    <div class="col-lg-12">
-        <div class="mt-0 text-gray-600 bg-gray-50 p-3 rounded space-y-1">
-            <div class="d-flex flex-column flex-md-row justify-between gap-4 mb-2">
-                {{-- Bên trái --}}
-                <div class="flex-1 space-y-3 text-[16px]">
-                    <p class="font-semibold text-info-dark text-[20px]">
-                        <i class="fas fa-barcode mr-1"></i>
-                        <span>Khách hàng: {{ $data->name ?? 'N/A' }}</span>
-                    </p>
-                    <p class="font-semibold text-info-subtle text-[18px]">
-                        <i class="fas fa-phone mr-1"></i>
-                        <span>Số điện thoại: {{ $data->phone ?? 'chưa xác định' }}</span>
-                    </p>
-                    <p class="font-semibold text-info text-[18px]">
-                        <i class="fas fa-envelope mr-1 "></i>
-                        <span>Email: {{ $data->email ?? 'chưa xác định' }}</span>
-                    </p>
+@section('title', 'Chi tiết khách hàng')
+
+<div class="bg-white rounded-lg shadow overflow-hidden">
+    <div class="px-6 py-4 border-b border-gray-200">
+        <div class="flex justify-between items-center">
+            <h3 class="text-lg font-medium text-gray-900">
+                Thông tin khách hàng
+            </h3>
+            <div class="flex space-x-2">
+                <a href="{{ route('customer.edit', $customer->id) }}" 
+                   class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-yellow-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500">
+                    <i class="fas fa-edit mr-1"></i> Chỉnh sửa
+                </a>
+                <a href="{{ route('customer.index') }}" 
+                   class="inline-flex items-center px-3 py-2 border border-gray-300 text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    <i class="fas fa-arrow-left mr-1"></i> Quay lại
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="px-6 py-4">
+        <div class="flex flex-col md:flex-row gap-6">
+            <div class="flex-1 space-y-4">
+                <div class="bg-gray-50 p-4 rounded-lg">
+                    <h4 class="text-lg font-medium text-gray-900 mb-4">Thông tin cơ bản</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <p class="text-sm font-medium text-gray-500">Họ và tên</p>
+                            <p class="mt-1 text-sm text-gray-900">{{ $customer->name ?? 'Chưa xác định' }}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium text-gray-500">Số điện thoại</p>
+                            <p class="mt-1 text-sm text-gray-900">{{ $customer->phone ?? 'Chưa xác định' }}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium text-gray-500">Email</p>
+                            <p class="mt-1 text-sm text-gray-900">{{ $customer->email ?? 'Chưa xác định' }}</p>
+                        </div>
+                    </div>
                 </div>
 
-                {{-- QR Code --}}
-                <div class="w-md-40 d-flex flex-column align-items-center">
-                    <div class="relative w-32 h-32">
-                        {{-- Ảnh mặc định --}}
-                        <img src="{{ asset('img/qrcode-default.jpg') }}" alt="Default QR"
-                            class="absolute inset-0 w-full h-full object-contain rounded shadow p-2" />
-
-                        {{-- Ảnh qrcode thật --}}
-                        <img src="{{ $data->avatar_url ??'https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg' }}" alt="QR Code"
-                            class="relative w-full h-full object-contain rounded shadow p-2" />
+                <div class="bg-gray-50 p-4 rounded-lg">
+                    <h4 class="text-lg font-medium text-gray-900 mb-4">Thông tin khác</h4>
+                    <div class="space-y-4">
+                        <div>
+                            <p class="text-sm font-medium text-gray-500">Địa chỉ</p>
+                            <p class="mt-1 text-sm text-gray-900">{{ $customer->address ?? 'Chưa cập nhật' }}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium text-gray-500">Ghi chú</p>
+                            <p class="mt-1 text-sm text-gray-900">{{ $customer->note ?? 'Không có ghi chú' }}</p>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <hr class="my-3" />
-
-            {{-- Thông tin thêm --}}
-            <div class="text-md flex-col">
-                <p class="mb-2"><i class="fas fa-map-marker-alt mr-1 text-gray-500"></i><strong>Địa chỉ:</strong>
-                    {{ $data->address }}</p>
-                <p class="mb-2"><i class="fas fa-layer-group mr-1 text-gray-500"></i><strong>Ghi chú:</strong>
-                    {{ $data->note }}</p>
+            <div class="w-full md:w-64 flex-shrink-0">
+                <div class="bg-gray-50 p-4 rounded-lg">
+                    <h4 class="text-lg font-medium text-gray-900 mb-4">Thông tin bổ sung</h4>
+                    <div class="space-y-4">
+                        <div>
+                            <p class="text-sm font-medium text-gray-500">Ngày tạo</p>
+                            <p class="mt-1 text-sm text-gray-900">{{ $customer->created_at->format('d/m/Y H:i') }}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium text-gray-500">Cập nhật lần cuối</p>
+                            <p class="mt-1 text-sm text-gray-900">{{ $customer->updated_at->format('d/m/Y H:i') }}</p>
+                        </div>
+                    </div>
+                </div>
             </div>
+        </div>
+    </div>
         </div>
     </div>
 
 
-    {{-- Nội dung gợi ý tìm kiếm --}}
-    {{-- Gợi ý tương tự --}}
-    <div class="col-lg-12">
-        @if ($suggestions)
-            @if (count($suggestions))
-                <h4 class="mt-3 text-md font-semibold text-gray-500 mb-2">
-                    <i class="fas fa-list mr-1 text-gray-500"></i> Các linh kiện tương tự:
-                </h4>
-
-                <div class="overflow-y-auto h-[44vh]">
-                    <ul class="space-y-2">
-                        @foreach ($suggestions as $item)
-                            <li class="mt-2 d-flex flex-col gap-2 p-2 bg-gray-100 rounded shadow-sm">
-                                <div class="d-inline-flex justify-content-between">
-                                    <p class="mr-2 text-sm flex items-center text-gray-500 italic"><i
-                                            class="fas fa-barcode mr-2 text-gray-500"></i>
-                                        <span
-                                            class="font-medium text-gray-500"><strong>{{ $item->serial_number }}</strong></span>
-                                    </p>
-                                    <p class="text-sm text-blue-700" style="color: #4b6cb7">
-                                        <strong>{{ strtoupper($item->name) }}</strong><i
-                                            class="fas fa-tags ml-2 text-blue-500" style="color: #4b6cb7"></i>
-                                    </p>
-                                </div>
-                                <div class="d-flex justify-content-between flex-column flex-sm-row gap-2">
-
-                                    <div class="d-inline-flex flex">
-
-                                        <p class="mr-2 text-sm flex items-center text-green-500 italic"><i
-                                                class="fas fa-cube mr-1 text-green-500"></i>
-                                            Loại: {{ optional($item->category)->name }}
+    {{-- Recent Orders Section --}}
+    <div class="px-6 py-4 border-t border-gray-200">
+        <div class="flex justify-between items-center mb-4">
+            <h4 class="text-lg font-medium text-gray-900">Đơn hàng gần đây</h4>
+            @if($customer->orders->count() > 0)
+                <a href="{{ route('orders.index', ['customer_id' => $customer->id]) }}" 
+                   class="text-sm font-medium text-blue-600 hover:text-blue-800">
+                    Xem tất cả ({{ $customer->orders->count() }})
+                </a>
+            @endif
+        </div>
+        
+        @if($customer->orders->count() > 0)
+            <div class="bg-white shadow overflow-hidden sm:rounded-md">
+                <ul class="divide-y divide-gray-200">
+                    @foreach($customer->orders->sortByDesc('order_date')->take(5) as $order)
+                        <li>
+                            <a href="{{ route('orders.show', $order->id) }}" class="block hover:bg-gray-50">
+                                <div class="px-4 py-4 sm:px-6">
+                                    <div class="flex items-center justify-between">
+                                        <p class="text-sm font-medium text-blue-600 truncate">
+                                            #{{ $order->order_number }}
                                         </p>
-                                        <p class="mr-2 text-sm flex items-center text-blue-500 italic"><i
-                                                class="fas fa-layer-group mr-1 text-blue-500"></i>
-                                            Trạng thái: {{ optional($item->status)->name }}
-                                        </p>
-                                        <p class="mr-2 text-sm flex items-center text-orange-500 italic"><i
-                                                class="fas fa-file-import mr-1 text-orange-500"></i>
-                                            Nhập kho: {{ $item->stockin_at ?? 'N/A' }}
-                                        </p>
+                                        <div class="ml-2 flex-shrink-0 flex">
+                                            <p class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                                                {{ 
+                                                    $order->status === 'completed' ? 'bg-green-100 text-green-800' : 
+                                                    ($order->status === 'processing' ? 'bg-blue-100 text-blue-800' : 
+                                                    ($order->status === 'cancelled' ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800'))
+                                                }}">
+                                                {{ ucfirst($order->status) }}
+                                            </p>
+                                        </div>
                                     </div>
-
-                                </div>
-                                <div class="d-flex justify-between align-items-center">
-                                    @php
-                                        $start = \Carbon\Carbon::parse($item->warranty_start);
-                                        $end = \Carbon\Carbon::parse($item->warranty_end);
-                                        $months = $start->diffInMonths($end);
-                                        $color = match (true) {
-                                            $months <= 0 => 'red',
-                                            $months > 48 => 'purple',
-                                            $months > 36 => 'indigo',
-                                            $months > 24 => 'blue',
-                                            $months > 12 => 'green',
-                                            $months > 6 => 'yellow',
-                                            $months > 3 => 'orange',
-                                            default => 'gray',
-                                        };
-                                    @endphp
-                                    <strong class="text-{{ $color }}-700">
-                                        <i class="fas fa-shield-alt mr-1 text-{{ $color }}-600"></i>
-                                        Bảo hành: {{ $months }} tháng ({{ $start->format('d/m/Y') }} -
-                                        {{ $end->format('d/m/Y') }})
-                                    </strong>
-
-                                    @if ($filter === 'manual')
-                                        <a href="#" class="text-main bright-hover scale-hover"
-                                            onclick="triggerManualScan('{{ $item->serial_number }}')">
-                                            <i class="fas fa-eye m-0"></i> Xem
-                                        </a>
-                                    @else
-                                        <a href="#" class="text-main bright-hover scale-hover"
-                                            onclick="triggerRealtimeScan('{{ $item->serial_number }}')">
-                                            <i class="fas fa-eye m-0"></i> Xem
-                                        </a>
+                                    <div class="mt-2 sm:flex sm:justify-between">
+                                        <div class="sm:flex">
+                                            <p class="flex items-center text-sm text-gray-500">
+                                                <i class="far fa-calendar-alt mr-1.5 flex-shrink-0"></i>
+                                                {{ $order->order_date->format('d/m/Y H:i') }}
+                                            </p>
+                                        </div>
+                                        <div class="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
+                                            <i class="fas fa-money-bill-wave mr-1.5 flex-shrink-0"></i>
+                                            {{ number_format($order->total_amount, 0, ',', '.') }} đ
+                                        </div>
+                                    </div>
+                                    @if($order->notes)
+                                        <div class="mt-2">
+                                            <p class="text-sm text-gray-500 truncate">
+                                                <i class="far fa-sticky-note mr-1.5"></i>
+                                                {{ $order->notes }}
+                                            </p>
+                                        </div>
                                     @endif
                                 </div>
-
-                            </li>
-                        @endforeach
-                    </ul>
+                            </a>
+                        </li>
+                    @endforeach
+                </ul>
+            </div>
+        @else
+            <div class="bg-gray-50 p-4 rounded-lg text-center">
+                <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                </svg>
+                <h3 class="mt-2 text-sm font-medium text-gray-900">Không có đơn hàng nào</h3>
+                <p class="mt-1 text-sm text-gray-500">Khách hàng này chưa có đơn hàng nào.</p>
+                <div class="mt-6">
+                    <a href="{{ route('orders.create', ['customer_id' => $customer->id]) }}" 
+                       class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        <i class="fas fa-plus -ml-1 mr-2 h-5 w-5"></i>
+                        Tạo đơn hàng mới
+                    </a>
                 </div>
-                <div class="mt-2">
-                    {{ $suggestions->links('livewire.elements.components.arrow-paginator') }}
-                </div>
-            @else
-                <p class="text-gray-500 italic text-md ml-4">Không có linh kiện tương tự.</p>
-            @endif
+            </div>
         @endif
     </div>
 </div>

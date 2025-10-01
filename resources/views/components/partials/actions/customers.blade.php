@@ -2,7 +2,20 @@
     'recordId' => null,
 ])
 
-<a href="#" class="x-button text-info"
-    onclick="event.preventDefault(); Livewire.emit('record', {{ $recordId }}); Livewire.emit('modal', 'show','{{ $recordId }}', 'Thông tin chi tiết', 'info','fas fa-eye')">
-    <i class="fas fa-eye"></i>
-</a>
+<div class="flex space-x-2">
+    @can('customer.show')
+    <a href="{{ route('customer.show', $recordId) }}" 
+       class="text-blue-600 hover:text-blue-800"
+       title="Xem chi tiết">
+        <i class="fas fa-eye"></i>
+    </a>
+    @endcan
+
+    @can('customer.edit')
+    <a href="{{ route('customer.edit', $recordId) }}" 
+       class="text-yellow-600 hover:text-yellow-800 ml-2"
+       title="Chỉnh sửa">
+        <i class="fas fa-pencil-alt"></i>
+    </a>
+    @endcan
+</div>

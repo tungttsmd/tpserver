@@ -6,12 +6,14 @@ use App\Models\Customer;
 use Illuminate\Support\Facades\Schema;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 
 class CustomerIndexLivewire extends Component
 {
-    use WithPagination;
+    use WithPagination, AuthorizesRequests;
 
     public $dir = "desc", $sort = "updated_at";
     public $customerId, $perPage = 20, $search;
@@ -47,6 +49,25 @@ class CustomerIndexLivewire extends Component
             )->orderBy($sortColumn, $this->dir)
             ->paginate($this->perPage);
 
+        // Add action buttons to each item
+        $list->getCollection()->transform(function ($item) {
+            $item->actions = [
+                'view' => [
+                    'url' => route('customer.show', $item->ID),
+                    'icon' => 'eye',
+                    'class' => 'text-blue-600 hover:text-blue-800',
+                    'permission' => 'customer.show'
+                ],
+                'edit' => [
+                    'url' => route('customer.edit', $item->ID),
+                    'icon' => 'pencil',
+                    'class' => 'text-yellow-600 hover:text-yellow-800',
+                    'permission' => 'customer.edit'
+                ]
+            ];
+            return $item;
+        });
+
         // Render view
         return view('livewire.features.customers.index', [
             'list' => $list,
@@ -54,6 +75,10 @@ class CustomerIndexLivewire extends Component
             'sort' => $this->sort,
             'dir' => $this->dir,
             'filter' => $this->filter,
+            'can' => [
+                'view' => Gate::allows('customer.show'),
+                'edit' => Gate::allows('customer.edit'),
+            ]
         ]);
     }
     public function sortBy($sort_column)

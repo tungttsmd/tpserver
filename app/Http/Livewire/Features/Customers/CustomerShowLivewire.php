@@ -7,24 +7,28 @@ use Livewire\Component;
 
 class CustomerShowLivewire extends Component
 {
-    protected $listeners = ['record'=>'record','routeRefreshCall' => '$refresh', 'setCustomerId' => 'setCustomerId'];
+    public $customer;
+    public $customerId;
 
-    public $dir, $sort, $customerId;
+    public function mount($id = null)
+    {
+        if ($id) {
+            $this->customerId = $id;
+            $this->loadCustomer();
+        }
+    }
+
+    public function loadCustomer()
+    {
+        $this->customer = Customer::with(['orders' => function($query) {
+            $query->orderBy('order_date', 'desc')->take(5);
+        }])->findOrFail($this->customerId);
+    }
+
     public function render()
     {
-        $customer = Customer::find($this->customerId);
-        $suggestions = $this->suggestions();
-        $data = [
-            'customer' => $customer,
-            'suggestions' => $suggestions,
-        ];
-        return view('livewire.features.customers.show', $data);
-    }
-    public function suggestions()
-    {
-        return [];
-    }
-    public function record($customerId){
-        $this->customerId = $customerId;
+        return view('livewire.features.customers.show', [
+            'customer' => $this->customer,
+        ]);
     }
 }

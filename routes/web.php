@@ -5,7 +5,9 @@ use App\Http\Livewire\Features\Components\ComponentCreateLivewire;
 use App\Http\Livewire\Features\Components\ComponentIndexLivewire;
 use App\Http\Livewire\Features\Components\ComponentScanLivewire;
 use App\Http\Livewire\Features\Customers\CustomerCreateLivewire;
+use App\Http\Livewire\Features\Customers\CustomerEditLivewire;
 use App\Http\Livewire\Features\Customers\CustomerIndexLivewire;
+use App\Http\Livewire\Features\Customers\CustomerShowLivewire;
 use App\Http\Livewire\Features\Exports\ExportLivewire;
 use App\Http\Livewire\Features\Locations\LocationCreateLivewire;
 use App\Http\Livewire\Features\Locations\LocationIndexLivewire;
@@ -51,7 +53,11 @@ Route::middleware('auth')->group(function () {
     Route::prefix('customer')->group(function () {
         Route::get('/create', CustomerCreateLivewire::class)
             ->name('customer.create')->middleware(['permission:customer.create']);
-        Route::get('/index', CustomerIndexLivewire::class)
+        Route::get('/{id}/edit', CustomerEditLivewire::class)
+            ->name('customer.edit')->middleware(['permission:customer.edit']);
+        Route::get('/{id}', CustomerShowLivewire::class)
+            ->name('customer.show')->middleware(['permission:customer.show']);
+        Route::get('/', CustomerIndexLivewire::class)
             ->name('customer.index')->middleware(['permission:customer.index']);
     });
 
