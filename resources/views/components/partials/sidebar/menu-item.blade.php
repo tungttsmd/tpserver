@@ -11,7 +11,40 @@
     }
 </style>
 
+<style>
+    .logo-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1rem 0;
+        border-bottom: 1px solid #e5e7eb;
+        margin-bottom: 1rem;
+    }
+
+    .logo {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #3b82f6;
+        /* blue-500 */
+        text-decoration: none;
+        transition: color 0.2s;
+    }
+
+    .logo:hover {
+        color: #2563eb;
+        /* blue-600 */
+    }
+</style>
+
 <nav x-data>
+    <div class="logo-container">
+        <a href="{{ route('index') }}" class="logo">
+            <div class="flex items-center">
+                <img class="filter drop-shadow-md" width="128" src="{{ asset('img/logo-tpserver.png') }}"
+                    alt="TP Server">
+            </div>
+        </a>
+    </div>
     <ul class="list-none p-0">
         <li class="menu-item">
             <a href="{{ route('item.create') }}" class="toggle">

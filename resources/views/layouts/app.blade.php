@@ -24,7 +24,13 @@
 
             <!-- Main content -->
             <main class="w-3/4">
-                {{ $slot }} <!-- Livewire component render tại đây -->
+                @hasSection('content')
+                    <!-- Dùng cho blade traditional -->
+                    @yield('content')
+                @else
+                    <!-- Livewire component render tại đây -->
+                    {{ $slot }}
+                @endif
             </main>
         </div>
     </div>

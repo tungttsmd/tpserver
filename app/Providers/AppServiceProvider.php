@@ -30,5 +30,6 @@ class AppServiceProvider extends ServiceProvider
     {
         Schema::defaultStringLength(191);
         Paginator::useTailwind();
+        Blade::component('layouts.app', 'layouts.app');
     }
 }
