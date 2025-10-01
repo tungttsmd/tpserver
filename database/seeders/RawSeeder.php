@@ -15,11 +15,11 @@ class RawSeeder extends Seeder
     {
         // Chạy app db tối thiểu
         $this->call([
+            RoleSeeder::class,
             PermissionSeeder::class,
             ActionSeeder::class,
             ProfileRoleColorSeeder::class,
             StatusSeeder::class,
-            RoleSeeder::class,
             UserSeeder::class,
             CategorySeeder::class,
         ]);

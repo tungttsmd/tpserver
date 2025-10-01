@@ -3,12 +3,21 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
 
 class RoleSeeder extends Seeder
 {
     public function run(): void
     {
+        // Disable foreign key checks
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        
+        // Truncate the table
+        Role::truncate();
+        
+        // Re-enable foreign key checks
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
         $colorList = [
             '#dc2626', // đỏ
@@ -50,8 +59,6 @@ class RoleSeeder extends Seeder
             '#c084fc', // tím nhạt
             '#14b8a6', // xanh ngọc
         ];
-
-        Role::truncate();
 
         $roles = [
             ['id' => 3, 'name' => 'admin', 'display_name' => 'Quản trị viên'],
